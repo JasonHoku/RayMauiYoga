@@ -1,0 +1,132 @@
+// Icons
+@import "./Pages/Dashboards/Shop/scss/style.scss";
+@import "assets/linear/style";
+@import "assets/pe7/pe-icon-7-stroke/css/pe-icon-7-stroke";
+@import "assets/pe7/pe-icon-7-stroke/css/helper";
+
+// BOOTSTRAP 4 VARIABLES
+
+@import "assets/components/bootstrap4/functions";
+@import "assets/components/bootstrap4/variables";
+@import "assets/components/bootstrap4/mixins";
+
+// ArchitectUI Themes Variables
+
+@import "assets/themes/layout-variables";
+
+// BOOTSTRAP 4 IMPORTS
+
+@import "assets/components/bootstrap4/root";
+@import "assets/components/bootstrap4/reboot";
+@import "assets/components/bootstrap4/type";
+@import "assets/components/bootstrap4/images";
+@import "assets/components/bootstrap4/code";
+@import "assets/components/bootstrap4/grid";
+@import "assets/components/bootstrap4/tables";
+@import "assets/components/bootstrap4/buttons";
+@import "assets/components/bootstrap4/transitions";
+@import "assets/components/bootstrap4/dropdown";
+@import "assets/components/bootstrap4/button-group";
+@import "assets/components/bootstrap4/input-group";
+@import "assets/components/bootstrap4/custom-forms";
+@import "assets/components/bootstrap4/nav";
+@import "assets/components/bootstrap4/navbar";
+@import "assets/components/bootstrap4/card";
+@import "assets/components/bootstrap4/breadcrumb";
+@import "assets/components/bootstrap4/pagination";
+@import "assets/components/bootstrap4/badge";
+@import "assets/components/bootstrap4/jumbotron";
+@import "assets/components/bootstrap4/alert";
+@import "assets/components/bootstrap4/progress";
+@import "assets/components/bootstrap4/media";
+@import "assets/components/bootstrap4/list-group";
+@import "assets/components/bootstrap4/close";
+@import "assets/components/bootstrap4/toasts";
+@import "assets/components/bootstrap4/tooltip";
+@import "assets/components/bootstrap4/popover";
+@import "assets/components/bootstrap4/carousel";
+@import "assets/components/bootstrap4/utilities";
+// LAYOUT
+
+@import "assets/layout/layout";
+
+// UTILS
+
+@import "assets/utils/helpers";
+@import "assets/utils/backgrounds";
+@import "assets/utils/animate";
+@import "assets/utils/comps-animations";
+
+// ELEMENTS
+
+@import "assets/elements/buttons";
+@import "assets/elements/dropdown";
+@import "assets/elements/navs";
+@import "assets/elements/badges";
+@import "assets/elements/cards";
+@import "assets/elements/tabs";
+@import "assets/elements/loaders";
+@import "assets/elements/progressbar";
+@import "assets/elements/timeline";
+@import "assets/elements/listgroup";
+@import "assets/elements/forms";
+@import "assets/elements/pagination";
+@import "assets/elements/chat";
+
+// DASHBOARD BOXES
+
+@import "assets/widgets/chart-boxes/chart-boxes";
+@import "assets/widgets/content-boxes/content-boxes";
+@import "assets/widgets/profile-boxes/profile-boxes";
+
+// PAGES
+
+// Applications
+
+@import "assets/applications/applications-base";
+
+// Perfect Scrollbar
+
+// RC Tabs
+@import "assets/components/rc-tabs/rc-tabs";
+
+// Hamburger Button
+@import "assets/components/hamburgers/hamburgers";
+
+// Drawer
+@import "assets/components/drawer/drawer";
+
+// Notifications
+@import "assets/components/notifications/sweetalerts";
+@import "assets/components/notifications/toastify";
+
+// Modals
+@import "assets/components/modals/rodal";
+
+// Progress Bar
+
+// Slick Carousel
+
+// Block loading
+
+// Popovers & Tooltips
+@import "assets/components/popovers-tooltips/popovers-tooltips";
+
+// DEMO
+
+@import "assets/demo-ui/demo";
+
+// Responsive
+
+@import "assets/layout/responsive/responsive-base";
+
+
+
+div.card {
+
+    box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)" 
+}
+
+div.card{
+    font-size: larger;
+}
