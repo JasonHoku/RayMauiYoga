@@ -55,7 +55,7 @@ import { relative } from "path";
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "https://api.microHawaii.com/graphql",
+    uri: "https://api.MauiYogaRay.com/graphql",
     headers: {
       "content-type": "application/json",
     },
@@ -64,7 +64,7 @@ const apolloClient = new ApolloClient({
 
 const MY_QUERY_COPY_QUERY = gql`
   query MyQueryCopy {
-    microHawaiis {
+    MauiYogaRays {
       id
     }
   }
@@ -130,7 +130,7 @@ if (this.state.images != null) {
     });
 
     axios
-      .post(`http://upload.microhawaii.com/uploadfiles/`, formData, {
+      .post(`http://upload.MauiYogaRay.com/uploadfiles/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -169,7 +169,7 @@ if (this.state.images != null) {
 
     const MY_MUTATION_MUTATION = gql`
   mutation MyMutation {
-    insert_microHawaii(objects: {email: "${formName}"}) {
+    insert_MauiYogaRay(objects: {email: "${formName}"}) {
       affected_rows
     }
   }
@@ -219,7 +219,7 @@ if (this.state.images != null) {
                 alignItems: "center",
               }}
             >
-              <CardHeader>  microHawaii Large File Uploader</CardHeader>
+              <CardHeader>  MauiYogaRay Large File Uploader</CardHeader>
               <CardBody>
                 {" "}
                 <p>

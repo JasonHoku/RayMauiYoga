@@ -80,7 +80,7 @@ const MyQueryCopyQuery = (props) => {
           );
 
         if (data) {
-          return <pre>{JSON.stringify(data.microHawaii, null, 2)}</pre>;
+          return <pre>{JSON.stringify(data.MauiYogaRay, null, 2)}</pre>;
         }
       }}
     </Query>
@@ -121,7 +121,7 @@ export default class AccountElements extends Component {
 
     const MY_MUTATION_MUTATION = gql`
   mutation MyMutation {
-    insert_microHawaii(objects: {email: "${formName}"}) {
+    insert_MauiYogaRay(objects: {email: "${formName}"}) {
       affected_rows
     }
   }

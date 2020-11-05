@@ -142,7 +142,7 @@ class MegaMenu extends React.Component {
         </Nav>&nbsp;&nbsp;&nbsp;&nbsp;
         <div></div>
        <div>
-   MicroHawaii <small> <br></br>Services &amp; Provisions</small> </div>
+   MauiYogaRay <small> <br></br>Services &amp; Provisions</small> </div>
       </Fragment>
     );
   }

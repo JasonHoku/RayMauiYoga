@@ -212,7 +212,7 @@ export default class GalleryElements extends Component {
 <Card>
   <CardBody><p>An image is said to contain a thousand words, but how should one contain a thousand images?
   </p> <p>
-  microHawaii has produced over 1,200 logos, icons, textures, and graphics.
+  MauiYogaRay has produced over 1,200 logos, icons, textures, and graphics.
     </p> <p>
     Here you shall find a collection of some, growing over time.
     </p> </CardBody>
@@ -258,7 +258,7 @@ export default class GalleryElements extends Component {
               Contact
             </CardHeader>
   <CardBody>
-    MicroHawaii eagerly responds to all persons within 1-2 days.
+    MauiYogaRay eagerly responds to all persons within 1-2 days.
     <br></br>
      For commission inquiries, suggestions or commentary reach out through the <a href="#/dashboard/contact"> contact page.</a>
   </CardBody>

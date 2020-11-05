@@ -108,230 +108,8 @@ export default class CRMDashboard2 extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <center><meta name="description" content="microHawaii.com, software development, e-commerce, education and services."/>
-            <Row>
-              <Col mx-auto className=" opacity-9" style={{ width: "12rem" }}>
-                <Card
-                  mx-auto
-                  style={{
-                    width: "11rem",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                  }}
-                >
-                  <a href="#/dashboards/services">
-                    {" "}
-                    <Route path="#/dashboards/services" />
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        Services
-                      </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className="rounded-circle text-center"
-                          src={servicespic}
-                          alt=""
-                        />
-                      </div>
-                      <center>Skills &amp; Consult.</center>
-                    </CardBody>
-                  </a>
-                </Card>
-                <br></br>
-                <a href="#/dashboards/gallery">
-                  <Card
-                    mx-auto
-                    style={{
-                      width: "11rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    }}
-                  >
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        Visual Art Gallery
-                      </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className=" text-center"
-                          src={visualpic}
-                          alt=""
-                        />
-                      </div>
-                      <center>Visual Gallery</center>
-                    </CardBody>
-                  </Card>
-                </a>{" "}
-                <br></br>
-              </Col>
-              <Col mx-auto className=" opacity-9">
-                <a href="#/dashboards/shop">
-                  <Route path="#/dashboards/shop" />
-
-                  <Card
-                    mx-auto
-                    style={{
-                      width: "11rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    }}
-                  >
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        Shoppe
-                      </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className=" text-center"
-                          src={shoppic}
-                          alt=""
-                        />
-                      </div>
-                      <center>E-Commerce</center>
-                    </CardBody>
-                  </Card>
-                </a>
-                <br></br>
-                <a href="#/dashboards/writing">
-                  <Card
-                    md="auto"
-                    className="main-card mb-3"
-                    style={{
-                      width: "11rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    }}
-                  >
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        Written Publishing
-                      </div>{" "}
-                      <div> </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className=" text-center"
-                          src={publishingpic}
-                          alt=""
-                        />
-                      </div>
-                      <center>Non Fiction</center>
-                    </CardBody>
-                  </Card>
-                </a>{" "}
-                <br></br>
-              </Col>
-              <Col mx-auto className=" opacity-9">
-                <a href="#/dashboards/services">
-                  <Route path="#/dashboards/services" />
-                  <Card
-                    mx-auto
-                    style={{
-                      width: "11rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    }}
-                  >
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        About
-                      </div>{" "}
-                      <div> </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className=" text-center"
-                          src={aboutpic}
-                          alt=""
-                        />
-                      </div>
-                      <center> Learn More</center>
-                    </CardBody>
-                  </Card>{" "}
-                  <br></br>
-                </a>{" "}
-              </Col>
-
-              <Col mx-auto className=" opacity-9">
-                {" "}
-                <a href="#/dashboards/music">
-                  <Card
-                    mx-auto
-                    className="main-card mb-3"
-                    style={{
-                      width: "11rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    }}
-                  >
-                    <CardHeader className="card-header-tab">
-                      <div className="card text-center card-shadow-focus opacity-9">
-                        Audio Art Gallery
-                      </div>{" "}
-                      <div> </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div>
-                        <img
-                          width={140}
-                          className=" text-center"
-                          src={audiopic}
-                          alt=""
-                        />
-                        <br></br>
-                      </div>
-                      <center>Music Production.</center>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-              <Col mx-auto className=" opacity-9" style={{ width: "31rem" }}>
-                <Card
-                  className="mb-3 main-card"
-                  style={{
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                  }}
-                >
-                  <CardHeader className="main-card dark card-header-tab">
-                    <div className="card-header-title">
-                      <i className=" lnr-rocket icon-gradient opacity-9"> </i>
-                      10/17/20 Announcement
-                    </div>
-                  </CardHeader>{" "}
-                  <CardBody>
-                    {" "}
-                    <div>
-                         microHawaii is fully functional and currently accepting
-                      client and consult requests.
-                      <br></br> <br></br>
-                      For more information on the{" "}
-                      <a href="#/dashboards/services"> services </a>
-                      provided here please inquire through the{" "}
-                      <a href="#/dashboards/contact"> contact </a> page. or by
-                      email at:   
-                      <a href="mailto:contact@microhawaii.com">
-                        {" "}
-                        Contact@microHawaii.com{" "}
-                      </a>
-                      <br></br>
-                      <br></br> <br></br>{" "}
-                      <center>
-                        {" "}
-                        <img src={logo} width="100"></img>
-                      </center>
-                      <br></br>
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
+          <center><meta name="description" content="MauiYogaRay.com, software development, e-commerce, education and services."/>
+            
           </center>
           <Row></Row>
           <Row>
@@ -357,23 +135,8 @@ export default class CRMDashboard2 extends Component {
                   </div>
                 </CardHeader>
                 <CardBody>
-                     I'd like to thank everyone who'se shown support through the
-                  goals and work, wouldn't have gotten here without you.
-                  <br></br> <br></br>
-                    The site is being transfered to modern templature, utilizing
-                  the React frameworks as the primary language. Improvements to
-                  speed, aestetics and new features will be rolling out over the
-                  coming weeks.
-                  <br></br>
-                  <br></br>   Please report any issues and commentary through
-                  the contact page and thank you so much for stopping by.
-                  <br></br>
-                  <br></br> <br></br>{" "}
-                  <center>
-                    {" "}
-                    <img src={logo} width="100"></img>
-                  </center>
-                  <br></br>
+               Featured Content
+                   
                   <br></br>
                 </CardBody>
               </Card>
@@ -391,18 +154,22 @@ export default class CRMDashboard2 extends Component {
                 <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
                   {" "}
                 </i>
-                Update: 7/17/20
+                BIO 
               </div>{" "}
               <div> </div>
             </CardHeader>
-            <CardBody>
-              Site updates are live! (Improved services page, upgraded layout,
-              added spunk)
+            <CardBody><p>
+Yoga is for everyone. It is the belief that guides Ray’s teaching. Whether it be a gentle class, a rockin’, vigorous practice, meditation, or private session, everyone has the capacity to explore themselves through yoga.  Ray’s classes are focused, light-hearted, and designed to challenge student’s physical, mental and spiritual qualities. 
+</p><p>
+Ray, a lifetime athlete, discovered yoga in a gym class 20 years ago.  He was intrigued at how yoga both strengthened and softened him.  Ray has studied and practiced with a variety of teachers from Iyengar, Ashtanga, Hatha and Anusara traditions and began teaching in 2007.  He continues to discover and explore how the qualities and values of yoga practice can help us with the practice of living.
+</p><p>
+Ray has taught public classes, private sessions, yoga for seniors, yoga for kids, and yoga for athletes. He has taught workshops, in school settings, at Buddhist temples and at the beach.
+</p><p>
+Ray loves living on Maui.  He is grateful to teach in such a beautiful setting.  Ray tries to get to the beach every day and when he is successful you will find him swimming, surfing or hanging with his family. He enjoys practicing yoga, jiu-jitsu, and writing.
+</p><p>
+Ray is the proud father of his son Taj, dog Nala and four chickens.</p>
               <br></br>
               <br></br>
-              Find out what microHawaii is working on, get involved and learn
-              more, by visiting the new
-              <a href="#/dashboards/projects"> Projects Page</a>.<br></br>
               <br></br>
             </CardBody>
           </Card>
@@ -425,48 +192,54 @@ export default class CRMDashboard2 extends Component {
               <div> </div>
             </CardHeader>
             <CardBody>
-              The microHawaii 3D Web-Game development is kicking off! Pre-Alpha
-              0.2 is now available
-              <a href="../3D/"> here </a>.<br></br>
               <br></br>
             </CardBody>
           </Card>
+          <Row></Row>
+
+<Card
+  className="main-card mb-3"
+  style={{
+    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+  }}
+>
+  <CardHeader className="card-header-tab">
+    <div className="card-header-title font-size-lg font-weight-normal">
+      <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
+        {" "}
+      </i>
+      Update: 64/15/20
+    </div>{" "}
+    <div> </div>
+  </CardHeader>
+  <CardBody>
+    <br></br>
+  </CardBody>
+</Card>
+<Row></Row>
+
+<Card
+  className="main-card mb-3"
+  style={{
+    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+  }}
+>
+  <CardHeader className="card-header-tab">
+    <div className="card-header-title font-size-lg font-weight-normal">
+      <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
+        {" "}
+      </i>
+      Update: 2/15/20
+    </div>{" "}
+    <div> </div>
+  </CardHeader>
+  <CardBody>
+    <br></br>
+  </CardBody>
+</Card>
 
           <Row></Row>
 
-          <Row>
-            <Col sm="12" md="6" xl="4">
-              <Card
-                className="card-shadow-primary card-border text-white mb-3"
-                color="primary"
-              >
-                <div className="dropdown-menu-header">
-                  <div className="dropdown-menu-header-inner bg-primary">
-                    <div className="menu-header-content">
-                      <div className="avatar-icon-wrapper mb-3 avatar-icon-xl">
-                        <div className="avatar-icon">
-                          <img src={avatar1} alt="Avatar 5" />
-                        </div>
-                      </div>
-                      <div>
-                        <h5 className="menu-header-title">Jason Hoku Levien</h5>
-                        <h6 className="menu-header-subtitle">
-                          Founder / Owner
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <CardFooter className="text-center d-block">
-                  <a href="#/dashboards/contact">
-                    <Button className="btn-shadow-dark btn-wider" color="dark">
-                      Send Message
-                    </Button>
-                  </a>
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row>
         </CSSTransitionGroup>
       </Fragment>
     );

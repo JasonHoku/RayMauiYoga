@@ -245,14 +245,14 @@ export default class CRMDashboard2 extends Component {
               <Card className="col-md- opacity-9 ">
                 <CardHeader className="card-header-tab">
                   <div className="card text-center card-shadow-focus opacity-9">
-                    MicroHawaii Services{" "}
+                    MauiYogaRay Services{" "}
                   </div>
                 </CardHeader>
                 <CardBody>
                   {" "}
                   <div class="col-md">
                     <div class="col-md">
-                      microHawaii is a conglomerate of Hawaii based computer
+                      MauiYogaRay is a conglomerate of Hawaii based computer
                       services.
                       <br></br> <br></br>    This website is a portfolio of
                       skills and active utilities.

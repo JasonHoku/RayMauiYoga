@@ -56,7 +56,7 @@ import { relative } from "path";
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "https://api.microHawaii.com/graphql",
+    uri: "https://api.MauiYogaRay.com/graphql",
     headers: {
       "content-type": "application/json",
     },
@@ -65,7 +65,7 @@ const apolloClient = new ApolloClient({
 
 const MY_QUERY_COPY_QUERY = gql`
   query MyQueryCopy {
-    microHawaiis {
+    MauiYogaRays {
       id
     }
   }
@@ -165,7 +165,7 @@ export default class AdminElements extends Component {
 
     const MY_MUTATION_MUTATION = gql`
   mutation MyMutation {
-    insert_microHawaii(objects: {email: "${formName}"}) {
+    insert_MauiYogaRay(objects: {email: "${formName}"}) {
       affected_rows
     }
   }
