@@ -3,6 +3,7 @@ import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import classnames from "classnames";
 import ReactTable from "react-table";
 import { Route } from "react-router-dom";
+import Vimeo from "@u-wave/react-vimeo";
 
 import {
   Row,
@@ -108,12 +109,45 @@ export default class CRMDashboard2 extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <center><meta name="description" content="MauiYogaRay.com, software development, e-commerce, education and services."/>
-            
+          <center>
+            <meta
+              name="description"
+              content="MauiYogaRay.com, software development, e-commerce, education and services."
+            />
           </center>
-          <Row></Row>
-          <Row>
-            <Col>
+          <Row
+            style={{
+              justifyContent: "center",
+              alignContent: "center",
+              width: "100%",
+              alignItems: "center",
+            }}
+          > <Card
+          className="main-card mb-3"
+          style={{
+            boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+          }}
+        >
+          <CardHeader className="card-header-tab" color="light">
+            <div className="card-header-title font-size-lg font-weight-normal">
+              <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
+                {" "}
+              </i>
+              MauiYogaRay Under Construction
+            </div>{" "}
+            <div>
+              {" "}
+              <br></br>
+              <br></br>
+              <br></br>
+            </div>
+          </CardHeader>
+          <CardBody>
+            
+            <p> <a href="https://dashboardpack.com/live-demo-preview/?livedemo=113&v=7516fd43adaa"> Template Examples</a></p>
+ <p> <a href="https://github.com/JasonHoku/MauiYogaRay" > Site Source Code</a></p>        
+          </CardBody>
+        </Card> &nbsp;&nbsp;&nbsp;
               <Card
                 className="main-card mb-3"
                 style={{
@@ -122,7 +156,7 @@ export default class CRMDashboard2 extends Component {
               >
                 <CardHeader className="card-header-tab" color="light">
                   <div className="card-header-title font-size-lg font-weight-normal">
-                    <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
+                    <i className="header-icon pe-7s-star mr-3 text-muted opacity-6">
                       {" "}
                     </i>
                     Update: 8/17/20
@@ -135,12 +169,11 @@ export default class CRMDashboard2 extends Component {
                   </div>
                 </CardHeader>
                 <CardBody>
-               Featured Content
-                   
+                  Private Video Example
+                  <Vimeo video="477795668" autoplay />
                   <br></br>
                 </CardBody>
               </Card>
-            </Col>
           </Row>
 
           <Card
@@ -151,23 +184,48 @@ export default class CRMDashboard2 extends Component {
           >
             <CardHeader className="card-header-tab">
               <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
+                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
                   {" "}
                 </i>
-                BIO 
+                BIO
               </div>{" "}
               <div> </div>
             </CardHeader>
-            <CardBody><p>
-Yoga is for everyone. It is the belief that guides Ray’s teaching. Whether it be a gentle class, a rockin’, vigorous practice, meditation, or private session, everyone has the capacity to explore themselves through yoga.  Ray’s classes are focused, light-hearted, and designed to challenge student’s physical, mental and spiritual qualities. 
-</p><p>
-Ray, a lifetime athlete, discovered yoga in a gym class 20 years ago.  He was intrigued at how yoga both strengthened and softened him.  Ray has studied and practiced with a variety of teachers from Iyengar, Ashtanga, Hatha and Anusara traditions and began teaching in 2007.  He continues to discover and explore how the qualities and values of yoga practice can help us with the practice of living.
-</p><p>
-Ray has taught public classes, private sessions, yoga for seniors, yoga for kids, and yoga for athletes. He has taught workshops, in school settings, at Buddhist temples and at the beach.
-</p><p>
-Ray loves living on Maui.  He is grateful to teach in such a beautiful setting.  Ray tries to get to the beach every day and when he is successful you will find him swimming, surfing or hanging with his family. He enjoys practicing yoga, jiu-jitsu, and writing.
-</p><p>
-Ray is the proud father of his son Taj, dog Nala and four chickens.</p>
+            <CardBody>
+              <p>
+                Yoga is for everyone. It is the belief that guides Ray’s
+                teaching. Whether it be a gentle class, a rockin’, vigorous
+                practice, meditation, or private session, everyone has the
+                capacity to explore themselves through yoga. Ray’s classes are
+                focused, light-hearted, and designed to challenge student’s
+                physical, mental and spiritual qualities.
+              </p>
+              <p>
+                Ray, a lifetime athlete, discovered yoga in a gym class 20 years
+                ago. He was intrigued at how yoga both strengthened and softened
+                him. Ray has studied and practiced with a variety of teachers
+                from Iyengar, Ashtanga, Hatha and Anusara traditions and began
+                teaching in 2007. He continues to discover and explore how the
+                qualities and values of yoga practice can help us with the
+                practice of living.
+              </p>
+              <p>
+                Ray has taught public classes, private sessions, yoga for
+                seniors, yoga for kids, and yoga for athletes. He has taught
+                workshops, in school settings, at Buddhist temples and at the
+                beach.
+              </p>
+              <p>
+                Ray loves living on Maui. He is grateful to teach in such a
+                beautiful setting. Ray tries to get to the beach every day and
+                when he is successful you will find him swimming, surfing or
+                hanging with his family. He enjoys practicing yoga, jiu-jitsu,
+                and writing.
+              </p>
+              <p>
+                Ray is the proud father of his son Taj, dog Nala and four
+                chickens.
+              </p>
               <br></br>
               <br></br>
               <br></br>
@@ -184,7 +242,7 @@ Ray is the proud father of his son Taj, dog Nala and four chickens.</p>
           >
             <CardHeader className="card-header-tab">
               <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
+                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
                   {" "}
                 </i>
                 Update: 6/15/20
@@ -197,49 +255,48 @@ Ray is the proud father of his son Taj, dog Nala and four chickens.</p>
           </Card>
           <Row></Row>
 
-<Card
-  className="main-card mb-3"
-  style={{
-    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-  }}
->
-  <CardHeader className="card-header-tab">
-    <div className="card-header-title font-size-lg font-weight-normal">
-      <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
-        {" "}
-      </i>
-      Update: 64/15/20
-    </div>{" "}
-    <div> </div>
-  </CardHeader>
-  <CardBody>
-    <br></br>
-  </CardBody>
-</Card>
-<Row></Row>
-
-<Card
-  className="main-card mb-3"
-  style={{
-    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-  }}
->
-  <CardHeader className="card-header-tab">
-    <div className="card-header-title font-size-lg font-weight-normal">
-      <i className="header-icon lnr-dice mr-3 text-muted opacity-6">
-        {" "}
-      </i>
-      Update: 2/15/20
-    </div>{" "}
-    <div> </div>
-  </CardHeader>
-  <CardBody>
-    <br></br>
-  </CardBody>
-</Card>
-
+          <Card
+            className="main-card mb-3"
+            style={{
+              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+            }}
+          >
+            <CardHeader className="card-header-tab">
+              <div className="card-header-title font-size-lg font-weight-normal">
+                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
+                  {" "}
+                </i>
+                Update: 64/15/20
+              </div>{" "}
+              <div> </div>
+            </CardHeader>
+            <CardBody>
+              <br></br>
+            </CardBody>
+          </Card>
           <Row></Row>
 
+          <Card
+            className="main-card mb-3"
+            style={{
+              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+            }}
+          >
+            <CardHeader className="card-header-tab">
+              <div className="card-header-title font-size-lg font-weight-normal">
+                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
+                  {" "}
+                </i>
+                Update: 2/15/20
+              </div>{" "}
+              <div> </div>
+            </CardHeader>
+            <CardBody>
+              <br></br>
+            </CardBody>
+          </Card>
+
+          <Row></Row>
         </CSSTransitionGroup>
       </Fragment>
     );
