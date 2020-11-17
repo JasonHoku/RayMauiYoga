@@ -206,98 +206,66 @@ export default class ProjectElements extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <Row>
-            <Col xs="auto" sm="auto" md="auto" xl="auto">
-              <Card>
-                <CardBody>
-                  This page is under construction and will become filled in the
-                  coming weeks as schedule allows.
-                  <br></br>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
           <br></br>
 
           <Row>
             <Col xs="auto" sm="auto" md="auto" xl="auto">
-              <Card>
-                <CardBody>
-                  Projects is brewing here and will include:
-                  <br /> <br />
-                  <li>
-                    Website Development: Follow on
-                    <a href="https://github.com/JasonHoku">
-                      {" "}
-                      GitHub
-                      <br></br>
-                    </a>
-                  </li>{" "}
-                  <li>
-                    <a href="/3D/">Game Development </a>
-                  </li>{" "}
-                  <li>
-                    <a href="https://github.com/JasonHoku"> Publishing</a>
-                  </li>
-                  <li>DIY Home Projects (Coming Soon)</li>
-                  <br></br>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-          <br></br>
-
-          <Row>
-            <Col xs="auto" sm="auto" md="auto" xl="auto">
-              <Card><CardHeader>20Minutes:</CardHeader>
-                <CardBody>
-                  <CountdownCircleTimer
-                    isPlaying
-                    duration={1200}
-                    colors={[
-                      ["#004777", 0.33],
-                      ["#F7B801", 0.33],
-                      ["#A30000", 0.33],
-                    ]}
-                  >
-                    {({ remainingTime }) => remainingTime}
-                  </CountdownCircleTimer>
-
-                </CardBody>
-              </Card>
-            </Col>
-            <Col xs="auto" sm="auto" md="auto" xl="auto">
-          
-              <Card><CardHeader>2Minutes:</CardHeader>
-                {" "}
-                <CardBody>
+        
+            <Card
+            className="main-card mb-3"
+            style={{
+              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+            }}
+          >
+            <CardHeader className="card-header-tab">
+              <div className="card-header-title font-size-lg font-weight-normal">
+                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
                   {" "}
-                  <CountdownCircleTimer
-                    isPlaying
-                    duration={120}
-                    colors={[
-                      ["#004777", 0.33],
-                      ["#F7B801", 0.33],
-                      ["#A30000", 0.33],
-                    ]}
-                  >
-                    {({ remainingTime }) => remainingTime}
-                  </CountdownCircleTimer>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-          <br></br>
-
-          <Row>
-            <Col xs="auto" sm="auto" md="auto" xl="auto">
-              <Card>
-                <CardBody>
-                  For now you can find more on the{" "}
-                  <a href="#/dashboards/services">about</a> page.
-                  <br></br>
-                </CardBody>
-              </Card>
+                </i>
+                BIO
+              </div>{" "}
+              <div> </div>
+            </CardHeader>
+            <CardBody>
+              <p>
+                Yoga is for everyone. It is the belief that guides Ray’s
+                teaching. Whether it be a gentle class, a rockin’, vigorous
+                practice, meditation, or private session, everyone has the
+                capacity to explore themselves through yoga. Ray’s classes are
+                focused, light-hearted, and designed to challenge student’s
+                physical, mental and spiritual qualities.
+              </p>
+              <p>
+                Ray, a lifetime athlete, discovered yoga in a gym class 20 years
+                ago. He was intrigued at how yoga both strengthened and softened
+                him. Ray has studied and practiced with a variety of teachers
+                from Iyengar, Ashtanga, Hatha and Anusara traditions and began
+                teaching in 2007. He continues to discover and explore how the
+                qualities and values of yoga practice can help us with the
+                practice of living.
+              </p>
+              <p>
+                Ray has taught public classes, private sessions, yoga for
+                seniors, yoga for kids, and yoga for athletes. He has taught
+                workshops, in school settings, at Buddhist temples and at the
+                beach.
+              </p>
+              <p>
+                Ray loves living on Maui. He is grateful to teach in such a
+                beautiful setting. Ray tries to get to the beach every day and
+                when he is successful you will find him swimming, surfing or
+                hanging with his family. He enjoys practicing yoga, jiu-jitsu,
+                and writing.
+              </p>
+              <p>
+                Ray is the proud father of his son Taj, dog Nala and four
+                chickens.
+              </p>
+              <br></br>
+              <br></br>
+              <br></br>
+            </CardBody>
+          </Card>
             </Col>
           </Row>
           <br></br>

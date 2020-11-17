@@ -51,7 +51,7 @@ import {
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "https://api.ponomap.com/pono-maps",
+    uri: "https://api.microHawaii.com/micro-hawaiis",
     headers: {
       "content-type": "application/json",
     },
@@ -60,7 +60,7 @@ const apolloClient = new ApolloClient({
 
 const MY_QUERY_COPY_QUERY = gql`
   query MyQueryCopy {
-    ponoMap(order_by: {}) {
+    microHawaii(order_by: {}) {
       email
     }
   }

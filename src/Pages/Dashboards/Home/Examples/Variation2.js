@@ -176,61 +176,6 @@ export default class CRMDashboard2 extends Component {
               </Card>
           </Row>
 
-          <Card
-            className="main-card mb-3"
-            style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-            }}
-          >
-            <CardHeader className="card-header-tab">
-              <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
-                  {" "}
-                </i>
-                BIO
-              </div>{" "}
-              <div> </div>
-            </CardHeader>
-            <CardBody>
-              <p>
-                Yoga is for everyone. It is the belief that guides Ray’s
-                teaching. Whether it be a gentle class, a rockin’, vigorous
-                practice, meditation, or private session, everyone has the
-                capacity to explore themselves through yoga. Ray’s classes are
-                focused, light-hearted, and designed to challenge student’s
-                physical, mental and spiritual qualities.
-              </p>
-              <p>
-                Ray, a lifetime athlete, discovered yoga in a gym class 20 years
-                ago. He was intrigued at how yoga both strengthened and softened
-                him. Ray has studied and practiced with a variety of teachers
-                from Iyengar, Ashtanga, Hatha and Anusara traditions and began
-                teaching in 2007. He continues to discover and explore how the
-                qualities and values of yoga practice can help us with the
-                practice of living.
-              </p>
-              <p>
-                Ray has taught public classes, private sessions, yoga for
-                seniors, yoga for kids, and yoga for athletes. He has taught
-                workshops, in school settings, at Buddhist temples and at the
-                beach.
-              </p>
-              <p>
-                Ray loves living on Maui. He is grateful to teach in such a
-                beautiful setting. Ray tries to get to the beach every day and
-                when he is successful you will find him swimming, surfing or
-                hanging with his family. He enjoys practicing yoga, jiu-jitsu,
-                and writing.
-              </p>
-              <p>
-                Ray is the proud father of his son Taj, dog Nala and four
-                chickens.
-              </p>
-              <br></br>
-              <br></br>
-              <br></br>
-            </CardBody>
-          </Card>
 
           <Row></Row>
 

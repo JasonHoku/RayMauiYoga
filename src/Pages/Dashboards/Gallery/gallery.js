@@ -210,11 +210,7 @@ export default class GalleryElements extends Component {
           <Row>      
             <Col xs="5" sm="5" md="4" xl="4">
 <Card>
-  <CardBody><p>An image is said to contain a thousand words, but how should one contain a thousand images?
-  </p> <p>
-  MauiYogaRay has produced over 1,200 logos, icons, textures, and graphics.
-    </p> <p>
-    Here you shall find a collection of some, growing over time.
+  <CardBody><p>MauiYogaRay Gallery.
     </p> </CardBody>
 </Card>
             </Col>
@@ -235,19 +231,13 @@ export default class GalleryElements extends Component {
           <Row>            
           <Col xs="4" sm="4" md="4" xl="3">
             <Card>
-  <CardBody> Instagram Gallery:
-    <br></br><a href="http://instagram.com/jasonlevien">http://instagram.com/jasonlevien </a>
-  </CardBody>
+  <CardBody>Gallery Element1 </CardBody>
 </Card>  </Col> 
 
 
             <Col xs="4" sm="4" md="3" xl="4">
             <Card>
-  <CardBody>Wallpapers for download:
-    <br></br><a href="https://drive.google.com/drive/folders/0BwrXo2gcPpKOeXBzejk1YXNCYWs"> 
-    Desktop </a>
-    <br></br> <a href="https://drive.google.com/drive/folders/0BwrXo2gcPpKOUkhQMUZqVHpfNzgs"> 
-    Mobile </a>
+  <CardBody>Gallery Element2
   </CardBody>
 </Card>  </Col> 
 
@@ -258,9 +248,8 @@ export default class GalleryElements extends Component {
               Contact
             </CardHeader>
   <CardBody>
-    MauiYogaRay eagerly responds to all persons within 1-2 days.
+    MauiYogaRay Contact Page.
     <br></br>
-     For commission inquiries, suggestions or commentary reach out through the <a href="#/dashboard/contact"> contact page.</a>
   </CardBody>
 </Card></a>
             </Col>

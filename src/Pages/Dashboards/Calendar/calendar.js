@@ -2,9 +2,9 @@
  * @fileoverview TOAST UI Calendar React wrapper component
  * @author NHN. FE Development Lab <dl_javascript@nhn.com>
  */
-import React from 'react';
-import TuiCalendar from 'tui-calendar';
-var CalendarUI = require('tui-calendar'); /* CommonJS */
+import React from "react";
+import TuiCalendar from "tui-calendar";
+var CalendarUI = require("tui-calendar"); /* CommonJS */
 require("tui-calendar/dist/tui-calendar.css");
 
 // If you use the default popups, use this.
@@ -15,61 +15,210 @@ require("tui-time-picker/dist/tui-time-picker.css");
  * @type {string[]}
  */
 const optionProps = [
-  'disableDblClick',
-  'isReadOnly',
-  'month',
-  'scheduleView',
-  'taskView',
-  'theme',
-  'timezones',
-  'week',
-  
+  "disableDblClick",
+  "isReadOnly",
+  "month",
+  "scheduleView",
+  "taskView",
+  "theme",
+  "timezones",
+  "week",
 ];
 export default class Calendar extends React.Component {
   rootEl = React.createRef();
 
   static defaultProps = {
-    height: '700px',
-    view: 'month',
-   
-    
+    height: "700px",
+    view: "month",
+
+    useDetailPopup: true,
   };
 
   calendarInst = null;
 
   componentDidMount() {
-    const {schedules = [], view} = this.props;
+    const { schedules = [], view } = this.props;
 
     this.calendarInst = new TuiCalendar(this.rootEl.current, {
+      isReadOnly: true,
       ...this.props,
-      defaultView: view
+      defaultView: view,
     });
-
     this.setSchedules([
       {
-          id: '1',
-          calendarId: '1',
-          title: 'Calendar Launch',
-          category: 'time',
-          start: '2020-10-29T22:30:00+09:00',
-          end: '2020-10-30T22:30:00+09:00',
-          bgColor: "#FF33FF",
+        id: "1",
+        calendarId: "1",
+        title: "Site Launch",
+        category: "allday",
+        start: "Mon Nov 16 2020 06:50:56 GMT-1000",
+        end: "Mon Nov 16 2020 06:50:56 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#FF33FF",
       },
       {
-          id: '2',
-          calendarId: '1',
-          title: 'Web Development',
-          category: 'time',
-          start: '2002-10-29T22:30:00+09:00',
-          end: '2021-10-31T22:30:00+09:00',
-          bgColor: "#3333CC44",
-      }
-  ]);
+        id: "2",
+        calendarId: "2",
+        title: " Jodo Mission Lahaina",
+        category: "allday",
+        start: "Mon Nov 3 2020 8:00:00 GMT-1000",
+        end: "Mon Nov 3 2020 09:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+        recurrenceRule: "Weekly",
+      },
+      {
+        id: "3",
+        calendarId: "3",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        start: "Mon Nov 3 2020 17:30:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        end: "Mon Nov 3 2020 019:00:00 GMT-1000",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "2",
+        calendarId: "2",
+        title: " Jodo Mission Lahaina",
+        category: "allday",
+        start: "Mon Nov 10 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+        recurrenceRule: "Weekly",
+      },
+      {
+        id: "3",
+        calendarId: "3",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        start: "Mon Nov 10 2020 17:30:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "2",
+        calendarId: "2",
+        title: " Jodo Mission Lahaina",
+        category: "allday",
+        start: "Mon Nov 17 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+        recurrenceRule: "Weekly",
+      },
+      {
+        id: "3",
+        calendarId: "3",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        start: "Mon Nov 17 2020 17:30:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "4",
+        calendarId: "4",
+        title: "Jodo Mission Lahaina",
+        category: "allday",
+        start: "Nov 6 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "4",
+        calendarId: "4",
+        title: "Jodo Mission Lahaina",
+        category: "allday",
+        start: "Nov 13 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "4",
+        calendarId: "4",
+        title: "Jodo Mission Lahaina",
+        category: "allday",
+        start: "Nov 20 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "4",
+        calendarId: "4",
+        title: "Jodo Mission Lahaina",
+        category: "allday",
+        start: "Nov 27 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "5",
+        calendarId: "5",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        body: "<a href='#'>Find Out More</a>",
+        start: "Nov 7 2020 9:00:00 GMT-1000",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "5",
+        calendarId: "5",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        body: "<a href='#'>Find Out More</a>",
+        start: "Nov 14 2020 9:00:00 GMT-1000",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "5",
+        calendarId: "5",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        body: "<a href='#'>Find Out More</a>",
+        start: "Nov 21 2020 9:00:00 GMT-1000",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "5",
+        calendarId: "5",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        body: "<a href='#'>Find Out More</a>",
+        start: "Nov 28 2020 9:00:00 GMT-1000",
+        bgColor: "#3333CC44",
+      },
+      {
+        id: "2",
+        calendarId: "2",
+        title: " Jodo Mission Lahaina",
+        category: "allday",
+        start: "Mon Nov 24 2020 8:00:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+        recurrenceRule: "Weekly",
+      },
+      {
+        id: "3",
+        calendarId: "3",
+        title: "Island Spirit Yoga",
+        category: "allday",
+        start: "Mon Nov 24 2020 17:30:00 GMT-1000",
+        body: "<a href='#'>Find Out More</a>",
+        bgColor: "#3333CC44",
+      },
+    ]);
+
     this.bindEventHandlers(this.props);
   }
 
+  alldayTitle() {
+    return "All Day";
+  }
   shouldComponentUpdate(nextProps) {
-    const {calendars, height, schedules, theme, view} = this.props;
+    const { calendars, height, schedules, theme, view } = this.props;
 
     if (height !== nextProps.height) {
       this.getRootElement().style.height = height;
@@ -124,7 +273,7 @@ export default class Calendar extends React.Component {
   }
 
   setOptions(propKey, prop) {
-    this.calendarInst.setOptions({[propKey]: prop});
+    this.calendarInst.setOptions({ [propKey]: prop });
   }
 
   getInstance() {
@@ -136,7 +285,9 @@ export default class Calendar extends React.Component {
   }
 
   bindEventHandlers = (props) => {
-    const eventHandlerNames = Object.keys(props).filter((key) => /^on[A-Z][a-zA-Z]+/.test(key));
+    const eventHandlerNames = Object.keys(props).filter((key) =>
+      /^on[A-Z][a-zA-Z]+/.test(key)
+    );
 
     eventHandlerNames.forEach((key) => {
       const eventName = key[2].toLowerCase() + key.slice(3);
@@ -146,6 +297,6 @@ export default class Calendar extends React.Component {
   };
 
   render() {
-    return <div ref={this.rootEl} style={{height: this.props.height}} />;
+    return <div ref={this.rootEl} style={{ height: this.props.height }} />;
   }
 }

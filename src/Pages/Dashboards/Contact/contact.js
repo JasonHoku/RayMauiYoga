@@ -244,7 +244,7 @@ export default class ContactElements extends Component {
       alert("You must fill this form entirely.");
     } else {
       var templateParams = {
-        name: `PonoBot: ${CLIIP}`,
+        name: `MYRBot: ${CLIIP}`,
         message: `Contact Form Submitted Message: ${formMessage}`,
         message2: ` SubmittedName: ${formName}  ||, SubmittedEmail: ${formEmail} || ID: ${CLIIP}`,
       };
@@ -259,7 +259,7 @@ export default class ContactElements extends Component {
         },
         function (error) {
           console.log("FAILED...", error);
-          alert("The message did not send. Perhaps you've lost internet?")
+          alert("The message did not send. Perhaps you've lost internet?");
         }
       );
     }
@@ -285,22 +285,23 @@ export default class ContactElements extends Component {
                 {" "}
                 <Row>
                   <Col>
-                  <Card
+                    <Card
                       style={{
                         width: "20rem",
                         boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                       }}
                     >
-                      <CardHeader>Contact PonoMap.</CardHeader>
+                      <CardHeader>Contact Ray.</CardHeader>
                       <CardBody>
                         <p>
                           {" "}
-                          Feel free to reach out at either{" "}
-                          <a href="mailto:info@ponomap.com">
-                            info@ponomap.com
-                          </a>
-                          , through the form on this page or by phone at:
-                          <p /> (808)385-1775
+                          Please contact Ray with questions on classes, private
+                          sessions, special events and yoga inquiries.{" "}
+                          <a href="mailto:raymauiyoga@gmail.com"><p></p>raymauiyoga@gmail.com</a>
+                         
+                          <p />
+                          
+                           808-214-8877
                         </p>
                       </CardBody>
                     </Card>
@@ -316,7 +317,12 @@ export default class ContactElements extends Component {
                 >
                   <CardBody>
                     <CardTitle>Contact</CardTitle>
-                    <br /> <span id="contactFormThanks" hidden > Thank you for your submission! A response can be expected in 0-3 days.</span>
+                    <br />{" "}
+                    <span id="contactFormThanks" hidden>
+                      {" "}
+                      Thank you for your submission! A response can be expected
+                      in 0-3 days.
+                    </span>
                     <Form id="contactFormID">
                       <FormGroup row>
                         <Label for="examplePassword" sm={3}>
