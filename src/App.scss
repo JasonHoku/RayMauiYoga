@@ -130,7 +130,7 @@ div.card {
 
 body {
   .crossfade > figure {
-    animation: imageAnimation 555s;
+    animation: imageAnimation 5555s;
     backface-visibility: hidden;
     background-size: cover;
     background-position: center center;
@@ -151,7 +151,7 @@ body {
       animation-timing-function: ease-in;
       opacity: 0;
     }
-    .1% {
+    .01% {
       animation-timing-function: ease-out;
       opacity: 1;
     }
@@ -165,4 +165,8 @@ body {
       opacity: 1;
     }
   }
+}
+.row{
+  
+  justify-content: center;
 }

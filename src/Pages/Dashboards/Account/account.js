@@ -51,7 +51,7 @@ import {
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "https://api.microHawaii.com/micro-hawaiis",
+    uri: "https://api2.microHawaii.com/micro-hawaiis",
     headers: {
       "content-type": "application/json",
     },
