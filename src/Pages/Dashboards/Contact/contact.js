@@ -236,7 +236,7 @@ export default class ContactElements extends Component {
       document.getElementById("contactFormButton").disabled = false;
     } else {
       var templateParams = {
-        name: `HokuBot: ${CLIIP}`,
+        name: `MYRBot: ${CLIIP}`,
         message: `Contact Form Submission From SubmittedFormName: ${formName}  Message: ${formMessage}`,
         message2: ` SubmittedEmail: ${formEmail} || ID: ${CLIIP}` + (window.location.href),
       };
