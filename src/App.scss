@@ -3,7 +3,7 @@
 @import "assets/linear/style";
 @import "assets/pe7/pe-icon-7-stroke/css/pe-icon-7-stroke";
 @import "assets/pe7/pe-icon-7-stroke/css/helper";
-
+@import "assets/components/bgsmoothin.css"; 
 // BOOTSTRAP 4 VARIABLES
 
 @import "assets/components/bootstrap4/functions";
@@ -143,9 +143,7 @@ body {
     width: 100%;
     z-index: 0;
   }
-  .crossfade > figure:nth-child(1) {
-    background-image: url("images/bg1.png");
-  }
+
   @keyframes imageAnimation {
     0% {
       animation-timing-function: ease-in;
@@ -166,7 +164,6 @@ body {
     }
   }
 }
-.row{
-  
+.row {
   justify-content: center;
 }

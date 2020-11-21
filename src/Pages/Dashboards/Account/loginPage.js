@@ -90,10 +90,10 @@ export default class LoginPageElements extends Component {
                   boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                 }}
               >
-                <CardHeader>MauiYogaRay Account Tools</CardHeader>
+                <CardHeader>RayYogaMaui Account Tools</CardHeader>
                 <CardBody>
                   <p>
-                    This page is currently home to MauiYogaRay's web development team tools.
+                    This page is currently home to RayYogaMaui's web development team tools.
                   </p>
                   <p> Please sign in to confirm authentication.</p>
                 </CardBody>
@@ -106,7 +106,7 @@ export default class LoginPageElements extends Component {
                   alignContent: "center",
                 }}
               >
-                <CardHeader>Sign-In to MauiYogaRay.</CardHeader>
+                <CardHeader>Sign-In to RayYogaMaui.</CardHeader>
                 <CardBody>
                   <p>
                   <a href={`${backendUrl}/connect/google`}>

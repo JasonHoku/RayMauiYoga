@@ -112,7 +112,7 @@ export default class CRMDashboard2 extends Component {
           <center>
             <meta
               name="description"
-              content="MauiYogaRay.com, software development, e-commerce, education and services."
+              content="RayYogaMaui.com, software development, e-commerce, education and services."
             />
           </center>
           <Row
@@ -133,7 +133,7 @@ export default class CRMDashboard2 extends Component {
               <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
                 {" "}
               </i>
-              MauiYogaRay Under Construction
+              RayYogaMaui Under Construction
             </div>{" "}
             <div>
               {" "}
@@ -145,7 +145,7 @@ export default class CRMDashboard2 extends Component {
           <CardBody>
             
             <p> <a href="https://dashboardpack.com/live-demo-preview/?livedemo=113&v=7516fd43adaa"> Template Examples</a></p>
- <p> <a href="https://github.com/JasonHoku/MauiYogaRay" > Site Source Code</a></p>        
+ <p> <a href="https://github.com/JasonHoku/RayYogaMaui" > Site Source Code</a></p>        
           </CardBody>
         </Card> &nbsp;&nbsp;&nbsp;
               <Card

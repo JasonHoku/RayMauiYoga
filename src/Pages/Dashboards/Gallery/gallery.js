@@ -210,7 +210,7 @@ export default class GalleryElements extends Component {
           <Row>      
             <Col xs="5" sm="5" md="4" xl="4">
 <Card>
-  <CardBody><p>MauiYogaRay Gallery.
+  <CardBody><p>RayYogaMaui Gallery.
     </p> </CardBody>
 </Card>
             </Col>
@@ -248,7 +248,7 @@ export default class GalleryElements extends Component {
               Contact
             </CardHeader>
   <CardBody>
-    MauiYogaRay Contact Page.
+    RayYogaMaui Contact Page.
     <br></br>
   </CardBody>
 </Card></a>

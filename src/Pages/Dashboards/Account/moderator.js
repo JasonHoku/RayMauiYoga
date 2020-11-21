@@ -55,7 +55,7 @@ import { relative } from "path";
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "https://api.MauiYogaRay.com/graphql",
+    uri: "https://api.RayYogaMaui.com/graphql",
     headers: {
       "content-type": "application/json",
     },
@@ -64,7 +64,7 @@ const apolloClient = new ApolloClient({
 
 const MY_QUERY_COPY_QUERY = gql`
   query MyQueryCopy {
-    MauiYogaRays {
+    RayYogaMauis {
       id
     }
   }
@@ -169,7 +169,7 @@ if (this.state.images != null) {
 
     const MY_MUTATION_MUTATION = gql`
   mutation MyMutation {
-    insert_MauiYogaRay(objects: {email: "${formName}"}) {
+    insert_RayYogaMaui(objects: {email: "${formName}"}) {
       affected_rows
     }
   }
@@ -219,7 +219,7 @@ if (this.state.images != null) {
                 alignItems: "center",
               }}
             >
-              <CardHeader>  MauiYogaRay Large File Uploader</CardHeader>
+              <CardHeader>  RayYogaMaui Large File Uploader</CardHeader>
               <CardBody>
                 {" "}
                 <p>
