@@ -89,7 +89,8 @@ export default class Account extends Component {
       );
     }     if (
       localStorage.getItem("jwt") != null &&
-      localStorage.getItem("username") == "jlevien808" 
+      localStorage.getItem("username") == "jlevien808" ||
+      localStorage.getItem("username") == "raymauiyoga" 
     ) {
       adminCardEle = (
         <Col>
