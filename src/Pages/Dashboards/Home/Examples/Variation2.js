@@ -71,6 +71,9 @@ import { setBackgroundImage } from "../../../../reducers/ThemeOptions";
 export default class CRMDashboard2 extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      hover: "hiddenText",
+    };
   }
 
   componentDidMount() {
@@ -122,61 +125,74 @@ export default class CRMDashboard2 extends Component {
               width: "100%",
               alignItems: "center",
             }}
-          > <Card
-          className="main-card mb-3"
-          style={{
-            boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-          }}
-        >
-          <CardHeader className="card-header-tab" color="light">
-            <div className="card-header-title font-size-lg font-weight-normal">
-              <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
-                {" "}
-              </i>
-              RayYogaMaui Under Construction
-            </div>{" "}
-            <div>
-              {" "}
-              <br></br>
-              <br></br>
-              <br></br>
-            </div>
-          </CardHeader>
-          <CardBody>
-            
-            <p> <a href="https://dashboardpack.com/live-demo-preview/?livedemo=113&v=7516fd43adaa"> Template Examples</a></p>
- <p> <a href="https://github.com/JasonHoku/RayYogaMaui" > Site Source Code</a></p>        
-          </CardBody>
-        </Card> &nbsp;&nbsp;&nbsp;
-              <Card
-                className="main-card mb-3"
-                style={{
-                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                }}
-              >
-                <CardHeader className="card-header-tab" color="light">
-                  <div className="card-header-title font-size-lg font-weight-normal">
-                    <i className="header-icon pe-7s-star mr-3 text-muted opacity-6">
-                      {" "}
-                    </i>
-                    Update: 8/17/20
-                  </div>{" "}
-                  <div>
+          >
+            {" "}
+            <Card
+              className="main-card mb-3"
+              style={{
+                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+              }}
+            >
+              <CardHeader className="card-header-tab" color="light">
+                <div className="card-header-title font-size-lg font-weight-normal">
+                  <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
                     {" "}
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  Private Video Example
-                  <Vimeo video="477795668" autoplay />
+                  </i>
+                  RayYogaMaui Under Construction
+                </div>{" "}
+                <div>
+                  {" "}
                   <br></br>
-                </CardBody>
-              </Card>
+                  <br></br>
+                  <br></br>
+                </div>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  {" "}
+                  <a href="https://dashboardpack.com/live-demo-preview/?livedemo=113&v=7516fd43adaa">
+                    {" "}
+                    Template Examples
+                  </a>
+                </p>
+                <p>
+                  {" "}
+                  <a href="https://github.com/JasonHoku/RayYogaMaui">
+                    {" "}
+                    Site Source Code
+                  </a>
+                </p>
+              </CardBody>
+            </Card>{" "}
+            &nbsp;&nbsp;&nbsp;
+            <Card
+              className="main-card mb-3"
+              style={{
+                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+              }}
+            >
+              <CardHeader className="card-header-tab" color="light">
+                <div className="card-header-title font-size-lg font-weight-normal">
+                  <i className="header-icon pe-7s-star mr-3 text-muted opacity-6">
+                    {" "}
+                  </i>
+                  Update: 8/17/20
+                </div>{" "}
+                <div>
+                  {" "}
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                </div>
+              </CardHeader>
+              <CardBody>
+                Private Video Example
+                <Vimeo video="477795668" autoplay />
+                <br></br>
+              </CardBody>
+            </Card>
           </Row>
 
-
           <Row></Row>
 
           <Card
@@ -190,57 +206,69 @@ export default class CRMDashboard2 extends Component {
                 <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
                   {" "}
                 </i>
-                Update: 6/15/20
+                Strength in Surrender
               </div>{" "}
               <div> </div>
             </CardHeader>
-            <CardBody>
-              <br></br>
+            <CardBody
+              onMouseOver={() => this.setState({ hover: "visibleText" })}
+              id={this.state.hover}
+              onMouseLeave={() => this.setState({ hover: "hiddenText" })}
+              id={this.state.hover}
+            >
+              <p>
+                {" "}
+                Isvara Pranidhana is one of yogas niyamas (positive observances)
+                that we practice to cultivate more healthy living, a positive
+                outlook and a liberated state of existence. Isvara translates as
+                “supreme being”, “ultimate reality”, “true self” or dare I say
+                “God” (the God that resides within, of course)! Pranidhana is to
+                “dedicate”, “devote” or “surrender”. Thus, a dedication or
+                devotion to our true self, ultimate reality, or God.. In Western
+                terms we often find the word “surrender” or “letting go” as a
+                more neat and clean translation for Isvara Pranidhana. And in
+                Western terms this act of “surrender” has certainly become quite
+                cliche in spiritual dialogue.
+              </p>
+              <p>
+                {" "}
+                Surrender doesn’t seem to invoke much courage, strength or power
+                on the surface. However, in yoga tradition surrender is NOT
+                giving up. Surrender is NOT weak or passive. Surrender is NOT
+                throwing up our arms and raising the white flag. Surrender is
+                NOT allowing something outside ourselves to determine our
+                condition. What this niyama teaches us is to be driven by our
+                intention and focus, to take actions that we hold with the
+                highest integrity, to align with the divine. Then, and only then
+                do we surrender any expectations or attachments we might have to
+                the highest; the best we can and the best we know how.
+              </p>{" "}
+              <p>
+                Isvara Pranidhana is perhaps the most courageous act we can do.
+                When we can fully integrate our thoughts, deeds and actions
+                through mindful and attentive living, and in that, let go of our
+                small self (ego), we begin to shed what limits us. Doors open
+                that were otherwise closed, synchronicities abound, and we find
+                our way with less resistance and more freedom. We’ve all had
+                glimpses at one time or another: doing our work only for the joy
+                of doing the work, practicing a pose for years until we
+                celebrate, “I did It!”, committing to a relationship and
+                discovering deeper, wonderful layers to it, teaching a child
+                over and over and when we least expect it, they get it. Whatever
+                shape or situation, we realize that it’s the courage and
+                strength of the inner warrior that generates our most profound
+                surrender.
+              </p>{" "}
+              <p>
+                So the next time we find ourselves struggling with our situation
+                consider:
+              </p>{" "}
+              Am I living in my highest….integrity, honesty, truth?. Have I
+              taken actions that convey my highest? If I am, it’s all good. I
+              can surrender to the perfect way the situation will unfold. If I’m
+              not, how can I live in my highest truth?
             </CardBody>
           </Card>
-          <Row></Row>
-
-          <Card
-            className="main-card mb-3"
-            style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-            }}
-          >
-            <CardHeader className="card-header-tab">
-              <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
-                  {" "}
-                </i>
-                Update: 64/15/20
-              </div>{" "}
-              <div> </div>
-            </CardHeader>
-            <CardBody>
-              <br></br>
-            </CardBody>
-          </Card>
-          <Row></Row>
-
-          <Card
-            className="main-card mb-3"
-            style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-            }}
-          >
-            <CardHeader className="card-header-tab">
-              <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
-                  {" "}
-                </i>
-                Update: 2/15/20
-              </div>{" "}
-              <div> </div>
-            </CardHeader>
-            <CardBody>
-              <br></br>
-            </CardBody>
-          </Card>
-
           <Row></Row>
         </CSSTransitionGroup>
       </Fragment>
