@@ -28,8 +28,7 @@ export default class Calendar extends React.Component {
   rootEl = React.createRef();
 
   static defaultProps = {
-    height: "700px",
-    view: "month",
+    view: "week",
 
     useDetailPopup: true,
   };
