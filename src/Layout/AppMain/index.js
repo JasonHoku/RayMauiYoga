@@ -16,6 +16,7 @@ const Forms = lazy(() => import("../../Pages/Forms"));
 const Tables = lazy(() => import("../../Pages/Tables"));
 
 
+import LandingPage from "../../Pages/landing.js"
 
 const AppMain = () => {
 
@@ -161,9 +162,29 @@ const AppMain = () => {
             }>
                 <Route path="/dashboards" component={Dashboards}/>
             </Suspense>
+            {/* Landing */}
+
+            <Suspense fallback={
+                <div className="loader-container">
+                    <div className="loader-container-inner">
+                        <div className="text-center">
+                            <Loader type="ball-grid-cy"/>
+                        </div>
+                        <h6 className="mt-3">
+                            Loading Dashboard Tools
+                            <small>Welcome to RayYogaMaui</small>
+                        </h6>
+                    </div>
+                </div>
+            }>
+                <Route path="/welcome" component={LandingPage}/>
+            </Suspense>
 
 
             <Route exact path="/" render={() => (
+                <Redirect to="/welcome"/>
+            )}/>
+             <Route exact path="/dash" render={() => (
                 <Redirect to="/dashboards/home"/>
             )}/>
             <ToastContainer/>
