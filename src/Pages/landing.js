@@ -24,16 +24,15 @@ class LandingPage extends React.Component {
         <CSSTransitionGroup>
           <span
             className="landingContent"
-            onClick={() =>(window.location.hash = "/dashboards/home")}
+            onClick={() => (window.location.hash = "/dashboards/home")}
           >
-            <h1>RayMauiYoga.com</h1>
-            <br /> <br />
+            <br /> <h1>RayMauiYoga.com</h1> <br />
             <img class="spin" src="/images/DialDecal.png"></img> <br /> <br />
-            <h2>Home to Yoga education in blog and video format.</h2>
-            <br /> <br />
-            <h3>
-              Site Under Construction. 12-10-2020 Click Anywhere to Proceed.
-            </h3>
+            <h2>Digital Yoga through Blog, Video &amp; Live-Stream by Ray</h2>
+            <br />
+            <h3>Site Under Construction. 12-10-2020</h3>
+            <br />
+            <h4>Click To Enter</h4>
             <br /> <br /> <br /> <br />
           </span>
         </CSSTransitionGroup>{" "}
