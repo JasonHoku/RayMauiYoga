@@ -150,44 +150,36 @@ export default class GalleryElements extends Component {
           transitionLeave={false}
         >
           <Row>
-            <Card style={{ width: "min-content" }}>
-              <CardBody style={{ width: "min-content" }}>
-                <p>Visual Gallery Under Construction.</p>{" "}
+            <Card>
+              <CardBody>
+                <p>Galleria RayYogaMaui</p>
               </CardBody>
-            </Card>
-
-            <Card >
-              <CardBody className="CarouselCard" >
-                  <CarouselBSExample />
-                <center>← Custom Display →</center>
+              <CardBody className="CarouselCard">
+                <CarouselBSExample />
               </CardBody>
             </Card>
             <br></br>
           </Row>
+          <br></br>
           <Row>
-            <Col xs="4" sm="4" md="4" xl="3">
-              <Card>
-                <CardBody>Gallery Element1 </CardBody>
-              </Card>{" "}
-            </Col>
-
-            <Col xs="4" sm="4" md="3" xl="4">
-              <Card>
-                <CardBody>Gallery Element2</CardBody>
-              </Card>{" "}
-            </Col>
-
-            <Col xs="4" sm="4" md="4" xl="5">
-              <a href="#/dashboard/contact">
-                <Card>
-                  <CardHeader>Contact</CardHeader>
-                  <CardBody>
-                    RayYogaMaui Contact Page.
-                    <br></br>
-                  </CardBody>
-                </Card>
-              </a>
-            </Col>
+            <Card>
+              <CardHeader>Explore</CardHeader>
+              <CardBody>
+                An Eye-
+                <br /> Opening <br />
+                Experience{" "}
+              </CardBody>
+            </Card>{" "}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#/dashboard/contact">
+              <Card style={{ width: "min-content" }}>
+                <CardHeader>Contact</CardHeader>
+                <CardBody>
+                  RayYogaMaui Contact Page.
+                  <br></br>
+                </CardBody>
+              </Card>
+            </a>
           </Row>
           <br></br>
         </CSSTransitionGroup>

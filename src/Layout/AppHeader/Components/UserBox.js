@@ -78,10 +78,10 @@ class UserBox extends React.Component {
                               </div>
                               <div className="widget-content-left">
                                 <div className="widget-heading">
-                                  Jason Hoku Levien
+                                  Ray Maui Yoga
                                 </div>
                                 <div className="widget-subheading opacity-9">
-                                  Software Developer, Hawaii
+                                  Yoga Instructor: Maui, Hawaii
                                 </div>
                               </div>
                           
@@ -103,13 +103,13 @@ class UserBox extends React.Component {
                           </NavItem>
                        
                           <NavItem>
-                            <NavLink href="#/dashboards/services">
-                              About
+                            <NavLink href="#/dashboards/projects">
+                              Bio
                             </NavLink>
                           </NavItem>
                           <NavItem>
-                            <NavLink href="#/dashboards/projects">
-                              Projects
+                            <NavLink href="#/dashboards/retreats">
+                              Retreats
                             </NavLink>
                           </NavItem>
                           <Nav vertical> 
@@ -125,8 +125,8 @@ class UserBox extends React.Component {
                 </UncontrolledButtonDropdown>
               </div>
               <div className="widget-content-left  ml-3 header-user-info">
-                <div className="widget-heading">Jason Hoku Levien</div>
-                <div className="widget-subheading">Developer</div>
+                <div className="widget-heading">Ray Maui Yoga</div>
+                <div className="widget-subheading">Instructor</div>
               </div>
               <div className="widget-content-right header-user-info ml-3">
               

@@ -5,6 +5,8 @@ import classnames from "classnames";
 import ReactTable from "react-table";
 import { Route } from "react-router-dom";
 
+import CKEditor from "ckeditor4-react";
+
 import {
   Row,
   Col,
@@ -19,6 +21,7 @@ import {
   ListGroupItem,
   Card,
   CardBody,
+  Input,
   CardHeader,
   CardLink,
   CardImg,
@@ -111,10 +114,25 @@ export default class BlogElements extends Component {
     this.toggle2 = this.toggle2.bind(this);
     this.state = {
       activeTab2: "222",
+      content: "Hello World",
       activeTab1: "11",
       data: makeData(),
     };
+    this.setContent = this.setContent.bind(this);
   }
+
+  //------ Test for race condition ------ //
+  setContent() {
+    this.setState({
+      content: "Hello World " + Math.random(),
+    });
+  }
+
+  onChange(evt) {}
+
+  onBlur(evt) {}
+
+  afterPaste(evt) {}
 
   toggle2(tab) {
     if (this.state.activeTab2 !== tab) {
@@ -146,7 +164,21 @@ export default class BlogElements extends Component {
           transitionLeave={false}
         >
           <Row>
-            <Card>Coming Soon</Card>
+            <Card style={{ width: "100%", height: "80vh" }}>
+              <CardHeader>Blog Explorer</CardHeader>
+              <CardHeader style={{ width: "100%", justifyContent: "center" }}>
+                <Button> A </Button> &nbsp;&nbsp;&nbsp;
+                <Button> B </Button> &nbsp;&nbsp;&nbsp;
+                <Button> C </Button> &nbsp;&nbsp;&nbsp;
+                <Button> ... </Button>
+              </CardHeader>
+              <TabContent>
+                {" "}
+                <TabPane id="1">
+                <CKEditor data="<p>Blog &amp; Admin Edit Tools: Coming Soon.</p>" />
+                </TabPane>
+              </TabContent>
+            </Card>
           </Row>
           <br></br>
         </CSSTransitionGroup>

@@ -64,7 +64,6 @@ import { Sparklines, SparklinesCurve } from "react-sparklines";
 
 import { makeData } from "../../Tables/DataTables/Examples/utils";
 
-
 var EJSSERVICE = process.env.REACT_APP_EJSSERVICE;
 var EJSTEMPLATE = process.env.REACT_APP_EJSTEMPLATE;
 var EJSUSER = process.env.REACT_APP_EJSUSER;
@@ -238,7 +237,9 @@ export default class ContactElements extends Component {
       var templateParams = {
         name: `MYRBot: ${CLIIP}`,
         message: `Contact Form Submission From SubmittedFormName: ${formName}  Message: ${formMessage}`,
-        message2: ` SubmittedEmail: ${formEmail} || ID: ${CLIIP}` + (window.location.href),
+        message2:
+          ` SubmittedEmail: ${formEmail} || ID: ${CLIIP}` +
+          window.location.href,
       };
 
       emailjs.send(EJSSERVICE, EJSTEMPLATE, templateParams).then(
@@ -249,11 +250,10 @@ export default class ContactElements extends Component {
           document.getElementById("contactFormID").hidden = true;
           document.getElementById("contactFormThanks").hidden = false;
           document.getElementById("contactFormButton").disabled = true;
-          
         },
         function (error) {
           console.log("FAILED...", error);
-          alert("The message did not send. Perhaps you've lost internet?")
+          alert("The message did not send. Perhaps you've lost internet?");
           document.getElementById("contactFormButton").disabled = false;
         }
       );
@@ -279,101 +279,93 @@ export default class ContactElements extends Component {
             <br />
             <br />
             <Row>
-                    <Card
-                      style={{
-                        width: "20rem",
-                        boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                        height:"100%",
-                      }}
-                    >
-
-<CardHeader>Contact Ray.</CardHeader>
-                      <CardBody>
-                        <p>
-                          {" "}
-                          Please contact Ray with questions on classes, private
-                          sessions, special events and yoga inquiries.{" "}
-                          <a href="mailto:raymauiyoga@gmail.com"><p></p>raymauiyoga@gmail.com</a>
-                         
-                          <p />
-                          
-                           808-214-8877
-                        </p>
-                      </CardBody>
-                    </Card>
-                    &nbsp; &nbsp; &nbsp;
-                <Card
-                  className="main-card mb-3"
-                  style={{
-                    width: "26rem",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                  }}
-                >
-                  <CardBody>
-                    <CardTitle>Contact</CardTitle>    <br /> <span id="contactFormThanks" hidden > Thank you for your submission! A response can be expected in 0-3 days.</span>
-        
+              <Card
+                style={{
+                  width: "24rem",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  height: "100%",
+                }}
+              >
+                <CardHeader>Contact Ray.</CardHeader>
+                <CardBody>
+                  <p>
+                    {" "}
+                    Please contact Ray with questions on classes, private
+                    sessions, special events and yoga inquiries.{" "}
+                    <a href="mailto:raymauiyoga@gmail.com">
+                      <p></p>raymauiyoga@gmail.com
+                    </a>
+                    <p />
+                    808-214-8877
+                  </p>
+                  <Form id="contactFormID">
+                    <FormGroup row  style={{ width: "300px" }} >
+                      <Label for="examplePassword" sm={3}>
+                        Name
+                      </Label>
+                      <Col sm={8}>
+                        <Input
+                          type="input"
+                          style={{ width: "270px" }}
+                          name="formName"
+                          value={this.state.formName}
+                          onChange={this.handleInputChange}
+                          id="formName"
+                          placeholder="Who'se inquiring?"
+                        />
+                      </Col>
+                    </FormGroup>
+                    <br />{" "}
+                    <FormGroup row   style={{ width: "300px" }}>
+                      <Label for="exampleEmail" sm={3}>
+                        Email
+                      </Label>
+                      <Col sm={8}>
+                        <Input
+                          style={{ width: "270px" }}
+                          type="formEmail"
+                          name="formEmail"
+                          value={this.state.formEmail}
+                          onChange={this.handleInputChange}
+                          id="formEmail"
+                          placeholder="How to best reach you?"
+                        />
+                      </Col>
+                    </FormGroup>
                     <br />
-                    <Form  id="contactFormID">
-                      <FormGroup row>
-                        <Label for="examplePassword" sm={3}>
-                          Name
-                        </Label>
-                        <Col sm={8}>
-                          <Input
-                            type="input"
-                            style={{ width: "270px" }}
-                            name="formName"
-                            value={this.state.formName}
-                            onChange={this.handleInputChange}
-                            id="formName"
-                            placeholder="Who'se inquiring?"
-                          />
+                    <FormGroup row height="1005px"  style={{ width: "300px" }}>
+                      <Label for="formMessage" sm={3}>
+                        Text
+                      </Label>
+                      <Col sm={8}>
+                        <Input
+                          type="textarea"
+                          name="formMessage"
+                          value={this.state.formMessage}
+                          onChange={this.handleInputChange}
+                          id="formMessage"
+                          style={{ width: "270px", height: "170px" }}
+                        />
+                      </Col>
+                    </FormGroup>
+                    <br />
+                    <center>
+                      <FormGroup check row>
+                        <Col sm={{ size: 12 }}>
+                          <Button
+                            id="contactFormButton"
+                            disabled={false}
+                            onClick={this.submitContact}
+                          >
+                            Submit
+                          </Button>
                         </Col>
                       </FormGroup>
-                      <br />{" "}
-                      <FormGroup row>
-                        <Label for="exampleEmail" sm={3}>
-                          Email
-                        </Label>
-                        <Col sm={8}>
-                          <Input
-                            style={{ width: "270px" }}
-                            type="formEmail"
-                            name="formEmail"
-                            value={this.state.formEmail}
-                            onChange={this.handleInputChange}
-                            id="formEmail"
-                            placeholder="How to best reach you?"
-                          />
-                        </Col>
-                      </FormGroup>
-                      <br />
-                      <FormGroup row height="1005px">
-                        <Label for="formMessage" sm={3}>
-                          Text Area
-                        </Label>
-                        <Col sm={8}>
-                          <Input
-                            type="textarea"
-                            name="formMessage"
-                            value={this.state.formMessage}
-                            onChange={this.handleInputChange}
-                            id="formMessage"
-                            style={{ width: "270px", height: "170px" }}
-                          />
-                        </Col>
-                      </FormGroup>
-                      <br />
-                      <center>
-                        <FormGroup check row>
-                          <Col sm={{ size: 12 }}>
-                            <Button id="contactFormButton" disabled={false} onClick={this.submitContact}>Submit</Button>
-                          </Col>
-                        </FormGroup>
-                      </center>
-                    </Form>
-                  </CardBody>
-                </Card></Row>
+                    </center>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Row>
           </Container>
         </CSSTransitionGroup>
       </Fragment>

@@ -15,22 +15,6 @@ class SearchBox extends React.Component {
     return (
       <Fragment>
 
-        <div className={cx("search-wrapper", {
-            active: this.state.activeSearch,
-          })}>
-          <div className="input-holder">
-            <a target="_blank" href="https://duckduckgo.com/?q=site%3ARayYogaMaui.com&t=hw&ia=web">
-            <input type="text" className="search-input" placeholder="Type to search"/>
-            <button 
-              className="search-icon">
-              <span />
-            </button></a>
-          </div>      
-       <button onClick={() =>
-              this.setState({ activeSearch: !this.state.activeSearch })
-            }
-            className="close"/>
-     </div>
       </Fragment>
     );
   }

@@ -135,7 +135,7 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
     }
 
     var templateParams = {
-      name: "Jason Hoku Levien",
+      name: "Ray Maui Yoga",
       message: string,
       message2: CLIIP,
       

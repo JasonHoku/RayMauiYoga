@@ -267,13 +267,14 @@ h2 {
 }
 
 .CarouselCard img {
-  height: fit-content;
-  max-height: "250px";
+  max-width: 300px;
+  max-height: 500px;
 }
 
 .CarouselCard {
-  height: fit-content;
-  max-height: "250px";
+  height: 400px;
+  max-height: 500px;
+  max-width: 300px;
 }
 
 .colJustText {

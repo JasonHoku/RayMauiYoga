@@ -381,7 +381,7 @@ export default class CRMDashboard2 extends Component {
                         </div>
                       </div>
                       <div>
-                        <h5 className="menu-header-title">Jason Hoku Levien</h5>
+                        <h5 className="menu-header-title">Ray Maui Yoga</h5>
                         <h6 className="menu-header-subtitle">
                           Lead Web Applications Developer
                         </h6>

@@ -27,9 +27,16 @@ const Loginbutton = (props) => (
   </div>
 );
 
-const Logoutbutton = (props) => <Button     style={{
-  alignContent: "center",
-}} onClick={props.onClick}>Logout</Button>;
+const Logoutbutton = (props) => (
+  <Button
+    style={{
+      alignContent: "center",
+    }}
+    onClick={props.onClick}
+  >
+    Logout
+  </Button>
+);
 
 const LoginAct = (props) => {
   const [isLogged, setIsLogged] = useState(!!localStorage.getItem("jwt"));
@@ -59,46 +66,28 @@ const LoginAct = (props) => {
 
   let text;
 
-  if (isLogged ) {
+  if (isLogged) {
     text = [
-      
-      
-      
-      `Welcome ${localStorage.getItem("username")}, you are connected!` + " "
-  
-  
-  
-  ];
+      `Welcome ${localStorage.getItem("username")}, you are connected!` + " ",
+    ];
 
     if (isLogged && localStorage.getItem("username") == "jlevien808") {
-
       text = `Sup ${localStorage.getItem("username")}, you are connected! `;
     }
   } else {
     text = [
-
-        <a href={`${backendUrl}/connect/google`}>
-          <Button
-            className="btn-icon-horizontal btn-transition app-header-right"
-            outline
-            color="dark"
-          >
-            <i className="fa fa-newspaper-o btn-icon-wrapper"></i>&nbsp; Sign-Up
-          </Button>
-        </a>
     ];
   }
 
   return (
     <div
-    className="app-header-right"
-    style={{
-      marginTop: 16,
-      alignContent: "center",
-      
-    }}
-  >
-      {text} 
+      className="app-header-right"
+      style={{
+        marginTop: 16,
+        alignContent: "center",
+      }}
+    >
+      {text}
       {buttons}
     </div>
   );

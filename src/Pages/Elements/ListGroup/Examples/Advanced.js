@@ -100,7 +100,7 @@ class ListGroupExampleAdvanced extends Component {
                           </div>
                           <div className="widget-content-left">
                             <div className="widget-heading">
-                              Jason Hoku Levien
+                              Ray Maui Yoga
                             </div>
                             <div className="widget-subheading">
                               A short profile description
@@ -598,7 +598,7 @@ class ListGroupExampleAdvanced extends Component {
                             </div>
                             <div className="widget-content-left">
                               <div className="widget-heading">
-                                Jason Hoku Levien
+                                Ray Maui Yoga
                               </div>
                               <div className="widget-subheading">
                                 A short profile description

@@ -193,7 +193,7 @@ export default class Mailbox extends Component {
                                   </div>
                                   <div className="widget-content-left">
                                     <div className="widget-heading">
-                                      Jason Hoku Levien
+                                      Ray Maui Yoga
                                     </div>
                                     <div className="widget-subheading">
                                       Last seen online 15 minutes ago
@@ -359,7 +359,7 @@ export default class Mailbox extends Component {
                                   </div>
                                   <div className="widget-content-left">
                                     <div className="widget-heading">
-                                      Jason Hoku Levien
+                                      Ray Maui Yoga
                                     </div>
                                     <div className="widget-subheading">
                                       Last seen online 15 minutes ago

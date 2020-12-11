@@ -9,16 +9,7 @@ import CustomExample from "./CustomTag";
 const CarouselBSExample = (props) => {
   return (
     <Fragment>
-      <CSSTransitionGroup
-        component="div"
-        transitionName="TabsAnimation"
-        transitionAppear={true}
-        transitionAppearTimeout={0}
-        transitionEnter={false}
-        transitionLeave={false}
-      >
             <CarouselDefault />
-      </CSSTransitionGroup>
     </Fragment>
   );
 };

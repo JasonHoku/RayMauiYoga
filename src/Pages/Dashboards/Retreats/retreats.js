@@ -4,6 +4,7 @@ import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import classnames from "classnames";
 import ReactTable from "react-table";
 import { Route } from "react-router-dom";
+import CKEditor from "ckeditor4-react";
 
 import {
   Row,
@@ -197,19 +198,33 @@ export default class MusicElements extends Component {
 
     return (
       <Fragment>
-        <CSSTransitionGroup
-          component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
-          transitionAppearTimeout={0}
-          transitionEnter={false}
-          transitionLeave={false}
-        >
-          <Row>
-            <Card>Coming Soon</Card>
-          </Row>
-          <br></br>
-        </CSSTransitionGroup>
+      <CSSTransitionGroup
+        component="div"
+        transitionName="TabsAnimation"
+        transitionAppear={true}
+        transitionAppearTimeout={0}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <Row>
+          <Card style={{ width: "100%", height: "80vh" }}>
+            <CardHeader>Retreat Through Connection</CardHeader>
+            <CardHeader style={{ width: "100%", justifyContent: "center" }}>
+              <Button> A </Button> &nbsp;&nbsp;&nbsp;
+              <Button> B </Button> &nbsp;&nbsp;&nbsp;
+              <Button> C </Button> &nbsp;&nbsp;&nbsp;
+              <Button> ... </Button>
+            </CardHeader>
+            <TabContent>
+              {" "}
+              <TabPane id="1">
+              <CKEditor data="<p>Blog &amp; Admin Edit Tools: Coming Soon.</p>" />
+              </TabPane>
+            </TabContent>
+          </Card>
+        </Row>
+        <br></br>
+      </CSSTransitionGroup>
       </Fragment>
     );
   }
