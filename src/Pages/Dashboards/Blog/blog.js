@@ -1,10 +1,9 @@
-import React, { Component, Fragment } from "../../../../node_modules/react";
-import scriptLoader from "../../../../node_modules/react-async-script-loader";
+import React, { Component, Fragment } from "react";
+import scriptLoader from "react-async-script-loader";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "../../../../node_modules/classnames";
-import ReactTable from "../../../../node_modules/react-table";
-import { Route } from "../../../../node_modules/react-router-dom";
-import CarouselBSExample from "./Carousel";
+import classnames from "classnames";
+import ReactTable from "react-table";
+import { Route } from "react-router-dom";
 
 import {
   Row,
@@ -29,7 +28,7 @@ import {
   Progress,
   CardFooter,
   ButtonGroup,
-} from "../../../../node_modules/reactstrap";
+} from "reactstrap";
 
 import {
   ResponsiveContainer,
@@ -38,26 +37,23 @@ import {
   AreaChart,
   Area,
   Tooltip,
-} from "../../../../node_modules/recharts";
+} from "recharts";
 
-import PerfectScrollbar from "../../../../node_modules/react-perfect-scrollbar";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 import {
   faAngleUp,
   faDotCircle,
   faAngleDown,
   faStrikethrough,
-} from "../../../../node_modules/@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons";
 
-import {
-  Sparklines,
-  SparklinesCurve,
-} from "../../../../node_modules/react-sparklines";
+import { Sparklines, SparklinesCurve } from "react-sparklines";
 
 import { makeData } from "../../Tables/DataTables/Examples/utils";
 
-import { FontAwesomeIcon } from "../../../../node_modules/@fortawesome/react-fontawesome";
-import CountUp from "../../../../node_modules/react-countup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CountUp from "react-countup";
 
 import avatar1 from "../../../assets/utils/images/avatars/1.jpg";
 import avatar2 from "../../../assets/utils/images/avatars/2.jpg";
@@ -108,7 +104,7 @@ console.info({
   sampleData4,
 });
 
-export default class GalleryElements extends Component {
+export default class BlogElements extends Component {
   constructor(props) {
     super(props);
 
@@ -150,44 +146,7 @@ export default class GalleryElements extends Component {
           transitionLeave={false}
         >
           <Row>
-            <Card style={{ width: "min-content" }}>
-              <CardBody style={{ width: "min-content" }}>
-                <p>Visual Gallery Under Construction.</p>{" "}
-              </CardBody>
-            </Card>
-
-            <Card >
-              <CardBody className="CarouselCard" >
-                  <CarouselBSExample />
-                <center>← Custom Display →</center>
-              </CardBody>
-            </Card>
-            <br></br>
-          </Row>
-          <Row>
-            <Col xs="4" sm="4" md="4" xl="3">
-              <Card>
-                <CardBody>Gallery Element1 </CardBody>
-              </Card>{" "}
-            </Col>
-
-            <Col xs="4" sm="4" md="3" xl="4">
-              <Card>
-                <CardBody>Gallery Element2</CardBody>
-              </Card>{" "}
-            </Col>
-
-            <Col xs="4" sm="4" md="4" xl="5">
-              <a href="#/dashboard/contact">
-                <Card>
-                  <CardHeader>Contact</CardHeader>
-                  <CardBody>
-                    RayYogaMaui Contact Page.
-                    <br></br>
-                  </CardBody>
-                </Card>
-              </a>
-            </Col>
+            <Card>Coming Soon</Card>
           </Row>
           <br></br>
         </CSSTransitionGroup>

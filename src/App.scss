@@ -266,6 +266,16 @@ h2 {
   -webkit-box-orient: vertical;
 }
 
+.CarouselCard img {
+  height: fit-content;
+  max-height: "250px";
+}
+
+.CarouselCard {
+  height: fit-content;
+  max-height: "250px";
+}
+
 .colJustText {
   width: 100%;
   text-align: right;

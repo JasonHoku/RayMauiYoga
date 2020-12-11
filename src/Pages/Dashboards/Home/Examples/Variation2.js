@@ -165,32 +165,6 @@ export default class CRMDashboard2 extends Component {
               </CardBody>
             </Card>{" "}
             &nbsp;&nbsp;&nbsp;
-            <Card
-              className="main-card mb-3"
-              style={{
-                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-              }}
-            >
-              <CardHeader className="card-header-tab" color="light">
-                <div className="card-header-title font-size-lg font-weight-normal">
-                  <i className="header-icon pe-7s-star mr-3 text-muted opacity-6">
-                    {" "}
-                  </i>
-                  Update: 8/17/20
-                </div>{" "}
-                <div>
-                  {" "}
-                  <br></br>
-                  <br></br>
-                  <br></br>
-                </div>
-              </CardHeader>
-              <CardBody>
-                Private Video Example
-                <Vimeo video="477795668" autoplay />
-                <br></br>
-              </CardBody>
-            </Card>
           </Row>
 
           <Row></Row>

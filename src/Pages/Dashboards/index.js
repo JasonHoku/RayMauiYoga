@@ -8,7 +8,9 @@ import Services from "./Services/";
 import ShopPage from "./Shop/";
 import GalleryPage from "./Gallery/"; 
 import Writing from "./Writing/"; 
-import Music from "./Music/"; 
+import Retreats from "./Retreats"; 
+import Videos from "./Videos"; 
+import Blog from "./Blog"; 
 import Contact from "./Contact/"; 
 import Projects from "./Projects/"; 
 import CalendarPage from "./Calendar/"; 
@@ -36,7 +38,9 @@ const Dashboards = ({ match }) => (
           <Route path={`${match.url}/shop`} component={ShopPage} />
           <Route path={`${match.url}/gallery`} component={GalleryPage} />
           <Route path={`${match.url}/writing`} component={Writing} />
-          <Route path={`${match.url}/music`} component={Music} />
+          <Route path={`${match.url}/retreats`} component={Retreats} />
+          <Route path={`${match.url}/videos`} component={Videos} />
+          <Route path={`${match.url}/blog`} component={Blog} />
           <Route path={`${match.url}/contact`} component={Contact} />
           <Route path={`${match.url}/projects`} component={Projects} />
           <Route path={`${match.url}/calendar`} component={CalendarPage} />

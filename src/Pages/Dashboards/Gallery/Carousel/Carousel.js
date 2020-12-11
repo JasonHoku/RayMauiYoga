@@ -3,7 +3,7 @@ import { UncontrolledCarousel } from "reactstrap";
 
 //import image3 from "../../../../assets/images/thumbs/04.png";
 
-const max = 500;
+const max = 13;
 
 const items = [
   {

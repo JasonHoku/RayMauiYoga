@@ -10,9 +10,19 @@ export const MainNav = [
     to: "#/dashboards/calendar",
   },
   {
+    icon: "pe-7s-pen",
+    label: "Blog",
+    to: "#/dashboards/blog",
+  },
+  {
+    icon: "pe-7s-play",
+    label: "Videos",
+    to: "#/dashboards/videos",
+  },
+  {
     icon: "pe-7s-album",
     label: "Retreats",
-    to: "#/dashboards/music",
+    to: "#/dashboards/retreats",
   },
   {
     icon: "pe-7s-photo",
