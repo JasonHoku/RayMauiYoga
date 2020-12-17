@@ -251,19 +251,90 @@ h2 {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 #hiddenText {
-  margin: 20px;
+  max-height: 113px; /* h*n */
+  overflow: hidden;
+
+  -webkit-animation: ellipsis ease 5s infinite; /*for test*/
+}
+
+#hiddenText {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
 #visibleText {
-  margin: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+}
+.ellipsis .xd123 {
+  position: relative;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-pack: center;
+  font-size: 50px; /* w */
+  line-height: 20px; /* line-height h */
+  color: transparent;
+  -webkit-line-clamp: 3; /* max row number n */
+  vertical-align: top;
+}
+.ellipsis .text {
+  display: inline;
+  vertical-align: top;
+  font-size: 14px;
+}
+.ellipsis .overlay {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  /**
+  overflow: visible;
+  left: 0;
+  background: rgba(0,0,0,.5);
+  /**/
+}
+.ellipsis .overlay:before {
+  content: "";
+  display: block;
+  float: left;
+  width: 50%;
+  height: 100%;
+
+  /**
+  background: lightgreen;
+  /**/
+}
+.ellipsis .placeholder {
+  float: left;
+  width: 50%;
+  height: 40px; /* h*n */
+
+  /**
+  background: lightblue;
+  /**/
+}
+.ellipsis .more {
+  position: relative;
+  top: -20px; /* -h */
+  left: -50px; /* -w */
+  float: left;
+  color: #000;
+  width: 50px; /* width of the .more w */
+  height: 20px; /* h */
+  font-size: 14px;
+
+  /**
+  top: 0;
+  left: 0;
+  background: orange;
+  /**/
 }
 
 .CarouselCard img {

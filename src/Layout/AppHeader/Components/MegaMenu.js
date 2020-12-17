@@ -54,7 +54,9 @@ class MegaMenu extends React.Component {
   render() {
     return (
       <Fragment>
-        <div>   RayYogaMaui : {this.state.url = window.location.hash} &nbsp; </div>
+        <div>
+             RayYogaMaui : {(this.state.url = window.location.hash)} &nbsp;{" "}
+        </div>
       </Fragment>
     );
   }

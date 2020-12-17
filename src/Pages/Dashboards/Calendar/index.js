@@ -28,20 +28,26 @@ export default class CalendarPage extends Component {
           <Card>
             <Row>
               <Col className="colJustText">
+                <br />
+                <br />
                 <CardBody>
                   <p>TUESDAY: 8-9am JODO MISSION LAHAINA</p>
                   <p>TUESDAY: 5:30-7PM ISLAND SPIRIT YOGA LAHAINA </p>
                 </CardBody>
               </Col>
               <Col>
+                <br />
+                <br />
                 <CardBody>
                   <p>FRIDAY: 8-9AM JODO MISSION LAHAINA</p>
                   <p>SATURDAY: 9-10;15AM ISLAND SPIRIT YOGA LAHAINA</p>
                 </CardBody>
               </Col>
             </Row>
+            <div style={{ height: "150px" }}>
+              <CalendarElements />
+            </div>
           </Card>
-          <CalendarElements />
         </CSSTransitionGroup>
       </Fragment>
     );

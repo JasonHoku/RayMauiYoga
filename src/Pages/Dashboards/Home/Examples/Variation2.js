@@ -3,7 +3,6 @@ import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import classnames from "classnames";
 import ReactTable from "react-table";
 import { Route } from "react-router-dom";
-import Vimeo from "@u-wave/react-vimeo";
 
 import {
   Row,
@@ -77,10 +76,6 @@ export default class CRMDashboard2 extends Component {
   }
 
   componentDidMount() {
-    //doing some asynchronous call here which dispatches an action
-    //and updates the state -> which inturn renders the component again.
-    //I want component to be rendered after this happended. Is it possible ?
-
     let clientWidth = Math.min(
       window.innerWidth,
       document.documentElement.clientWidth
@@ -185,13 +180,13 @@ export default class CRMDashboard2 extends Component {
               <div> </div>
             </CardHeader>
             <CardBody
-              onMouseOver={() => this.setState({ hover: "visibleText" })}
-              id={this.state.hover}
-              onMouseLeave={() => this.setState({ hover: "hiddenText" })}
+              onMouseOver={() =>
+                this.setState({ hover: "visibleText" }) &
+                (document.getElementsByClassName("xd123")[0].hidden = true)
+              }
               id={this.state.hover}
             >
               <p>
-                {" "}
                 Isvara Pranidhana is one of yogas niyamas (positive observances)
                 that we practice to cultivate more healthy living, a positive
                 outlook and a liberated state of existence. Isvara translates as
@@ -205,7 +200,6 @@ export default class CRMDashboard2 extends Component {
                 cliche in spiritual dialogue.
               </p>
               <p>
-                {" "}
                 Surrender doesn’t seem to invoke much courage, strength or power
                 on the surface. However, in yoga tradition surrender is NOT
                 giving up. Surrender is NOT weak or passive. Surrender is NOT
@@ -241,6 +235,20 @@ export default class CRMDashboard2 extends Component {
               taken actions that convey my highest? If I am, it’s all good. I
               can surrender to the perfect way the situation will unfold. If I’m
               not, how can I live in my highest truth?
+            </CardBody>
+            <CardBody
+              className="xd123"
+              style={{ justifyContent: "center", textAlign: "center" }}
+              onMouseOver={() =>
+                this.setState({ hover: "visibleText" }) &
+                (document.getElementsByClassName("xd123")[0].hidden = true)
+              }
+              id={this.state.hover}
+            >
+              {" "}
+              <span id="readMore">
+                <span id="readMore">Click To Read More</span>
+              </span>
             </CardBody>
           </Card>
           <Row></Row>
