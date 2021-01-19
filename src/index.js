@@ -5,19 +5,16 @@ import "react-app-polyfill/stable";
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { Router, Switch, Route } from "react-router-dom";
-
-import * as serviceWorker from "./serviceWorker";
+import { Route } from "react-router-dom";
 
 import { HashRouter } from "react-router-dom";
 import "./App.scss";
 import Main from "./Pages/Main";
 import configureStore from "./config/configureStore";
 import { Provider } from "react-redux";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import LoginRedirect from "./Login/LoginRedirect";
-import { node } from "prop-types";
 
+import reportWebVitals from "./reportWebVitals";
 const store = configureStore();
 const rootElement = document.getElementById("root");
 
@@ -33,12 +30,6 @@ const renderApp = (Component) => {
   );
 };
 
+reportWebVitals();
 renderApp(Main);
 
-if (module.hot) {
-  module.hot.accept("./Pages/Main", () => {
-    const NextApp = require("./Pages/Main").default;
-    renderApp(NextApp);
-  });
-}
-serviceWorker.unregister();

@@ -15,181 +15,199 @@ const Components = lazy(() => import("../../Pages/Components"));
 const Forms = lazy(() => import("../../Pages/Forms"));
 const Tables = lazy(() => import("../../Pages/Tables"));
 
-
-import LandingPage from "../../Pages/landing.js"
+import LandingPage from "../../Pages/landing.js";
 
 const AppMain = () => {
+  return (
+    <Fragment>
+      {/* Components */}
 
-    return (
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="ball-pulse-rise" />
+              </div>
+              <h6 className="mt-5">
+                Loading Components
+                <small>Welcome to RayMauiYoga</small>
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/components" component={Components} />
+      </Suspense>
 
-        <Fragment>
+      {/* Forms */}
 
-            {/* Components */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="ball-pulse-rise" />
+              </div>
+              <h6 className="mt-5">
+                Loading Forms
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/forms" component={Forms} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-pulse-rise"/>
-                        </div>
-                        <h6 className="mt-5">
-                               Loading Components
-                            <small>Welcome to RayYogaMaui</small></h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/components" component={Components}/>
-            </Suspense>
+      {/* Tables */}
 
-            {/* Forms */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="ball-pulse-rise" />
+              </div>
+              <h6 className="mt-5">
+                Loading Tables
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/tables" component={Tables} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-pulse-rise"/>
-                        </div>
-                        <h6 className="mt-5">
-                                  Loading Forms
-                            <small>Welcome to RayYogaMaui</small>  </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/forms" component={Forms}/>
-            </Suspense>
+      {/* Elements */}
 
-       
-            {/* Tables */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="line-scale" />
+              </div>
+              <h6 className="mt-3">
+                Loading Elements
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/elements" component={Elements} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-pulse-rise"/>
-                        </div>
-                        <h6 className="mt-5">
-                        Loading Tables
-                            <small>Welcome to RayYogaMaui</small>    </h6>
-                 
-                    </div>
-                </div>
-            }>
-                <Route path="/tables" component={Tables}/>
-            </Suspense>
+      {/* Dashboard Widgets */}
 
-            {/* Elements */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="ball-pulse-sync" />
+              </div>
+              <h6 className="mt-3">
+                Loading Widgets
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/widgets" component={Widgets} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="line-scale"/>
-                        </div>
-                        <h6 className="mt-3">
-                        Loading Elements
-                            <small>Welcome to RayYogaMaui</small>    </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/elements" component={Elements}/>
-            </Suspense>
+      {/* Pages */}
 
-            {/* Dashboard Widgets */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="line-scale-party" />
+              </div>
+              <h6 className="mt-3">
+                Loading Pages
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/pages" component={UserPages} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-pulse-sync"/>
-                        </div>
-                        <h6 className="mt-3">
-                        Loading Widgets
-                            <small>Welcome to RayYogaMaui</small> </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/widgets" component={Widgets}/>
-            </Suspense>
+      {/* Applications */}
 
-            {/* Pages */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="text-center">
+                <Loader type="ball-pulse" />
+              </div>
+              <h6 className="mt-3">
+                Loading Application Tools
+                <small>Welcome to RayMauiYoga</small>{" "}
+              </h6>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/apps" component={Applications} />
+      </Suspense>
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="line-scale-party"/>
-                        </div>
-                        <h6 className="mt-3">
-                        Loading Pages
-                            <small>Welcome to RayYogaMaui</small>   </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/pages" component={UserPages}/>
-            </Suspense>
+      {/* Dashboards */}
 
-            {/* Applications */}
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="loader-wrapper d-flex justify-content-center align-items-center">
+                <Loader color="#c4cfda" type="ball-triangle-path" />
+              </div>
+              <h2 className="mt-3" style={{ color: "black" }}>
+                Loading RayMauiYoga
+                <small style={{ color: "black" }}>Welcome</small>
+              </h2>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/dashboards" component={Dashboards} />
+      </Suspense>
+      {/* Landing */}
 
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-pulse"/>
-                        </div>
-                        <h6 className="mt-3">
-                        Loading Application Tools
-                            <small>Welcome to RayYogaMaui</small> </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/apps" component={Applications}/>
-            </Suspense>
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader-container-inner">
+              <div className="loader-wrapper d-flex justify-content-center align-items-center">
+                <Loader color="#c4cfda" type="ball-triangle-path" />
+              </div>
+              <h2 className="mt-3" style={{ color: "black" }}>
+                Loading RayMauiYoga
+                <small style={{ color: "black" }}>Welcome</small>
+              </h2>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/welcome" component={LandingPage} />
+      </Suspense>
 
-            {/* Dashboards */}
-
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-grid-cy"/>
-                        </div>
-                        <h6 className="mt-3">
-                            Loading Dashboard Tools
-                            <small>Welcome to RayYogaMaui</small>
-                        </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/dashboards" component={Dashboards}/>
-            </Suspense>
-            {/* Landing */}
-
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-grid-cy"/>
-                        </div>
-                        <h6 className="mt-3">
-                            Loading Dashboard Tools
-                            <small>Welcome to RayYogaMaui</small>
-                        </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/welcome" component={LandingPage}/>
-            </Suspense>
-
-
-            <Route exact path="/" render={() => (
-                <Redirect to="/welcome"/>
-            )}/>
-             <Route exact path="/dash" render={() => (
-                <Redirect to="/dashboards/home"/>
-            )}/>
-            <ToastContainer/>
-        </Fragment>
-    )
+      <Route exact path="/" render={() => <Redirect to="/welcome" />} />
+      <Route
+        exact
+        path="/dash"
+        render={() => <Redirect to="/dashboards/home" />}
+      />
+      <ToastContainer />
+    </Fragment>
+  );
 };
 
 export default AppMain;

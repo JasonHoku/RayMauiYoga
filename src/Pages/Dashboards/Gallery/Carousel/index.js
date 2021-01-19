@@ -9,7 +9,7 @@ import CustomExample from "./CustomTag";
 const CarouselBSExample = (props) => {
   return (
     <Fragment>
-            <CarouselDefault />
+      <CarouselDefault />
     </Fragment>
   );
 };

@@ -8,152 +8,245 @@ const max = 13;
 const items = [
   {
     id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  }, 
-  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
-    altText: "Gallery Randomizer",
- 
-    interval: "30",
-  },  {
-    id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
     altText: "Gallery Randomizer",
 
- 
     interval: "30",
-  },  {
+  },
+  {
     id: 1,
-    src: " ./assets/images/thumb2/1 (" + Math.floor(Math.random()*max+1) + ").jpg",
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
     altText: "Gallery Randomizer",
- 
+
     interval: "30",
-  }, 
- /* {
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  {
+    id: 1,
+    src:
+      " ./assets/images/thumb2/1 (" +
+      Math.floor(Math.random() * max + 1) +
+      ").jpg",
+    altText: "Gallery Randomizer",
+
+    interval: "30",
+  },
+  /* {
     id: 3,
     src: image3,
     altText: "Slide 3",

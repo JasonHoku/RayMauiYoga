@@ -35,7 +35,7 @@ export const AboutNav = [
   {
     icon: "pe-7s-arc",
     label: "Bio",
-    to: "#/dashboards/projects",
+    to: "#/dashboards/about",
   },
   {
     icon: "pe-7s-mail",

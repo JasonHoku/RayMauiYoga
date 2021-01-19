@@ -33,22 +33,27 @@ import ModeratorElements from "./moderator";
 import LoginPageElements from "./loginPage";
 //
 
-
-  var CLIIP;
-  
-  const Koa = require('koa');
-  const cors = require('@koa/cors');
-  
-  const app = new Koa();
-  app.use(cors());
+var CLIIP;
 
 export default class Account extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: "1",
+    };
+    this.toggle = this.toggle.bind(this);
+  }
 
-
-
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
   componentDidMount() {
     this.setState({ isLoading: true });
-  
+
     fetch("https://api.ipify.org")
       .then((response) => response.text())
       .then((response) => {
@@ -57,60 +62,53 @@ export default class Account extends Component {
       .then(function (parsedData) {})
       .catch((error) => this.setState({ error, isLoading: false }));
   }
-  
 
   render() {
-    
     let adminCardEle;
-    if (localStorage.getItem("jwt") == null ){
+    if (localStorage.getItem("jwt") == null) {
       {
-       adminCardEle = (
-         <Col>
-           <LoginPageElements />
-         </Col>
-       );
-     }
- }
-    if (localStorage.getItem("jwt") != null ) {
+        adminCardEle = (
+          <Col>
+            <LoginPageElements />
+          </Col>
+        );
+      }
+    }
+    if (localStorage.getItem("jwt") != null) {
       adminCardEle = (
-        <Col>
-          <AccountElements />
-        </Col>
+        <Row>
+          <Col>
+            <AccountElements />
+          </Col>
+        </Row>
       );
     }
     if (
-      localStorage.getItem("jwt") != null &&
-      localStorage.getItem("username") == "jlevien808" 
+      (localStorage.getItem("jwt") != null &&
+        localStorage.getItem("username") == "microAdmin2") ||
+      window.location == "http://localhost:9999/#/dashboards/account"
+    ) {
+      adminCardEle = <AdminElements />;
+    }
+    if (
+      (localStorage.getItem("jwt") != null &&
+        localStorage.getItem("username") == "microAdmin") ||
+      localStorage.getItem("username") == "raymauiyoga"
     ) {
       adminCardEle = (
-        <Col>
-          <AdminElements />
-        </Col>
-      );
-    }     if (
-      localStorage.getItem("jwt") != null &&
-      localStorage.getItem("username") == "jlevien808" ||
-      localStorage.getItem("username") == "raymauiyoga" 
-    ) {
-      adminCardEle = (
-        <Col>
-          <ModeratorElements />
-        </Col>
-      );
-    } 
-    return (
-      <Fragment>
-        <CSSTransitionGroup
-          component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
-          transitionAppearTimeout={0}
-          transitionEnter={false}
-          transitionLeave={false}
+        <span
+          style={{
+            backgroundColor: "transparent",
+            width: "100%",
+            justifyContent: "center",
+            alignSelf: "center",
+            opacity: 100,
+          }}
         >
-          <Row>{adminCardEle}</Row>
-        </CSSTransitionGroup>
-      </Fragment>
-    );
+          <ModeratorElements />
+        </span>
+      );
+    }
+    return <Fragment>{adminCardEle}</Fragment>;
   }
 }

@@ -6,15 +6,15 @@ import { Route } from "react-router-dom";
 import HomeDashboard from "./Home/";
 import Services from "./Services/";
 import ShopPage from "./Shop/";
-import GalleryPage from "./Gallery/"; 
-import Writing from "./Writing/"; 
-import Retreats from "./Retreats"; 
-import Videos from "./Videos"; 
-import Blog from "./Blog"; 
-import Contact from "./Contact/"; 
-import Projects from "./Projects/"; 
-import CalendarPage from "./Calendar/"; 
-import Account from "./Account/"; 
+import GalleryPage from "./Gallery/";
+import Writing from "./Writing/";
+import Retreats from "./Retreats";
+import Videos from "./Videos";
+import Blog from "./Blog";
+import Contact from "./Contact/";
+import Projects from "./Projects/";
+import CalendarPage from "./Calendar/";
+import Account from "./Account/";
 // Layout
 
 import AppHeader from "../../Layout/AppHeader/";
@@ -24,10 +24,8 @@ import AppFooter from "../../Layout/AppFooter/";
 // Theme Options
 import ThemeOptions from "../../Layout/ThemeOptions/";
 
-
 const Dashboards = ({ match }) => (
   <Fragment>
-    <ThemeOptions />
     <AppHeader />
     <div className="app-main">
       <AppSidebar />
@@ -42,7 +40,7 @@ const Dashboards = ({ match }) => (
           <Route path={`${match.url}/videos`} component={Videos} />
           <Route path={`${match.url}/blog`} component={Blog} />
           <Route path={`${match.url}/contact`} component={Contact} />
-          <Route path={`${match.url}/projects`} component={Projects} />
+          <Route path={`${match.url}/about`} component={Projects} />
           <Route path={`${match.url}/calendar`} component={CalendarPage} />
           <Route path={`${match.url}/account`} component={Account} />
         </div>

@@ -3,6 +3,7 @@ import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import classnames from "classnames";
 import ReactTable from "react-table";
 import { Route } from "react-router-dom";
+import CarouselBSExample from "./HomeCarousel";
 
 import {
   Row,
@@ -18,6 +19,7 @@ import {
   ListGroupItem,
   Card,
   CardBody,
+  CardLink,
   CardHeader,
   NavLink,
   TabContent,
@@ -52,20 +54,6 @@ import { makeData } from "../../../Tables/DataTables/Examples/utils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CountUp from "react-countup";
-
-import avatar1 from "../../../../assets/utils/images/avatars/1.jpg";
-import avatar2 from "../../../../assets/utils/images/avatars/2.jpg";
-import avatar3 from "../../../../assets/utils/images/avatars/3.jpg";
-import servicespic from "../../../../assets/images/thumbs/services.png";
-import aboutpic from "../../../../assets/images/thumbs/about.png";
-import publishingpic from "../../../../assets/images/thumbs/publishing.png";
-import shoppic from "../../../../assets/images/thumbs/shop.png";
-import audiopic from "../../../../assets/images/thumbs/audio.png";
-import visualpic from "../../../../assets/images/thumbs/visual.jpg";
-import logo from "../../../../assets/images/logoani.gif";
-import Main from "../../../Main";
-import CenterMode from "../../../Components/Carousel/Examples/Slideshow/CenterMode";
-import { setBackgroundImage } from "../../../../reducers/ThemeOptions";
 
 export default class CRMDashboard2 extends Component {
   constructor(props) {
@@ -107,24 +95,18 @@ export default class CRMDashboard2 extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <center>
-            <meta
-              name="description"
-              content="RayYogaMaui.com, software development, e-commerce, education and services."
-            />
-          </center>
           <Row
             style={{
               justifyContent: "center",
               alignContent: "center",
-              width: "100%",
               alignItems: "center",
             }}
           >
-            {" "}
             <Card
               className="main-card mb-3"
               style={{
+                width: "75%",
+                maxWidth:"750px",
                 boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
               }}
             >
@@ -133,36 +115,32 @@ export default class CRMDashboard2 extends Component {
                   <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
                     {" "}
                   </i>
-                  RayYogaMaui Under Construction
-                </div>{" "}
-                <div>
-                  {" "}
-                  <br></br>
-                  <br></br>
-                  <br></br>
+                  RayMauiYoga Under Construction
                 </div>
               </CardHeader>
               <CardBody>
                 <p>
-                  {" "}
-                  <a href="https://dashboardpack.com/live-demo-preview/?livedemo=113&v=7516fd43adaa">
-                    {" "}
-                    Template Examples
-                  </a>
+                  RayMauiYoga, study and connect with the self, through Ray's
+                  Live, Written, &amp; Video Events.
                 </p>
                 <p>
                   {" "}
-                  <a href="https://github.com/JasonHoku/RayYogaMaui">
-                    {" "}
-                    Site Source Code
+                  <a href="https://github.com/JasonHoku/RayMauiYoga">
+                    Open-Source
                   </a>
                 </p>
               </CardBody>
-            </Card>{" "}
-            &nbsp;&nbsp;&nbsp;
+              <CardBody
+                style={{
+                  maxWidth: "500px",
+                  textAlign: "center  ",
+                  alignSelf: "center",
+                }}
+              >
+                <CarouselBSExample />
+              </CardBody>
+            </Card>
           </Row>
-
-          <Row></Row>
 
           <Card
             className="main-card mb-3"
@@ -236,6 +214,7 @@ export default class CRMDashboard2 extends Component {
               can surrender to the perfect way the situation will unfold. If I’m
               not, how can I live in my highest truth?
             </CardBody>
+
             <CardBody
               className="xd123"
               style={{ justifyContent: "center", textAlign: "center" }}
@@ -251,7 +230,28 @@ export default class CRMDashboard2 extends Component {
               </span>
             </CardBody>
           </Card>
-          <Row></Row>
+          <Row>
+            <Card
+              className="main-card mb-3"
+              style={{
+                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+              }}
+            >
+              <CardLink href="/#/dashboards/calendar">
+                <CardHeader className="card-header-tab">
+                  <div className="card-header-title font-size-lg font-weight-normal">
+                    <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
+                      {" "}
+                    </i>
+                    Join An Upcoming Event.
+                  </div>{" "}
+                  <div> </div>
+                </CardHeader>
+                Find new and coming activities with Ray by visiting the Events
+                Page.
+              </CardLink>
+            </Card>
+          </Row>
         </CSSTransitionGroup>
       </Fragment>
     );

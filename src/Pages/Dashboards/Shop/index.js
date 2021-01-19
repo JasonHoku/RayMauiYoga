@@ -214,14 +214,14 @@ export default class ShopPage extends Component {
             <Card style={{ width: "22rem" }}>
               <CardHeader>
                 {" "}
-                <strong>Welcome to the RayYogaMaui E-Shop</strong>
+                <strong>Welcome to the RayMauiYoga E-Shop</strong>
               </CardHeader>
               <CardBody>
                 {" "}
                 <p> </p>
                 <p>
                   Thank you so much for expressing interest in the products
-                  RayYogaMaui has to offer!
+                  RayMauiYoga has to offer!
                   <br></br>
                 </p>
                 <p> </p>

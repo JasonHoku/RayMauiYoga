@@ -26,27 +26,35 @@ export default class CalendarPage extends Component {
           transitionLeave={false}
         >
           <Card>
+            <Row>RayMauiYoga's</Row>
             <Row>
               <Col className="colJustText">
-                <br />
-                <br />
                 <CardBody>
-                  <p>TUESDAY: 8-9am JODO MISSION LAHAINA</p>
-                  <p>TUESDAY: 5:30-7PM ISLAND SPIRIT YOGA LAHAINA </p>
+                  <p>
+                    <b>TUESDAY</b>: <b>8-9am</b> JODO MISSION LAHAINA
+                  </p>
+                  <p>
+                    <b>TUESDAY</b>: <b>5:30-7PM</b> ISLAND SPIRIT YOGA LAHAINA{" "}
+                  </p>
                 </CardBody>
               </Col>
               <Col>
-                <br />
-                <br />
                 <CardBody>
-                  <p>FRIDAY: 8-9AM JODO MISSION LAHAINA</p>
-                  <p>SATURDAY: 9-10;15AM ISLAND SPIRIT YOGA LAHAINA</p>
+                  <p>
+                    <b>FRIDAY</b>: <b>8-9AM</b> JODO MISSION LAHAINA
+                  </p>
+                  <p>
+                    <b>SATURDAY</b>: <b>9-10:15AM</b> ISLAND SPIRIT YOGA LAHAINA
+                  </p>
                 </CardBody>
               </Col>
             </Row>
-            <div style={{ height: "150px" }}>
+            <div style={{ height: "600px" }}>
               <CalendarElements />
             </div>
+            <span style={{ textAlign: "center" }}>
+              Please reach out through the contact page for more information.
+            </span>
           </Card>
         </CSSTransitionGroup>
       </Fragment>

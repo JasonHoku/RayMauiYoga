@@ -24,8 +24,11 @@ class TimelineEx extends Component {
           <PerfectScrollbar>
             <div className="p-3">
               <div className="notifications-box">
-                <VerticalTimeline animate={false} layout="1-column"
-                  className="vertical-time-simple vertical-without-time">
+                <VerticalTimeline
+                  animate={false}
+                  layout="1-column"
+                  className="vertical-time-simple vertical-without-time"
+                >
                   <VerticalTimelineElement className="vertical-timeline-item dot-danger">
                     <h4 className="timeline-title">All Hands Meeting</h4>
                   </VerticalTimelineElement>

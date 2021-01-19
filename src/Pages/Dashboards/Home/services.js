@@ -21,8 +21,8 @@ export default class HomeDashboard extends Component {
         <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
 
-           <PageTitleAlt2 heading="RayYogaMaui Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"
-            subheading="RayYogaMaui Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"/>
+           <PageTitleAlt2 heading="RayMauiYoga Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"
+            subheading="RayMauiYoga Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"/>
             <CRMDashboard2 />
                  </CSSTransitionGroup>
       </Fragment>

@@ -1,3 +1,5 @@
-  .crossfade > figure:nth-child(1) {
-    background-image: url("../../images/bg1.png");
-  }
+.crossfade > figure:nth-child(1) {
+  background-image: url("../../images/bg1.png");
+  background-position: center;
+  opacity: 0.75;
+}

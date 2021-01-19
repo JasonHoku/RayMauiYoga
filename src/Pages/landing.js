@@ -26,16 +26,23 @@ class LandingPage extends React.Component {
             className="landingContent"
             onClick={() => (window.location.hash = "/dashboards/home")}
           >
-            <br /> <h1>RayMauiYoga.com</h1> <br />
-            <img class="spin" src="/images/DialDecal.png"></img> <br /> <br />
+            <h1 style={{ color: "black" }}>RayMauiYoga.com</h1>
+            <img class="spin" src="/images/DialDecal.png"></img>
             <h2>Digital Yoga through Blog, Video &amp; Live-Stream by Ray</h2>
-            <br />
-            <h3>Site Under Construction. 12-10-2020</h3>
-            <br />
-            <h4>Click To Enter</h4>
-            <br /> <br /> <br /> <br />
+            <h4>
+              <a
+                style={{ color: "white" }}
+                href="https://RayMauiYoga.com/#/dashboards/home"
+              >
+                Click Anywhere To Enter
+              </a>
+            </h4>
+            <h3>
+              <small>Under Construction. 1-19-2021</small>
+            </h3>
+            <br /> <br />
           </span>
-        </CSSTransitionGroup>{" "}
+        </CSSTransitionGroup>
       </Fragment>
     );
   }
