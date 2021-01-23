@@ -326,8 +326,17 @@ export default class ModeratorElements extends Component {
                     "btn-pill btn-wide " +
                     classnames({ active: this.state.activeTab === "2" })
                   }
-                  onClick={() => {
+                  onClick={async () => {
                     this.toggle("2");
+                    setTimeout(
+                      () =>
+                        document.getElementById("id001").scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                          inline: "center",
+                        }),
+                      100
+                    );
                   }}
                 >
                   User View
@@ -376,8 +385,17 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
                           this.toggle("Documentation");
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                         }}
                       >
                         {" "}
@@ -393,7 +411,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Content");
                         }}
                       >
@@ -410,7 +437,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Video");
                         }}
                       >
@@ -427,7 +463,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Users");
                         }}
                       >
@@ -445,7 +490,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                         onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Comments");
                         }}
                       >
@@ -463,7 +517,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                         onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Products");
                         }}
                       >
@@ -480,7 +543,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Events");
                         }}
                       >
@@ -497,7 +569,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Notes");
                         }}
                       >
@@ -512,7 +593,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Surveys");
                         }}
                       >
@@ -529,7 +619,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                         onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Live");
                         }}
                       >
@@ -545,7 +644,16 @@ export default class ModeratorElements extends Component {
                           fontSize: "120%",
                           marginTop: "5px",
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                          setTimeout(
+                            () =>
+                              document.getElementById("id002").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                                inline: "center",
+                              }),
+                            100
+                          );
                           this.toggle("Issue");
                         }}
                       >
@@ -590,12 +698,13 @@ export default class ModeratorElements extends Component {
                     <h4>
                       Users: {this.state.userMetric}
                       <br />
+                      <span id="id002"></span>
                       Open Issues: {this.state.issuesMetric}
                     </h4>
                   </Card>
                 </TabPane>
               </Row>
-              <TabPane tabId="2">
+              <TabPane id="id001" tabId="2">
                 <Row style={{ justifyContent: "center" }}>
                   <Card
                     style={{
