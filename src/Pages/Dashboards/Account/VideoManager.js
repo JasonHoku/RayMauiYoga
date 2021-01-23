@@ -51,11 +51,6 @@ class VideoManager extends Component {
     setTimeout(() => this.getData(), 500);
     setTimeout(() => this.getData(), 1500);
     setTimeout(() => this.getData(), 2500);
-
-    let intervalId = setInterval(() => {
-      this.getData();
-    }, 2000);
-    this.setState({ intervalId: intervalId });
   }
   componentWillUnmount() {
     clearInterval(this.state.intervalId);

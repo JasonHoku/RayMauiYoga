@@ -56,7 +56,6 @@ import { makeData } from "../../Tables/DataTables/Examples/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CountUp from "react-countup";
 
-
 const CLIENT = {
   sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
   production: process.env.PAYPAL_CLIENT_ID_PRODUCTION,
@@ -192,33 +191,36 @@ export default class MusicElements extends Component {
 
     return (
       <Fragment>
-      <CSSTransitionGroup
-        component="div"
-        transitionName="TabsAnimation"
-        transitionAppear={true}
-        transitionAppearTimeout={0}
-        transitionEnter={false}
-        transitionLeave={false}
-      >
-        <Row>
-          <Card style={{ width: "100%", height: "80vh" }}>
-            <CardHeader>Retreat Through Connection</CardHeader>
-            <CardHeader style={{ width: "100%", justifyContent: "center" }}>
-              <Button> A </Button> &nbsp;&nbsp;&nbsp;
-              <Button> B </Button> &nbsp;&nbsp;&nbsp;
-              <Button> C </Button> &nbsp;&nbsp;&nbsp;
-              <Button> ... </Button>
-            </CardHeader>
-            <TabContent>
-              {" "}
-              <TabPane id="1">
-              <CKEditor data="<p>Blog &amp; Admin Edit Tools: Coming Soon.</p>" />
-              </TabPane>
-            </TabContent>
-          </Card>
-        </Row>
-        <br></br>
-      </CSSTransitionGroup>
+        <CSSTransitionGroup
+          component="div"
+          transitionName="TabsAnimation"
+          transitionAppear={true}
+          transitionAppearTimeout={0}
+          transitionEnter={false}
+          transitionLeave={false}
+        >
+          <Row
+            style={{
+              textAlign: "center",
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Card style={{ width: "90%", 
+                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)", height: "min" }}>
+              <CardHeader>Retreat Through Connection</CardHeader>
+              <TabContent>
+                {" "}
+                <TabPane id="1">
+                  <Card>
+                    <CardBody> Information Coming Soon.</CardBody>
+                  </Card>{" "}
+                </TabPane>
+              </TabContent>
+            </Card>
+          </Row>
+        </CSSTransitionGroup>
       </Fragment>
     );
   }

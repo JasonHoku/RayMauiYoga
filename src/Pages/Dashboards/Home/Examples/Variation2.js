@@ -106,29 +106,19 @@ export default class CRMDashboard2 extends Component {
               className="main-card mb-3"
               style={{
                 width: "75%",
-                maxWidth:"750px",
+                maxWidth: "750px",
                 boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
               }}
             >
               <CardHeader className="card-header-tab" color="light">
-                <div className="card-header-title font-size-lg font-weight-normal">
-                  <i className="header-icon pe-7s-tools mr-3 text-muted opacity-6">
-                    {" "}
-                  </i>
-                  RayMauiYoga Under Construction
-                </div>
+                <h1>Welcome</h1>
               </CardHeader>
               <CardBody>
-                <p>
-                  RayMauiYoga, study and connect with the self, through Ray's
-                  Live, Written, &amp; Video Events.
-                </p>
-                <p>
+                <h3>
                   {" "}
-                  <a href="https://github.com/JasonHoku/RayMauiYoga">
-                    Open-Source
-                  </a>
-                </p>
+                  Study and connect with Ray through live, written, &amp; video
+                  events.
+                </h3>
               </CardBody>
               <CardBody
                 style={{
@@ -149,34 +139,26 @@ export default class CRMDashboard2 extends Component {
             }}
           >
             <CardHeader className="card-header-tab">
-              <div className="card-header-title font-size-lg font-weight-normal">
-                <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
-                  {" "}
-                </i>
-                Strength in Surrender
-              </div>{" "}
-              <div> </div>
+              <h3> Strength in Surrender</h3>
             </CardHeader>
             <CardBody
-              onMouseOver={() =>
+              onClick={() =>
                 this.setState({ hover: "visibleText" }) &
                 (document.getElementsByClassName("xd123")[0].hidden = true)
               }
               id={this.state.hover}
             >
-              <p>
-                Isvara Pranidhana is one of yogas niyamas (positive observances)
-                that we practice to cultivate more healthy living, a positive
-                outlook and a liberated state of existence. Isvara translates as
-                “supreme being”, “ultimate reality”, “true self” or dare I say
-                “God” (the God that resides within, of course)! Pranidhana is to
-                “dedicate”, “devote” or “surrender”. Thus, a dedication or
-                devotion to our true self, ultimate reality, or God.. In Western
-                terms we often find the word “surrender” or “letting go” as a
-                more neat and clean translation for Isvara Pranidhana. And in
-                Western terms this act of “surrender” has certainly become quite
-                cliche in spiritual dialogue.
-              </p>
+              Isvara Pranidhana is one of yogas niyamas (positive observances)
+              that we practice to cultivate more healthy living, a positive
+              outlook and a liberated state of existence. Isvara translates as
+              “supreme being”, “ultimate reality”, “true self” or dare I say
+              “God” (the God that resides within, of course)! Pranidhana is to
+              “dedicate”, “devote” or “surrender”. Thus, a dedication or
+              devotion to our true self, ultimate reality, or God.. In Western
+              terms we often find the word “surrender” or “letting go” as a more
+              neat and clean translation for Isvara Pranidhana. And in Western
+              terms this act of “surrender” has certainly become quite cliche in
+              spiritual dialogue.
               <p>
                 Surrender doesn’t seem to invoke much courage, strength or power
                 on the surface. However, in yoga tradition surrender is NOT
@@ -218,7 +200,7 @@ export default class CRMDashboard2 extends Component {
             <CardBody
               className="xd123"
               style={{ justifyContent: "center", textAlign: "center" }}
-              onMouseOver={() =>
+              onClick={() =>
                 this.setState({ hover: "visibleText" }) &
                 (document.getElementsByClassName("xd123")[0].hidden = true)
               }
@@ -226,7 +208,9 @@ export default class CRMDashboard2 extends Component {
             >
               {" "}
               <span id="readMore">
-                <span id="readMore">Click To Read More</span>
+                <span id="readMore">
+                  <Button>Click To Read More</Button>
+                </span>
               </span>
             </CardBody>
           </Card>
@@ -235,20 +219,18 @@ export default class CRMDashboard2 extends Component {
               className="main-card mb-3"
               style={{
                 boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                width: "95%",
               }}
             >
               <CardLink href="/#/dashboards/calendar">
                 <CardHeader className="card-header-tab">
-                  <div className="card-header-title font-size-lg font-weight-normal">
-                    <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
-                      {" "}
-                    </i>
-                    Join An Upcoming Event.
-                  </div>{" "}
-                  <div> </div>
+                  <h3>Join An Upcoming Event</h3>
                 </CardHeader>
-                Find new and coming activities with Ray by visiting the Events
-                Page.
+                <CardBody>
+                  {" "}
+                  Find new and coming activities with Ray by visiting the Events
+                  Page.
+                </CardBody>
               </CardLink>
             </Card>
           </Row>

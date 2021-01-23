@@ -26,8 +26,34 @@ import {
   CardFooter,
   ButtonGroup,
 } from "reactstrap";
-import { idText } from "typescript";
-import { toHtml } from "@fortawesome/fontawesome-svg-core";
+
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
+import {
+  FirestoreProvider,
+  FirestoreCollection,
+  FirestoreDocument,
+  FirestoreMutation,
+} from "@react-firebase/firestore";
+
+import {
+  FirebaseAuthProvider,
+  FirebaseAuthConsumer,
+  IfFirebaseAuthed,
+  IfFirebaseAuthedAnd,
+} from "@react-firebase/auth";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDurY8L6svgBXIb1eunXLlBAUVrAqpNZ8Q",
+  authDomain: "raymauiyoga-d75b1.firebaseapp.com",
+  projectId: "raymauiyoga-d75b1",
+  storageBucket: "raymauiyoga-d75b1.appspot.com",
+  messagingSenderId: "313463385446",
+  appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
+  measurementId: "G-S8EJTRMN63",
+};
 
 class UserQueryComponent extends Component {
   constructor(props) {
@@ -35,58 +61,93 @@ class UserQueryComponent extends Component {
     this.state = {
       authVar: this.props.authVar,
       textVar: "",
+      activeIDStatus: "Status: Viewing All",
     };
   }
   render() {
-    this.state.authVar = axios
-      .get(`https://api.raymauiyoga.com/users/`, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-      .then((res) => {
-        if (res.err == null) {
-        }
-        localStorage.setItem(
-          "ActiveUserCount",
-          JSON.parse(JSON.stringify(res.data)).length 
-        );
-        let concData = "";
-        for (var i = 0; i < JSON.parse(JSON.stringify(res.data)).length; i++) {
-          concData =
-            concData +
-            "\r\n " +
-            String(JSON.parse(JSON.stringify(res.data))[i].username) +
-            " - " +
-            String(JSON.parse(JSON.stringify(res.data))[i].email);
-          this.state.textVar = concData
-            .split("\n")
-            .map((str, index) => <h5 key={index}>{str}</h5>);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     return (
       <Fragment>
         <Card>
           <CardBody>
-            <button onClick={() => alert("coming soon")}>Delete User</button>{" "}
-            &nbsp;
-            <button onClick={() => alert("coming soon")}>Email All</button>{" "}
-            &nbsp;
             <button
-              style={{ marginTop: "5px" }}
+              style={{
+                backgroundColor: "#335599",
+                height: "40px",
+                alignSelf: "center",
+                borderRadius: "10px",
+                marginBottom: "5px",
+                fontSize: "15px",
+              }}
               onClick={() => alert("coming soon")}
             >
-              Create Admin
+              Email All
+            </button>
+            <br />
+            <input
+              style={{ textAlign: "center" }}
+              placeholder={this.state.activeIDStatus}
+            ></input>
+            <br />
+            &nbsp;
+            <button
+              style={{
+                backgroundColor: "#335599",
+                height: "40px",
+                alignSelf: "center",
+                borderRadius: "10px",
+                fontSize: "15px",
+              }}
+              onClick={() => alert("coming soon")}
+            >
+              Change Powerlevel
             </button>{" "}
             &nbsp;
+            <button
+              style={{
+                backgroundColor: "#993333",
+                height: "40px",
+                alignSelf: "center",
+                borderRadius: "10px",
+                fontSize: "15px",
+              }}
+              onClick={() => alert("coming soon")}
+            >
+              Ban User
+            </button>
+            &nbsp;
+            <FirestoreProvider {...firebaseConfig} firebase={firebase}>
+              <FirestoreCollection path={`/users/`}>
+                {(d) => {
+                  if (d) {
+                    return d.isLoading ? (
+                      "Loading"
+                    ) : (
+                      <pre>
+                        {" "}
+                        {localStorage.setItem(
+                          "activeID2",
+                          String(JSON.stringify(d.value))
+                        )}
+                        <div style={{ maxWidth: "350px" }}>
+                          <h4>
+                            {String(JSON.stringify(d.value))
+                              .replace(/("|{|]|\[|\\|\/])/gm, "")
+                              .replace(/(,)/gm, "\r\n ")
+                              .replace(/(})/gm, "\r\n ")}
+                          </h4>
+                          {localStorage.setItem(
+                            "ActiveUserCount",
+                            d.value.length
+                          )}
+                        </div>
+                      </pre>
+                    );
+                  }
+                }}
+              </FirestoreCollection>
+            </FirestoreProvider>
           </CardBody>
         </Card>
-        {this.state.textVar} <br />
       </Fragment>
     );
   }

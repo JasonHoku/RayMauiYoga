@@ -26,7 +26,9 @@ export default class CalendarPage extends Component {
           transitionLeave={false}
         >
           <Card>
-            <Row>RayMauiYoga's</Row>
+            <Row>
+              <h1>Events</h1>
+            </Row>
             <Row>
               <Col className="colJustText">
                 <CardBody>

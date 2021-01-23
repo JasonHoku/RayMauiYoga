@@ -2,11 +2,7 @@ import React, { Fragment } from "react";
 import cx from "classnames";
 import axios from "axios";
 import { connect } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
 import HeaderLogo from "../AppLogo";
@@ -17,7 +13,7 @@ import UserBox from "./Components/UserBox";
 import HeaderRightDrawer from "./Components/HeaderRightDrawer";
 import { Button } from "reactstrap";
 
-import Login from "../../Login/Login"
+import Login from "../../Login/Login";
 
 import HeaderDots from "./Components/HeaderDots";
 
@@ -30,7 +26,6 @@ class Header extends React.Component {
       response: [],
     };
   }
-
 
   render() {
     let {
@@ -62,16 +57,19 @@ class Header extends React.Component {
               <MegaMenu />
             </div>
             <div className="app-header-right">
-              <span> <Router>
-            <Switch>
-            <Route path="/#/dashboards/home/connect/google/redirect" component={LoginRedirect} />
-            <Route exact path="/" component={Login} />
-              <Login />
-       </Switch></Router>
-
-                &nbsp;
-
-                &nbsp;
+              <span>
+                {" "}
+                <Router>
+                  <Switch>
+                    <Route
+                      path="/#/dashboards/home/connect/google/redirect"
+                      component={LoginRedirect}
+                    />
+                    <Route exact path="/" component={Login} />
+                    <Login />
+                  </Switch>
+                </Router>
+                &nbsp; &nbsp;
               </span>
 
               <UserBox />
@@ -82,8 +80,6 @@ class Header extends React.Component {
       </Fragment>
     );
   }
-
-
 }
 
 const mapStateToProps = (state) => ({

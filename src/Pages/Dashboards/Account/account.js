@@ -10,10 +10,8 @@ to your service.
 */
 
 import React, { Component, Fragment } from "react";
-import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
-import gql from "graphql-tag";
 
 import classnames from "classnames";
 import {
@@ -48,16 +46,28 @@ import {
   ButtonGroup,
 } from "reactstrap";
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
+import {
+  FirestoreProvider,
+  FirestoreCollection,
+  FirestoreDocument,
+  FirestoreMutation,
+} from "@react-firebase/firestore";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDurY8L6svgBXIb1eunXLlBAUVrAqpNZ8Q",
+  authDomain: "raymauiyoga-d75b1.firebaseapp.com",
+  projectId: "raymauiyoga-d75b1",
+  storageBucket: "raymauiyoga-d75b1.appspot.com",
+  messagingSenderId: "313463385446",
+  appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
+  measurementId: "G-S8EJTRMN63",
+};
+
 // This setup is only needed once per application;
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: "https://api.raymauiyoga.com/graphql",
-    headers: {
-      "content-type": "application/json",
-    },
-  }),
-});
 
 export default class AccountElements extends Component {
   constructor(props) {
@@ -68,6 +78,7 @@ export default class AccountElements extends Component {
       formDesc: [],
       formMessage: "",
       activeTab: "1",
+      sendCommentButtonText: "Send Message",
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleInputChange2 = this.handleInputChange2.bind(this);
@@ -113,188 +124,110 @@ export default class AccountElements extends Component {
     let { formName, formDesc, formEmail, formMessage } = this.state;
     const { data } = this.state;
 
-    const MY_MUTATION_MUTATION = gql`
-    mutation MyMutation {
-      createMicroComment(
-        input: {
-          data: {
-            name: "${this.state.formName}  + ${Date().toString()}"
-            comment: "${this.state.formDesc}"
-            user: "${localStorage.getItem("username")}"
-          }
-        }
-      ) {
-        microComment {
-          name
-          comment
-          user
-          
-        }
-      }
-    }
-    
-    `;
-
-    const MyMutationMutation = (props) => {
-      this.state.sendButton = "Send";
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data
-                ? ((<pre>{JSON.stringify(null, null, 2)}</pre>),
-                  (this.state.sendButton = "Message Sent!"))
-                : null;
-              return (
-                <div style={{ alignContent: "center" }}>
-                  <br />
-                  {dataEl} &nbsp;&nbsp;&nbsp;&nbsp;
-                  <button
-                    id="apiupform2"
-                    onClick={() =>
-                      MyMutation(formName + formDesc, Date().toString())
-                    }
-                  >
-                    {this.state.sendButton}
-                  </button>{" "}
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <button
-                    style={{ backgroundColor: "#660000" }}
-                    onClick={logout}
-                  >
-                    {" "}
-                    Logout
-                  </button>
-                </div>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
     return (
       <Fragment>
-        <Row
+        <Card
           style={{
-            width: "100%",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
-            alignItems: "center",
+            width: "85%",
+            maxWidth: "750px",
+            backgroundColor: "#CCCCCCC",
+            borderRadius: "25px",
+            background:
+              "linear-gradient(0.25turn, #CCDDFFEE, #FFFFFFAA, #CCDDFFEE)",
+
+            boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
           }}
         >
-          <ApolloProvider client={apolloClient}>
-            <Card
+          <TabContent
+            activeTab={this.state.activeTab}
+            style={{
+              backgroundColor: "transparent",
+              opacity: 0.9,
+              justifyContent: "center",
+              alignSelf: "center",
+              width: "100%",
+            }}
+          >
+            <CardHeader
+              className="ponoTitle"
               style={{
-                width: "24rem",
-                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                backgroundColor: "transparent",
+                justifyContent: "center",
+                alignSelf: "center",
+                width: "100%",
+
+                opacity: 100,
               }}
             >
-              <TabContent
-                activeTab={this.state.activeTab}
-                style={{
-                  backgroundColor: "transparent",
-                  opacity: 0.9,
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: "100%",
+              <Button
+                size="sm"
+                outline
+                color="alternate"
+                className={
+                  "btn-pill btn-wide " +
+                  classnames({ active: this.state.activeTab === "1" })
+                }
+                onClick={() => {
+                  this.toggle("1");
                 }}
               >
-                <CardHeader
-                  className="ponoTitle"
+                Contact
+              </Button>
+              &nbsp;
+              <Button
+                size="sm"
+                outline
+                color="alternate"
+                className={
+                  "btn-pill btn-wide " +
+                  classnames({ active: this.state.activeTab === "3" })
+                }
+                onClick={() => {
+                  this.toggle("3");
+                }}
+              >
+                Your Account
+              </Button>
+            </CardHeader>
+            <TabPane tabId="1">
+              <Row>
+                <Card
                   style={{
-                    backgroundColor: "transparent",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: "100%",
-
-                    opacity: 100,
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                   }}
                 >
-                  <Button
-                    size="sm"
-                    outline
-                    color="alternate"
-                    className={
-                      "btn-pill btn-wide " +
-                      classnames({ active: this.state.activeTab === "1" })
-                    }
-                    onClick={() => {
-                      this.toggle("1");
-                    }}
-                  >
-                    Contact
-                  </Button>
-                  &nbsp;
-                  <Button
-                    size="sm"
-                    outline
-                    color="alternate"
-                    className={
-                      "btn-pill btn-wide " +
-                      classnames({ active: this.state.activeTab === "2" })
-                    }
-                    onClick={() => {
-                      this.toggle("2");
-                    }}
-                  >
-                    Live Chat
-                  </Button>
-                  &nbsp;
-                  <Button
-                    size="sm"
-                    outline
-                    color="alternate"
-                    className={
-                      "btn-pill btn-wide " +
-                      classnames({ active: this.state.activeTab === "3" })
-                    }
-                    onClick={() => {
-                      this.toggle("3");
-                    }}
-                  >
-                    Your Account
-                  </Button>
-                </CardHeader>
-                <TabPane tabId="1">
-                  <CardHeader
-                    style={{
-                      backgroundColor: "transparent",
-                    }}
-                  >
-                    Welcome, {localStorage.getItem("username")} !
-                  </CardHeader>
                   <CardBody
                     style={{
                       backgroundColor: "transparent",
                     }}
                   >
-                    <div> Thank you for signing up with RayMauiYoga!</div>{" "}
+                    <h3>Tools and information coming soon.</h3>
+                    <div style={{ textAlign: "left" }}>
+                      <li>Live Streams</li>
+                      <li>Video Libraries</li>
+                      <li>Early Access</li>
+                      <li>Notifications</li>
+                    </div>
                     <br />
-                    Additional site features are coming soon, for now you can
-                    send a message directly to administaration here.
-                    <br />
-                    <br />
+                    <h3>Send a message:</h3>
                     <Form
                       style={{
                         justifyContent: "center",
+                        textAlign: "center",
                       }}
                     >
-                      Contact Info: <br />
+                      <div style={{ textAlign: "left" }}>
+                        {" "}
+                        Contact Information:
+                      </div>
                       <Input
+                        style={{ width: "250px" }}
                         onChange={this.handleInputChange}
                         name="formName"
                         type="text"
                         value={this.state.formName}
                       ></Input>
-                      <br />
-                      Message: <br />
+                      <div style={{ textAlign: "left" }}>Message:</div>
                       <Input
                         style={{ width: "250px" }}
                         onChange={this.handleInputChange2}
@@ -302,23 +235,86 @@ export default class AccountElements extends Component {
                         type="textarea"
                         value={this.state.formDesc}
                       ></Input>
-                      <br />
+
+                      <FirestoreProvider
+                        {...firebaseConfig}
+                        firebase={firebase}
+                      >
+                        <FirestoreMutation
+                          type="add"
+                          merge={true}
+                          path={`/comments/`}
+                        >
+                          {({ runMutation }) => {
+                            return (
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                }}
+                              >
+                                <button
+                                  style={{
+                                    borderRadius: "5px",
+                                    textAlign: "center",
+                                    width: "auto",
+                                  }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    runMutation(
+                                      {
+                                        From: this.state.formName,
+                                        Message: this.state.formDesc,
+                                      },
+                                      { merge: true }
+                                    ).then((res) => {
+                                      console.log("Ran mutation ", res);
+                                    });
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      position: "relative",
+                                      top: "-4px",
+                                    }}
+                                  >
+                                    {this.state.sendCommentButtonText}
+                                  </span>
+                                </button>
+                              </div>
+                            );
+                          }}
+                        </FirestoreMutation>
+                      </FirestoreProvider>
                     </Form>
-                    <MyMutationMutation />
                   </CardBody>
-                </TabPane>
-                <TabPane tabId="2">
-                  <CardBody>Live Chat, Coming Soon.</CardBody>
-                </TabPane>
-                <TabPane tabId="3">
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="3">
+              <Row>
+                <Card
+                  style={{
+                    width: "85%",
+                    maxWidth: "750px",
+                    backgroundColor: "#CCCCCCC",
+                    borderRadius: "25px",
+                    boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
+                  }}
+                >
                   <CardBody>
-                    Account information and tools will propagate here soon.
+                    <h3> Account tools coming soon.</h3>
+                    <div style={{ textAlign: "left" }}>
+                      Username: {localStorage.getItem("username")} <br />
+                      E-Mail: {localStorage.getItem("userEmail")}
+                      <br />
+                      Status: Regular User
+                    </div>
                   </CardBody>
-                </TabPane>
-              </TabContent>
-            </Card>
-          </ApolloProvider>
-        </Row>
+                </Card>
+              </Row>
+            </TabPane>
+          </TabContent>
+        </Card>
       </Fragment>
     );
   }

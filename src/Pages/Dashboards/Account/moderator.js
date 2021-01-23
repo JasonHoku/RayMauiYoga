@@ -317,7 +317,7 @@ export default class ModeratorElements extends Component {
                     this.toggle("1");
                   }}
                 >
-                  Main Tools
+                  Tools
                 </Button>
                 <Button
                   outline
@@ -330,7 +330,7 @@ export default class ModeratorElements extends Component {
                     this.toggle("2");
                   }}
                 >
-                  Team
+                  User View
                 </Button>
               </CardHeader>
               <br />
@@ -434,6 +434,7 @@ export default class ModeratorElements extends Component {
                         {" "}
                         User Management{" "}
                       </button>
+                      {/* //Comment Manager Button
                       &nbsp;
                       <button
                         style={{
@@ -450,7 +451,8 @@ export default class ModeratorElements extends Component {
                       >
                         {" "}
                         Comments{" "}
-                      </button>
+                      </button>*/}
+                      {/*
                       &nbsp;
                       <button
                         style={{
@@ -467,7 +469,7 @@ export default class ModeratorElements extends Component {
                       >
                         {" "}
                         Products{" "}
-                      </button>
+                      </button>*/}
                       &nbsp;
                       <button
                         style={{
@@ -499,7 +501,7 @@ export default class ModeratorElements extends Component {
                           this.toggle("Notes");
                         }}
                       >
-                        Your Notes
+                        Team Notes
                       </button>
                       &nbsp;
                       <button
@@ -517,6 +519,7 @@ export default class ModeratorElements extends Component {
                         {" "}
                         Surveys{" "}
                       </button>
+                      {/*
                       &nbsp;
                       <button
                         style={{
@@ -532,7 +535,7 @@ export default class ModeratorElements extends Component {
                       >
                         {" "}
                         Live Chat{" "}
-                      </button>
+                      </button>*/}
                       &nbsp;
                       <button
                         style={{
@@ -550,26 +553,6 @@ export default class ModeratorElements extends Component {
                         Report Issue{" "}
                       </button>
                       &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#FF0000",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          localStorage.removeItem("jwt");
-                          localStorage.removeItem("username");
-                          window.location.reload();
-                        }}
-                      >
-                        {" "}
-                        Logout{" "}
-                      </button>
-                      &nbsp;
                       <br />
                       <br />
                     </span>
@@ -585,79 +568,44 @@ export default class ModeratorElements extends Component {
                     opacity: 100,
                   }}
                 >
-                  <Row>
-                    {" "}
-                    <Card
+                  <Card
+                    style={{
+                      width: "100%",
+                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                      alignContent: "center",
+                      height: "100%",
+                      marginTop: "15px",
+                      alignItems: "center",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    <CardTitle
                       style={{
-                        width: "18rem",
-                        boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                        alignContent: "center",
-                        height: "100%",
-                        marginTop: "15px",
-                        marginLeft: "25px",
-                        alignItems: "center",
-                        marginBottom: "25px",
+                        justifyContent: "center",
+                        alignSelf: "center",
                       }}
                     >
-                      <CardTitle
-                        style={{
-                          justifyContent: "center",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <h4>Highlight Metrics:</h4>
-                      </CardTitle>
-                      <TabContent
-                        activeTab={this.state.activeTab2}
-                        style={{
-                          backgroundColor: "transparent",
-                          opacity: 0.9,
-                          justifyContent: "center",
-                          alignSelf: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <TabPane
-                          className="ponoTitle"
-                          tabId="1"
-                          style={{
-                            height: "100%",
-                            opacity: 100,
-                          }}
-                        >
-                          <h4>
-                            Users: {this.state.userMetric}
-                            <br />
-                            Chat Live: (NYI){this.state.chatMetric}
-                            <br />
-                            Comments: {this.state.commentsMetric}
-                            <br />
-                            Open Issues: {this.state.issuesMetric}
-                            <br />
-                            Survey Responses: {this.state.SurveyMetric}
-                          </h4>
-                        </TabPane>
-                      </TabContent>
-                    </Card>
-                  </Row>
+                      <h4>Highlight Metrics:</h4>
+                    </CardTitle>
+                    <h4>
+                      Users: {this.state.userMetric}
+                      <br />
+                      Open Issues: {this.state.issuesMetric}
+                    </h4>
+                  </Card>
                 </TabPane>
               </Row>
               <TabPane tabId="2">
                 <Row style={{ justifyContent: "center" }}>
-                  {" "}
                   <Card
                     style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                       backgroundColor: "transparent",
                       alignContent: "center",
                       alignItems: "center",
                     }}
                   >
                     <CardHeader> Registered User View:</CardHeader>
-                    <CardBody>
-                      <AccountElements />
-                    </CardBody>
+                    <AccountElements />
                   </Card>
                 </Row>
               </TabPane>{" "}

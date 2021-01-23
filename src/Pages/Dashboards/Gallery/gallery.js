@@ -21,6 +21,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  CardTitle,
   CardLink,
   CardImg,
   NavLink,
@@ -48,7 +49,6 @@ import {
   faAngleDown,
   faStrikethrough,
 } from "../../../../node_modules/@fortawesome/free-solid-svg-icons";
-
 
 import { makeData } from "../../Tables/DataTables/Examples/utils";
 
@@ -135,37 +135,81 @@ export default class GalleryElements extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <Row>
-            <Card>
-              <CardBody>
-                <p>Galleria RayMauiYoga</p>
-              </CardBody>
-              <CardBody className="CarouselCard">
-                <CarouselBSExample />
-              </CardBody>
-            </Card>
-            <br></br>
+          <Row
+            style={{
+              alignContent: "center",
+              justifyContent: "center",
+              marginTop: "-15px",
+              marginBottom: "-15px",
+
+              textAlign: "center",
+            }}
+            width="100%"
+          >
+            <CardTitle
+              style={{
+                textAlign: "center",
+                borderRadius: "25px",
+                backgroundColor: "#440066BB",
+                paddingRight: "10px",
+                paddingLeft: "10px",
+                fontWeight: "900",
+                color: "whitesmoke",
+                fontSize: "36px",
+              }}
+            >
+              Galleria
+            </CardTitle>
           </Row>
-          <br></br>
-          <Row>
-            <Card>
-              <CardHeader>Explore</CardHeader>
-              <CardBody>
-                An Eye-
-                <br /> Opening <br />
-                Experience{" "}
-              </CardBody>
-            </Card>{" "}
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="#/dashboard/contact">
-              <Card style={{ width: "min-content" }}>
-                <CardHeader>Contact</CardHeader>
+          <br />
+          <Row style={{ justifyContent: "center" }}>
+            <Col width="100%" style={{ maxWidth: "750px" }}>
+              <Card>
                 <CardBody>
-                  RayMauiYoga Contact Page.
-                  <br></br>
+                  <p></p>{" "}
+                  <center>
+                    <CarouselBSExample />
+                  </center>
+                  <center>
+                    ← Slideshow →
+                    <br />
+                  </center>{" "}
                 </CardBody>
               </Card>
-            </a>
+            </Col>
+          </Row>
+          <br></br>
+
+          <Row>
+            <Col xs="6" sm="4" md="4" xl="3">
+              <a href="/#/dashboards/about">
+                <Card>
+                  <CardHeader>Explore</CardHeader>
+                  <CardBody> An Eye-Opening Experience</CardBody>
+                </Card>
+              </a>
+            </Col>
+
+            <Col style={{ marginTop: "10px" }} xs="6" sm="4" md="3" xl="4">
+              <a href="/#/dashboards/about">
+                <Card>
+                  <CardHeader>Learn More</CardHeader>
+                  <CardBody>Discover RayMauiYoga Events.</CardBody>
+                </Card>
+              </a>
+            </Col>
+
+            <Col style={{ marginTop: "15px" }} xs="7" sm="4" md="4" xl="5">
+              <a href="#/dashboard/contact">
+                <Card>
+                  <CardHeader>Contact</CardHeader>
+                  <CardBody>
+                    For questions, comments or concerns, reach out at the
+                    contact page.
+                  </CardBody>
+                </Card>
+              </a>
+            </Col>
           </Row>
           <br></br>
         </CSSTransitionGroup>

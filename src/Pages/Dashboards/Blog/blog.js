@@ -51,9 +51,7 @@ import {
   faStrikethrough,
 } from "@fortawesome/free-solid-svg-icons";
 
-
 import { makeData } from "../../Tables/DataTables/Examples/utils";
-
 
 const CLIENT = {
   sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
@@ -153,9 +151,24 @@ export default class BlogElements extends Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-          <Row>
-            <Card style={{ width: "100%", height: "80vh" }}>
-              <CardHeader>Blog Explorer</CardHeader>
+          <Row
+            style={{
+              textAlign: "center",
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Card
+              style={{
+                width: "90%",
+                boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                height: "80vh",
+              }}
+            >
+              <CardHeader>
+                <h1>Blog Explorer</h1>
+              </CardHeader>
               <CardHeader style={{ width: "100%", justifyContent: "center" }}>
                 <Button> A </Button> &nbsp;&nbsp;&nbsp;
                 <Button> B </Button> &nbsp;&nbsp;&nbsp;
@@ -165,12 +178,17 @@ export default class BlogElements extends Component {
               <TabContent>
                 {" "}
                 <TabPane id="1">
-                <CKEditor data="<p>Blog &amp; Admin Edit Tools: Coming Soon.</p>" />
+                  <Card>
+                    <CardBody>
+                      {" "}
+                      Recent Updates, Written Articles &amp; Notifications
+                      Coming Soon.
+                    </CardBody>
+                  </Card>{" "}
                 </TabPane>
               </TabContent>
             </Card>
           </Row>
-          <br></br>
         </CSSTransitionGroup>
       </Fragment>
     );

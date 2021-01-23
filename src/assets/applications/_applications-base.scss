@@ -1,13 +1,10 @@
 // Applications
 
-$app-layout-sidebar-width         : 270px;
-$app-layout-aside-width           : 60px;
-$app-layout-header-height         : 50px;
-
-
+$app-layout-sidebar-width: 270px;
+$app-layout-aside-width: 60px;
+$app-layout-header-height: 50px;
 
 .app-inner-layout {
-
   &.rm-sidebar {
     .app-inner-layout__wrapper {
       .app-inner-layout__content {
@@ -50,7 +47,7 @@ $app-layout-header-height         : 50px;
       display: flex;
 
       &.card {
-        box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)" ;
+        box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)";
         border-radius: 0;
         border: 0;
       }
@@ -95,7 +92,7 @@ $app-layout-header-height         : 50px;
       }
 
       &.card {
-        box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)" ;
+        box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)";
         border-radius: 0;
         background: $gray-100;
         border: 0;

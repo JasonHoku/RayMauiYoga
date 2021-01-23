@@ -163,100 +163,144 @@ class DocumentationPage extends Component {
 
     return (
       <Fragment>
-        <CardHeader> Webtools Documentation </CardHeader>
+        <CardHeader>
+          <h3> Mod Tools Docs</h3>{" "}
+        </CardHeader>
         <CardBody>
           <div
             style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
               borderRadius: "5px",
             }}
           >
             <strong>
-              ChangeLog Post<b> 1/19/21</b>
+              ChangeLog Post<b> 1/22/21</b>
             </strong>
-            <small> V1.1 </small>
+            <small> V1.2 </small>
             <br />
             <br />{" "}
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Content Editor</b>
               </Col>
-              <Col>Used for changing parts of the website easily</Col>
+              <Col>
+                Used for changing parts of the website easily, TODO: Discuss
+                dynamic website sections and flow
+              </Col>
             </Row>{" "}
             <br />
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Video Manager</b>
               </Col>
-              <Col>Manages Custom Videos and Streaming.</Col>
+              <Col>
+                Manage Videos &amp; Streams, Categories, get Links, go Live.
+              </Col>
             </Row>{" "}
             <br />
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>User Management</b>
               </Col>
-              <Col>Send Emails, Create Moderators, Ban Accounts</Col>
+              <Col>Send Emails, Create Moderators, Edit Meta, Ban Accounts</Col>
             </Row>{" "}
             <br />
             <br />
-            <Row>
-              <Col>
-                <b>Comments</b>
-              </Col>
-              <Col>Manage Comment Submissions</Col>
-            </Row>{" "}
-            <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Products</b>
               </Col>
               <Col>Add, Edit, or Delete Shop Products and Content</Col>
             </Row>{" "}
             <br />
-            <Row>
+            <br />
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Events</b>
               </Col>
-              <Col>Manage Event Calendar Data</Col>
+              <Col>Manage event calendar data</Col>
             </Row>{" "}
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
-                <b>Your Notes</b>
+                <b>Team Notes</b>
               </Col>
-              <Col>Personal Notekeeping Tool</Col>
+              <Col>Share notes amongst your team</Col>
             </Row>{" "}
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Surveys</b>
               </Col>
-              <Col>Create, manage and view survey utilities.</Col>
+              <Col>
+                Create, manage and view survey utilities and website feedback.
+              </Col>
             </Row>{" "}
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Report Issue</b>
               </Col>
-              <Col>Manage and report issues to web development.</Col>
+              <Col>Manage and report issues to web development team.</Col>
             </Row>{" "}
             <br />
-            <Row>
+            <Row
+              style={{
+                borderBottom: "solid 2px",
+                borderColor: "black",
+              }}
+            >
               <Col>
                 <b>Live Chat</b>
               </Col>
-              <Col>Chat with users who are live on your website!</Col>
+              <Col>Currently Disabled</Col>
             </Row>{" "}
             <br />
           </div>{" "}
           <br />
           <br />{" "}
-          <a
-            href="https://github.com/RayMauiYoga/PrettCoolWeb/
-      "
-          >
+          <a href="https://github.com/JasonHoku/RayMauiYoga">
             Source Code And Readme
           </a>{" "}
           <br />

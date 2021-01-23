@@ -55,7 +55,6 @@ import { makeData } from "../../Tables/DataTables/Examples/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CountUp from "react-countup";
 
-
 const CLIENT = {
   sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
   production: process.env.PAYPAL_CLIENT_ID_PRODUCTION,
@@ -147,18 +146,7 @@ export default class MusicElements extends Component {
               }}
             >
               <CardHeader className="card-header-tab" color="light">
-                <div className="card-header-title font-size-lg font-weight-normal">
-                  <i className="header-icon pe-7s-star mr-3 text-muted opacity-6">
-                    {" "}
-                  </i>
-                  Update: 12/10/20
-                </div>{" "}
-                <div>
-                  {" "}
-                  <br></br>
-                  <br></br>
-                  <br></br>
-                </div>
+                <h1>Videos</h1>
               </CardHeader>
               <CardBody>
                 Videos Coming Soon

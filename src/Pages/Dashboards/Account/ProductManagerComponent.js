@@ -150,38 +150,6 @@ class ProductManagerComponent extends Component {
       } catch (error) {}
     };
 
-    this.state.authVar = axios
-      .get(`https://api.raymauiyoga.com/pcp-products`, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-      .then((res) => {
-        if (res.err == null) {
-        }
-        let concData = "";
-        for (var i = 0; i < JSON.parse(JSON.stringify(res.data)).length; i++) {
-          concData =
-            concData +
-            "\r\n ID#" +
-            String(JSON.parse(JSON.stringify(res.data))[i].id) +
-            "| " +
-            String(JSON.parse(JSON.stringify(res.data))[i].ProductName) +
-            " - " +
-            String(JSON.parse(JSON.stringify(res.data))[i].Description) +
-            " Image: " +
-            process.env.REACT_APP_BACKEND_URL +
-            String(JSON.parse(JSON.stringify(res.data))[i].Image[0].url);
-          this.state.textVar = concData
-            .split("\n")
-            .map((str, index) => <h5 key={index}>{str}</h5>);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     return (
       <Fragment>
         <CardHeader> PCP Product Adder</CardHeader>
