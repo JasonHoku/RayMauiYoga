@@ -356,3 +356,7 @@ h2 {
   border: none;
   box-shadow: none;
 }
+
+#root > div > div.app-main > div.app-main__outer > div.app-main__inner {
+  height: min-content;
+}

@@ -154,7 +154,6 @@ export default class MusicElements extends Component {
               </CardBody>
             </Card>
           </Row>
-          <br></br>
         </CSSTransitionGroup>
       </Fragment>
     );

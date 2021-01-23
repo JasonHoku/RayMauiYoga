@@ -92,6 +92,7 @@ export default class Account extends Component {
             justifyContent: "center",
             alignContent: "center",
             alignItems: "center",
+            height:"min-content",
           }}
         >
           <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
@@ -166,7 +167,6 @@ export default class Account extends Component {
                           </div>
                         </div>
                       </CardBody>
-                      <br />
                     </Card>
                   );
                 } else {
