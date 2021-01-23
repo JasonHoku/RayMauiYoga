@@ -1,22 +1,34 @@
+name: npm i test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
-      - name: Checkout branch
-        uses: actions/checkout@v1
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.16
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+    - name: Clear Modules
+      run: rm -rf node_modules
+      
+    - name: Install Test
+      run: npm i
 
-      - name: Build & deploy
-        run: npm run fb
-        env:
-          CI: true
-          FIREBASE_TOKEN: ${{ secrets.YOUR_SECRET }}
+    - name: Firebase Deploy
+      run: npm run fb
