@@ -3,7 +3,10 @@ import { compose, graphql } from "react-apollo";
 import { gql, useQuery } from "@apollo/client";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
-
+import mux from "mux-embed";
+import "hls.js";
+import "hls.js/dist/hls.js";
+import Hls from "hls.js";
 import {
   Row,
   Col,
@@ -37,6 +40,9 @@ const apolloClient = new ApolloClient({
   }),
 });
 
+var REACT_APP_MUX_TOKEN_ID = process.env.REACT_APP_MUX_TOKEN_ID;
+var REACT_APP_MUX_TOKEN_SECRET = process.env.REACT_APP_MUX_TOKEN_SECRET;
+var REACT_APP_MUX_TOKEN_SECRET2 = process.env.REACT_APP_MUX_TOKEN_SECRET2;
 class VideoManager extends Component {
   constructor(props) {
     super(props);
@@ -46,56 +52,83 @@ class VideoManager extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getData();
-    setTimeout(() => this.getData(), 500);
-    setTimeout(() => this.getData(), 1500);
-    setTimeout(() => this.getData(), 2500);
+  asyncGet() {
+    async () => {
+      console.log("Y");
+    };
+  }
+
+  async componentDidMount() {
+    {
+      (function () {
+        // Replace with your asset's playback ID
+        var playbackId = "U9hQ27mjUuZV00pavV5fNZMTwDfdwvE8KywKPYUObTQU";
+        var url = "https://stream.mux.com/" + playbackId + ".m3u8";
+        var video = document.getElementById("myVideo");
+
+        // Let native HLS support handle it if possible
+        if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          video.src = url;
+        } else if (Hls.isSupported()) {
+          // HLS.js-specific setup code
+          let hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(video);
+        }
+      })();
+    }
+    if (typeof mux !== "undefined") {
+      mux.monitor("#myVideo", {
+        data: {
+          env_key: REACT_APP_MUX_TOKEN_SECRET, // required
+
+          // Metadata
+          player_name: "Custom Player", // ex: 'My Main Player'
+          player_init_time: window.muxPlayerInitTime, // ex: 1451606400000
+
+          // ... and other metadata
+        },
+      });
+    }
+    console.log("YYY");
+    const Mux = require("@mux/mux-node");
+    const { Video, Data } = new Mux(
+      REACT_APP_MUX_TOKEN_ID,
+      REACT_APP_MUX_TOKEN_SECRET
+    );
+    console.log(Video, Data);
+    const muxClient = new Mux(
+      REACT_APP_MUX_TOKEN_ID,
+      REACT_APP_MUX_TOKEN_SECRET
+    ); // Success!
+    muxClient.on("request", (req) => {
+      // Request will contain everything being sent such as `headers, method, base url, etc
+      body = {
+        playback_policy: ["public"],
+        new_asset_settings: {
+          playback_policy: ["public"],
+        },
+      };
+    });
+
+    muxClient.on("response", (res) => {
+      // Response will include everything returned from the API, such as status codes/text, headers, etc
+    });
+
+    Video.LiveStreams.create({
+      new_asset_settings: {
+        playback_policy: ["public"],
+        mp4_support: "standard",
+      },
+    }).then((asset) => {
+      /* Do things with the asset */
+      this.setState({ gotStreamKey: asset.stream_key });
+    });
   }
   componentWillUnmount() {
     clearInterval(this.state.intervalId);
   }
-  getData() {
-    console.log("Check Chat Data");
-    try {
-      this.state.authVar = axios
-        .get(`https://api.raymauiyoga.com/chats`, {
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        })
-        .then((res) => {
-          if (res.err == null) {
-            this.setState({ textvar: JSON.stringify(res) });
-          }
-          let concData = "";
-          for (
-            var i = 0;
-            i < JSON.parse(JSON.stringify(res.data)).length;
-            i++
-          ) {
-            concData =
-              concData +
-              "\r\n ID#" +
-              String(JSON.parse(JSON.stringify(res.data))[i].id) +
-              "| " +
-              String(JSON.parse(JSON.stringify(res.data))[i].User) +
-              ": " +
-              String(JSON.parse(JSON.stringify(res.data))[i].Comment);
-
-            this.state.textVar = concData
-              .split("\n")
-              .map((str, index) => <h5 key={index}>{str}</h5>);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  getData() {}
 
   handleInputChange(event) {
     this.setState({
@@ -108,110 +141,19 @@ class VideoManager extends Component {
     });
   }
 
-  onSubmit = () => {
-    const formData = new FormData();
-    formData.Comment = this.state.noteVar;
-    formData.User = localStorage.getItem("username");
-    console.log(formData);
-
-    axios
-      .post(`https://api.raymauiyoga.com/chats`, JSON.stringify(formData), {
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-      .then((res) => {
-        if (res.err == null) {
-          document.getElementById("apiupform").hidden = false;
-        }
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  onSubmitDelete = () => {
-    const formData = new FormData();
-    formData.Note = this.state.noteVar;
-    formData.id = 21;
-    console.log(formData);
-
-    axios
-      .post(`https://api.raymauiyoga.com/chats`, JSON.stringify(formData), {
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-      .then((res) => {
-        if (res.err == null) {
-          alert("Success!");
-        }
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  onImageChange = (event) => {
-    console.log(event.target.files);
-
-    this.setState({
-      images: event.target.files,
-    });
-  };
-
   render() {
-    let { formName, formDesc, formEmail, formMessage } = this.state;
-    const { data } = this.state;
-
-    const MY_MUTATION_MUTATION = gql`
-      mutation DeleteChat {
-        deleteChat(input: { where: { id: ${this.state.deleteIDVar} } }) {
-          chat {
-            id
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-
-              return (
-                <button
-                  onClick={() =>
-                    MyMutation(formName + formDesc, Date().toString())
-                  }
-                >
-                  Delete Comment #
-                </button>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-
     return (
       <Fragment>
+        <script src="https://src.litix.io/core/3/mux.js"></script>
         <CardHeader> PCP Site Video Manager</CardHeader>
-        <CardBody>Setup Per Request. </CardBody>
+        <CardBody>
+          Fresh Stream Key: {this.state.gotStreamKey}
+          <br />
+          Stream Video Example
+          <video width="350px" id="myVideo" controls></video>
+          <br />
+        </CardBody>
+
         <br />
       </Fragment>
     );
