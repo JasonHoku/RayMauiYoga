@@ -108,7 +108,7 @@ function ContentManagerComponent() {
       } else {
         isInitialMount.current = false;
         if (loadStage === "2") {
-          checkFormStates() & loadStage("3");
+          checkFormStates() & setloadStage("3");
         }
         if (loadStage === "3") {
           sethasLoaded("4");
@@ -130,7 +130,10 @@ function ContentManagerComponent() {
       setloadStage("2");
       isInitialMount.current = false;
     } else if (loadStage === "3") {
+      setloadedIDData(loadedEzID);
       console.log("Setting Send Data");
+      seteditedDescription(loadedDescription);
+      setloadedEzID(loadedIDData);
       setsendReadyDescription(loadedDescription);
       setsendReadyCreator(loadedCreatorData);
       setsendReadyCategory(loadedCategory);
@@ -182,9 +185,6 @@ function ContentManagerComponent() {
         setfinListButton("Send Listing"),
           setfinListButtonStatus("Ready To Publish"),
           setfinListButtonDisable(false);
-      } else {
-        console.log("222");
-        document.getElementById("finListButton").disabled = true;
       }
     } catch (e) {}
   }
@@ -282,7 +282,7 @@ function ContentManagerComponent() {
                 textAlign: "center",
               }}
             >
-              <CardHeader>Live View:</CardHeader>{" "}
+              <CardHeader>Content View:</CardHeader>{" "}
             </div>{" "}
             <Row>
               <Col
@@ -290,16 +290,11 @@ function ContentManagerComponent() {
                   width: "90%",
                 }}
               >
+                Title: <br />
                 <b>{loadedTitleData}</b>
                 <br />
-                <a
-                  target="_blank"
-                  href={`https://www.google.com/search?q=${encodeURIComponent(
-                    loadedLocationData
-                  )}`}
-                >
-                  {loadedLocationData}
-                </a>
+                <br />
+                Body:{" "}
                 <div
                   className="listingExample"
                   dangerouslySetInnerHTML={{
@@ -309,8 +304,6 @@ function ContentManagerComponent() {
               </Col>
             </Row>{" "}
           </div>
-          <br />
-          <br />
           &nbsp;
           <br />{" "}
           <div style={{ width: "100%", textAlign: "center" }}>
@@ -349,6 +342,9 @@ function ContentManagerComponent() {
                                 setloadedCreatorData(
                                   d.value[loadedEzID - 1].Creator
                                 ) &
+                                setloadedDescription(
+                                  d.value[loadedEzID - 1].Description
+                                ) &
                                 setloadedIDData(d.value[loadedEzID - 1].ID) &
                                 setloadStage("3");
                             }
@@ -382,41 +378,31 @@ function ContentManagerComponent() {
                                 width: "100%",
                               }}
                               onClick={() => {
+                                setloadedIDData("2");
                                 runMutation({
                                   Location: `${localStorage.getItem(
                                     "sendReadyLocation"
                                   )}`,
                                   Creator: `${localStorage.getItem(
-                                    "sendReadyCreator"
-                                  )}`,
-                                  GMapCoords: `${localStorage.getItem(
-                                    "sendReadyGMapCoords"
+                                    "username"
                                   )}`,
                                   ID: `${localStorage.getItem("sendReadyID")}`,
                                   Title: `${localStorage.getItem(
                                     "sendReadyTitle"
                                   )}`,
-                                  Public: `${localStorage.getItem(
-                                    "sendReadyPublic"
-                                  )}`,
-                                  LastEdit: `${localStorage.getItem(
-                                    "username"
-                                  )}`,
                                   Description: `${localStorage
                                     .getItem("editedDescription")
                                     .replace(/(\r\n|\n|\r)/gm, ``)
                                     .replace(/(`)/gm, `'`)} `,
-                                  Category: `${localStorage.getItem(
-                                    "sendReadyCategory"
-                                  )} `,
                                 }).then((res) => {
+                                  alert("Published");
                                   if (res) {
                                     setloadStage("2");
                                   }
                                 });
                               }}
                             >
-                              Publish To Live
+                              Publish
                             </button>
                           </div>
                         );
