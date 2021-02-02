@@ -235,7 +235,7 @@ function ModeratorElements() {
 
   function loadVideoManagerComponent() {
     if (activeTab === "Video") {
-      return <VideoManagerComponent />;
+      return <VideoManager />;
     }
   }
 
@@ -584,31 +584,6 @@ function ModeratorElements() {
                     >
                       {" "}
                       Events{" "}
-                    </button>
-                    &nbsp;
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#BB00CC",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Notes");
-                      }}
-                    >
-                      Team Notes
                     </button>
                     &nbsp;
                     <button

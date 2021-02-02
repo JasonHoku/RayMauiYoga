@@ -151,7 +151,7 @@ class VideoManager extends Component {
           69e93363-3e18-db5a-ed77-dc9a33a7f897
           <br />
           <b> Stream Video Example</b>
-          <video width="350px" id="myVideo" controls></video>
+          <video preload="false" width="350px" id="myVideo" controls></video>
           <br />
         </CardBody>
 

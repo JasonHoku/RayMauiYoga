@@ -254,18 +254,6 @@ class DocumentationPage extends Component {
               }}
             >
               <Col>
-                <b>Team Notes</b>
-              </Col>
-              <Col>Share notes amongst your team</Col>
-            </Row>{" "}
-            <br />
-            <Row
-              style={{
-                borderBottom: "solid 2px",
-                borderColor: "black",
-              }}
-            >
-              <Col>
                 <b>Surveys</b>
               </Col>
               <Col>

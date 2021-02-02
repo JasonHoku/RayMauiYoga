@@ -2,6 +2,10 @@ import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 
 import SubmitListingAsUser from "./UserListingAction";
 
+import PayPalButton from "../Shop/PayPalExpress";
+
+import { toInteger } from "lodash";
+
 import classnames from "classnames";
 import {
   Row,
@@ -65,6 +69,10 @@ function AccountElements() {
   const [loadedEzID, setloadedEzID] = useState("");
   const [hasLoaded, sethasLoaded] = useState("1");
   const [imgUpped, setimgUpped] = useState("");
+  const [readyPaymentCost, setreadyPaymentCost] = useState("2");
+  const [readyPaymentItems, setreadyPaymentItems] = useState(
+    "Tier 1: $2 / Month"
+  );
   const [formPublicType, setformPublicType] = useState("");
   const [sendCommentButtonText, setsendCommentButtonText] = useState(
     "Send Message"
@@ -139,6 +147,39 @@ function AccountElements() {
       );
     }
   }
+  function loadPayPalButton() {
+    if (activeTab === "4") {
+      return (
+        <span>
+          <center> ${readyPaymentCost}</center>
+          <PayPalButton
+            valueCheck={valueCheck()}
+            cart={readyPaymentCost
+              .toString()
+              .split("\n")
+              .map((str) => (
+                <p key={str}>{str}</p>
+              ))}
+            total={toInteger(readyPaymentCost)}
+            cartItems={readyPaymentItems
+              .toString()
+              .split("\n")
+              .map((str) => (
+                <p key={str}>{str}</p>
+              ))}
+            removeProduct={handleRemoveProduct}
+            style={{ width: "15rem" }}
+          />
+          {readyPaymentItems
+            .toString()
+            .split("\n")
+            .map((str) => (
+              <p key={str}>{str}</p>
+            ))}
+        </span>
+      );
+    }
+  }
   function formResetter() {
     try {
       document.forms[1].reset();
@@ -178,6 +219,30 @@ function AccountElements() {
     }
   }
 
+  function valueCheck() {
+    if (!localStorage.getItem("localData3")) {
+      localStorage.setItem("localData3", 0);
+    }
+  }
+  function handleRemoveProduct(id, e) {
+    let cart = this.state.cart;
+    let index = cart.findIndex((x) => x.id == id);
+    cart.splice(index, 1);
+    this.setState({
+      cart: cart,
+    });
+    this.sumTotalItems(this.state.cart);
+    this.sumTotalAmount(this.state.cart);
+    e.preventDefault();
+  }
+
+  //Reset Quantity
+  function updateQuantity(qty) {
+    console.log("quantity added...");
+    this.setState({
+      quantity: qty,
+    });
+  }
   function checkFormStates() {
     setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
     handleImageUploadState();
@@ -401,6 +466,77 @@ function AccountElements() {
                     <br />
                     <b>Status:</b> Regular User
                     <br />
+                    <br />
+                    <br />
+                    <a href="#" onClick={(e) => e.preventDefault() & setactiveTab("4")}>
+                      {" "}
+                      Upgrade Account Status{" "}
+                    </a>
+                    <br />
+                    <br />
+                  </div>
+                </h5>
+              </CardBody>
+            </Card>
+          </Row>
+        </TabPane>
+        <TabPane tabId="4">
+          <Row>
+            <Card
+              style={{
+                width: "95%",
+                maxWidth: "750px",
+                backgroundColor: "#CCCCCCC",
+                borderRadius: "25px",
+                boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
+              }}
+            >
+              <CardBody>
+                <h3> Upgrade Account:</h3>
+                <h5>
+                  {" "}
+                  <div style={{ textAlign: "left" }}>
+                    <b>Username:</b> {localStorage.getItem("username")} <br />
+                    <br />
+                    <b> E-Mail:</b> {localStorage.getItem("userEmail")}
+                    <br />
+                    <br />
+                    <a
+                      href="#"
+                      onClick={(e) =>
+                        e.preventDefault() &
+                        setreadyPaymentCost("2") &
+                        setreadyPaymentItems("Tier 1: $2 / Month")
+                      }
+                    >
+                      Tier 1
+                    </a>{" "}
+                    &nbsp;
+                    <a
+                      href="#"
+                      onClick={(e) =>
+                        e.preventDefault() &
+                        setreadyPaymentCost("5") &
+                        setreadyPaymentItems("Tier 2: $5 / Month")
+                      }
+                    >
+                      Tier 2
+                    </a>{" "}
+                    &nbsp;
+                    <a
+                      href="#"
+                      onClick={(e) =>
+                        e.preventDefault() &
+                        setreadyPaymentCost("25") &
+                        setreadyPaymentItems("Tier 3: $25 / Month")
+                      }
+                    >
+                      Tier 3
+                    </a>
+                    <br />
+                    <br />
+                    <br />
+                    {loadPayPalButton()}
                     <br />
                   </div>
                 </h5>
