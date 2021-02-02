@@ -44,9 +44,8 @@ import {
   IfFirebaseAuthed,
   IfFirebaseAuthedAnd,
 } from "@react-firebase/auth";
-
 var firebaseConfig = {
-  apiKey: "AIzaSyDurY8L6svgBXIb1eunXLlBAUVrAqpNZ8Q",
+  apiKey: process.env.REACT_APP_FIREBASE,
   authDomain: "raymauiyoga-d75b1.firebaseapp.com",
   projectId: "raymauiyoga-d75b1",
   storageBucket: "raymauiyoga-d75b1.appspot.com",
@@ -54,7 +53,6 @@ var firebaseConfig = {
   appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
   measurementId: "G-S8EJTRMN63",
 };
-
 class UserQueryComponent extends Component {
   constructor(props) {
     super(props);

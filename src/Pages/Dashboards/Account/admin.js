@@ -154,7 +154,6 @@ export default class AdminElements extends Component {
 
   render() {
     let { formName, formEmail, formMessage } = this.state;
-    const { data } = this.state;
 
     const MY_MUTATION_MUTATION = gql`
   mutation MyMutation {

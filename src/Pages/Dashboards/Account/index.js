@@ -39,15 +39,8 @@ import {
 
 // Examples
 
-import AccountElements from "./account";
-import AdminElements from "./admin";
-import ModeratorElements from "./moderator";
-import LoginPageElements from "./loginPage";
-//
-
-var CLIIP;
 var firebaseConfig = {
-  apiKey: "AIzaSyDurY8L6svgBXIb1eunXLlBAUVrAqpNZ8Q",
+  apiKey: process.env.REACT_APP_FIREBASE,
   authDomain: "raymauiyoga-d75b1.firebaseapp.com",
   projectId: "raymauiyoga-d75b1",
   storageBucket: "raymauiyoga-d75b1.appspot.com",
@@ -55,6 +48,16 @@ var firebaseConfig = {
   appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
   measurementId: "G-S8EJTRMN63",
 };
+
+import AccountElements from "./account";
+import AdminElements from "./admin";
+import ModeratorElements from "./moderator";
+import LoginPageElements from "./loginPage";
+import { throwServerError } from "@apollo/client";
+//
+
+var CLIIP;
+
 export default class Account extends Component {
   constructor(props) {
     super(props);
@@ -92,7 +95,7 @@ export default class Account extends Component {
             justifyContent: "center",
             alignContent: "center",
             alignItems: "center",
-            height:"min-content",
+            height: "min-content",
           }}
         >
           <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
@@ -104,7 +107,7 @@ export default class Account extends Component {
                     <Card
                       className="main-card mb-3"
                       style={{
-                        width: "85%",
+                        width: "95%",
                         maxWidth: "750px",
                         backgroundColor: "#CCCCCCC",
                         borderRadius: "25px",
@@ -170,10 +173,9 @@ export default class Account extends Component {
                     </Card>
                   );
                 } else {
-                  //Begin Moderator Check
                   if (
-                    user.displayName === "raymauiyoga" ||
-                    user.displayName === "Jason Hoku"
+                    user.uid === "zj0jKGLWbUPb7FapAUoCS9zyaoo1" ||
+                    user.uid === "8gZKzIAI7le5B03GbynBUKCpyl02"
                   ) {
                     localStorage.setItem("username", user.displayName);
                     localStorage.setItem("userEmail", user.email);
@@ -181,7 +183,7 @@ export default class Account extends Component {
                     return (
                       <Card
                         style={{
-                          width: "85%",
+                          width: "95%",
                           maxWidth: "750px",
                           backgroundColor: "#CCCCCCC",
                           borderRadius: "25px",
@@ -233,14 +235,31 @@ export default class Account extends Component {
                         </CardBody>
                       </Card>
                     );
-                  } else localStorage.setItem("username", user.displayName);
-                  localStorage.setItem("userEmail", user.email);
-                  localStorage.setItem("userUID", user.uid);
-                  console.log(user);
+                  } else {
+                    localStorage.setItem("username", user.displayName);
+                    localStorage.setItem("userEmail", user.email);
+                    localStorage.setItem("userUID", user.uid);
+
+                    if (this.state.username === undefined) {
+                      this.setState({
+                        username: localStorage.getItem("username"),
+                      });
+                    }
+                    if (this.state.userEmail === undefined) {
+                      this.setState({
+                        userEmail: localStorage.getItem("userEmail"),
+                      });
+                    }
+                    if (this.state.userUID === undefined) {
+                      this.setState({
+                        userUID: localStorage.getItem("userUID"),
+                      });
+                    }
+                  }
                   return (
                     <Card
                       style={{
-                        width: "85%",
+                        width: "95%",
                         maxWidth: "750px",
                         backgroundColor: "#CCCCCCC",
                         borderRadius: "25px",
@@ -253,16 +272,11 @@ export default class Account extends Component {
                       <CardBody
                         style={{
                           width: "100%",
-                          justifyContent: "center",
-                          alignContent: "center",
                           boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                          width: "100%",
-                          alignItems: "center",
                           borderRadius: "25px",
                           textAlign: "center",
                         }}
                       >
-                        {" "}
                         <button
                           className="zoom"
                           style={{
@@ -285,11 +299,11 @@ export default class Account extends Component {
                         >
                           Sign&nbsp;Out
                         </button>
-                        <h2> Welcome, {localStorage.getItem("username")}</h2>
-                        <IfFirebaseAuthed>
-                          <AccountElements />
-                        </IfFirebaseAuthed>
+                        <h3> Welcome, {localStorage.getItem("username")}</h3>
                       </CardBody>
+                      <IfFirebaseAuthed>
+                        <AccountElements />
+                      </IfFirebaseAuthed>
                     </Card>
                   );
                 }

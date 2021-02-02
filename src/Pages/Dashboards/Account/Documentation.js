@@ -119,7 +119,6 @@ class DocumentationPage extends Component {
 
   render() {
     let { formName, formDesc, formEmail, formMessage } = this.state;
-    const { data } = this.state;
 
     const MY_MUTATION_MUTATION = gql`
       mutation DeleteNote {
@@ -221,6 +220,7 @@ class DocumentationPage extends Component {
               <Col>Send Emails, Create Moderators, Edit Meta, Ban Accounts</Col>
             </Row>{" "}
             <br />
+            {/*
             <br />
             <Row
               style={{
@@ -233,7 +233,7 @@ class DocumentationPage extends Component {
               </Col>
               <Col>Add, Edit, or Delete Shop Products and Content</Col>
             </Row>{" "}
-            <br />
+            <br /> */}
             <br />
             <Row
               style={{
@@ -272,6 +272,7 @@ class DocumentationPage extends Component {
                 Create, manage and view survey utilities and website feedback.
               </Col>
             </Row>{" "}
+            {/* 
             <br />
             <Row
               style={{
@@ -283,7 +284,7 @@ class DocumentationPage extends Component {
                 <b>Report Issue</b>
               </Col>
               <Col>Manage and report issues to web development team.</Col>
-            </Row>{" "}
+            </Row>{" "} */}
             <br />
             <Row
               style={{
@@ -294,7 +295,9 @@ class DocumentationPage extends Component {
               <Col>
                 <b>Live Chat</b>
               </Col>
-              <Col>Currently Disabled</Col>
+              <Col>
+                Not Active <br /> (Lead Generation Utility)
+              </Col>
             </Row>{" "}
             <br />
           </div>{" "}

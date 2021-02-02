@@ -80,20 +80,7 @@ function boxMullerRandom() {
   })();
 }
 
-function randomData(n = 30) {
-  return Array.apply(0, Array(n)).map(boxMullerRandom);
-}
 
-const sampleData = randomData(10);
-const sampleData2 = randomData(15);
-const sampleData3 = randomData(8);
-const sampleData4 = randomData(12);
-console.info({
-  sampleData,
-  sampleData2,
-  sampleData3,
-  sampleData4,
-});
 
 export default class BlogElements extends Component {
   constructor(props) {
@@ -104,7 +91,6 @@ export default class BlogElements extends Component {
       activeTab2: "222",
       content: "Hello World",
       activeTab1: "11",
-      data: makeData(),
     };
     this.setContent = this.setContent.bind(this);
   }
@@ -139,7 +125,6 @@ export default class BlogElements extends Component {
   }
 
   render() {
-    const { data } = this.state;
 
     return (
       <Fragment>

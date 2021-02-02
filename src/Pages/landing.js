@@ -26,9 +26,11 @@ class LandingPage extends React.Component {
             className="landingContent"
             onClick={() => (window.location.hash = "/dashboards/home")}
           >
-            <h1 style={{ color: "black" }}>RayMauiYoga.com</h1>
+            <h1 style={{ color: "black", fontFamily: "monospace" }}>
+              RayMauiYoga.com
+            </h1>
             <img class="spin" src="/images/DialDecal.png"></img>
-            <h2>Digital Yoga through Blog, Video &amp; Live-Stream by Ray</h2>
+            <h2>Yoga through Blog, Video &amp; Live-Stream by Ray</h2>
             <h4>
               <a
                 style={{ color: "white" }}
@@ -38,7 +40,9 @@ class LandingPage extends React.Component {
               </a>
             </h4>
             <h3>
-              <small>Under Construction. 1-19-2021</small>
+              <small>
+                Under Construction. {String(new Date().toLocaleDateString())}
+              </small>
             </h3>
             <br /> <br />
           </span>

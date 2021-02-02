@@ -9,7 +9,7 @@ to your service.
     "react-apollo": "^2.5.5"
 */
 
-import React, { Component, Fragment, useEffect } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
@@ -114,44 +114,31 @@ const MyQueryCopyQuery = (props) => {
   );
 };
 
-export default class ModeratorElements extends Component {
-  constructor(props) {
-    super(props);
-    this.setMutation = this.setMutation.bind(this);
-    this.state = {
-      formName: [],
-      formEmail: "",
-      token: "",
-      authVar: "",
-      ponoMapDATA: "Loading...",
-      formMessage: "",
-      intervalID2: "",
-      activeTab: "1",
-      activeTab2: "1",
-      cartItems: "x",
-      cart: ["x", "y"],
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handlePriceInputChange = this.handlePriceInputChange.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.toggle2 = this.toggle2.bind(this);
+function ModeratorElements() {
+  const [message, setMessage] = useState("Hi there, how are you?");
+  const [formName, setformName] = useState([]);
+  const [formEmail, setformEmail] = useState([]);
+  const [activeTab, setactiveTab] = useState("1");
+  const [userMetric, setuserMetric] = useState("");
+  const [issuesMetric, setissuesMetric] = useState("");
+  const [fruit, setFruit] = useState("banana");
+  const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
+  function loadProducts(props) {
+    if (activeTab === "Products") {
+      return <ProductManagerComponent />;
+    }
   }
-
-  componentDidMount() {
-    this.getMetrics();
-    setTimeout(() => this.getMetrics(), 500);
-    setTimeout(() => this.getMetrics(), 1500);
-    setTimeout(() => this.getMetrics(), 2500);
-
-    let intervalId = setInterval(() => {
-      this.getMetrics();
-    }, 2000);
-    this.setState({ intervalId: intervalId });
+  function loadEvents(props) {
+    if (activeTab === "Events") {
+      return <EventManagerComponent />;
+    }
   }
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+  function loadContentManagerComponent(props) {
+    if (activeTab === "Content") {
+      return <ContentManagerComponent />;
+    }
   }
-  getMetrics() {
+  function getMetrics() {
     console.log("Updating Metrics"),
       this.setState({
         userMetric: localStorage.getItem("ActiveUserCount"),
@@ -161,71 +148,32 @@ export default class ModeratorElements extends Component {
         SurveyMetric: localStorage.getItem("NewSurveyCount"),
       });
   }
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
+  function toggle(tab) {
+    if (activeTab !== tab) {
+      setactiveTab(tab);
     }
   }
-  handleRemoveProduct(id, e) {
-    let cart = this.state.cart;
-    let index = cart.findIndex((x) => x.id === id);
-    cart.splice(index, 1);
-    this.sumTotalItems(this.state.cart);
-    this.sumTotalAmount(this.state.cart);
-    e.preventDefault();
-  }
-  toggle2(tab) {
-    if (this.state.activeTab2 !== tab) {
+  function toggle2(tab) {
+    if (activeTab2 !== tab) {
       this.setState({
         activeTab2: tab,
       });
     }
   }
-  onImageChange = (event) => {
+  function onImageChange(event) {
     console.log(event.target.files);
 
     this.setState({
       images: event.target.files,
     });
-  };
+  }
 
-  onSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    if (this.state.images != null) {
-      var form = document.getElementById("apiupform");
-      document.getElementById("apiupform").hidden = true;
-      this.valueCheck = this.valueCheck.bind(this);
-      Array.from(this.state.images).forEach((image) => {
-        formData.append("files", image);
-      });
-
-      axios
-        .post(`https://api.raymauiyoga.com/upload`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          if (res.err == null) {
-            alert("Success!");
-            document.getElementById("apiupform").hidden = false;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-  handleInputChange(event) {
+  function handleInputChange(event) {
     this.setState({
       formName: event.target.value,
     });
   }
-  handlePriceInputChange(event) {
+  function handlePriceInputChange(event) {
     localStorage.setItem(
       "localData7",
       event.target.value - localStorage.getItem("localData4")
@@ -234,252 +182,330 @@ export default class ModeratorElements extends Component {
       adminPrice: event.target.value,
     });
   }
-
-  setMutation() {
-    let { formName, formEmail, formMessage } = this.state;
-
-    if (formName.length !== null) {
-      formName = document.getElementById("formName");
-    } else {
-      formName = document.getElementById("formName");
-    }
-  }
-  componentWillUnmount() {
-    clearInterval(this.intervalID2);
-  }
-  valueCheck() {
+  function valueCheck() {
     if (!localStorage.getItem("localData3")) {
       localStorage.setItem("localData3", 0);
     }
   }
-  render() {
-    let { formName, formEmail, formMessage } = this.state;
-    const { data } = this.state;
 
-    return (
-      <Fragment>
-        <Container
-          fluid
-          style={{
-            backgroundColor: "transparent",
-            backgroundColor: "#FFFFFFDD",
-            borderRadius: "55px",
-            width: "100%",
-            justifyContent: "center",
-          }}
-        >
-          <ApolloProvider client={apolloClient}>
-            <TabContent
-              activeTab={this.state.activeTab}
+  function loadProductsComponent(props) {
+    if (activeTab === "Products") {
+      return <ProductManagerComponent />;
+    }
+  }
+  function loadAccountElementsComponent(props) {
+    if (activeTab === "User View") {
+      return <AccountElements />;
+    }
+  }
+
+  function loadEventsComponent(props) {
+    if (activeTab === "Events") {
+      return <EventManagerComponent />;
+    }
+  }
+
+  function loadContentManagerComponent(props) {
+    if (activeTab === "Content") {
+      return <ContentManagerComponent />;
+    }
+  }
+
+  function loadCommentManagerComponent(props) {
+    if (activeTab === "Comments") {
+      return <CommentManagerComponent />;
+    }
+  }
+
+  function loadUserQueryComponent(props) {
+    if (activeTab === "Users") {
+      return <UserQueryComponent />;
+    }
+  }
+  function documentationPageLoader() {
+    if (activeTab === "Documentation") {
+      return <DocumentationPage />;
+    }
+  }
+  function loadLiveChatManager() {
+    if (activeTab === "Live Chat") {
+      return <LiveChatManager />;
+    }
+  }
+
+  function loadVideoManagerComponent() {
+    if (activeTab === "Video") {
+      return <VideoManagerComponent />;
+    }
+  }
+
+  function loadUserQueryComponent(props) {
+    if (activeTab === "Users") {
+      return <UserQueryComponent />;
+    }
+  }
+  function loadListingManagerComponent() {
+    if (activeTab === "Listing Manager") {
+      return <ListingManagerComponent />;
+    }
+  }
+  function loadEventManagerComponent(props) {
+    if (activeTab === "Events") {
+      return <EventManagerComponent />;
+    }
+  }
+  function loadContentManagerComponent(props) {
+    if (activeTab === "Content") {
+      return <ContentManagerComponent />;
+    }
+  }
+  function loadCommentManagerComponent(props) {
+    if (activeTab === "Comments") {
+      return <CommentManagerComponent />;
+    }
+  }
+
+  function loadIssueManagerComponent(props) {
+    if (activeTab === "Issues") {
+      return <IssueManager />;
+    }
+  }
+
+  function loadSurveyManagerComponent(props) {
+    if (activeTab === "Surveys") {
+      return <SurveyManagerComponent />;
+    }
+  }
+  function loadNoteManagerComponent(props) {
+    if (activeTab === "Notes") {
+      return <NoteManagerComponent />;
+    }
+  }
+
+  return (
+    <Fragment>
+      <Container
+        fluid
+        style={{
+          backgroundColor: "transparent",
+          backgroundColor: "#FFFFFFDD",
+          borderRadius: "55px",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <ApolloProvider client={apolloClient}>
+          <TabContent
+            activeTab={activeTab}
+            style={{
+              backgroundColor: "transparent",
+              opacity: 0.9,
+              justifyContent: "center",
+              alignSelf: "center",
+              width: "100%",
+            }}
+          >
+            <CardHeader
+              className="ponoTitle"
               style={{
-                backgroundColor: "transparent",
-                opacity: 0.9,
                 justifyContent: "center",
+                backgroundColor: "transparent",
                 alignSelf: "center",
+                borderBottom: "none",
+                marginBottom: "-25px",
                 width: "100%",
+                opacity: 100,
               }}
             >
-              <CardHeader
-                className="ponoTitle"
-                style={{
-                  justifyContent: "center",
-                  backgroundColor: "transparent",
-                  alignSelf: "center",
-                  borderBottom: "none",
-                  marginBottom: "-25px",
-                  width: "100%",
-                  opacity: 100,
+              <h2>
+                <i className="pe-7s-tools icon-gradient bg-plum-plate"></i>
+                Moderator Controls
+              </h2>
+            </CardHeader>
+            <CardHeader
+              style={{
+                marginBottom: "-35px",
+                justifyContent: "center",
+                backgroundColor: "transparent",
+                borderBottom: "none",
+                alignSelf: "center",
+              }}
+            >
+              <Button
+                size="sm"
+                outline
+                color="alternate"
+                className={
+                  "btn-pill btn-wide " +
+                  classnames({ active: activeTab === "1" })
+                }
+                onClick={() => {
+                  toggle("1");
                 }}
               >
-                <h2>
-                  <i className="pe-7s-tools icon-gradient bg-plum-plate"></i>
-                  Moderator Controls
-                </h2>
-              </CardHeader>
-              <CardHeader
-                style={{
-                  marginBottom: "-35px",
-                  justifyContent: "center",
-                  backgroundColor: "transparent",
-                  borderBottom: "none",
-                  alignSelf: "center",
+                Tools
+              </Button>
+              <Button
+                outline
+                color="alternate"
+                className={
+                  "btn-pill btn-wide " +
+                  classnames({ active: activeTab === "User View" })
+                }
+                onClick={async () => {
+                  toggle("User View");
+                  setTimeout(
+                    () =>
+                      document.getElementById("id001").scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center",
+                      }),
+                    100
+                  );
                 }}
               >
-                <Button
-                  size="sm"
-                  outline
-                  color="alternate"
-                  className={
-                    "btn-pill btn-wide " +
-                    classnames({ active: this.state.activeTab === "1" })
-                  }
-                  onClick={() => {
-                    this.toggle("1");
+                User View
+              </Button>
+            </CardHeader>
+            <br />
+            <br />
+            <Row style={{ justifyContent: "center" }}>
+              <Row>
+                {" "}
+                <Card
+                  style={{
+                    width: "auto",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    height: "100%",
+                    marginTop: "-5px",
+                    marginBottom: "-10px",
+                    marginLeft: "25px",
+                    marginRight: "25px",
+                    alignItems: "center",
                   }}
                 >
-                  Tools
-                </Button>
-                <Button
-                  outline
-                  color="alternate"
-                  className={
-                    "btn-pill btn-wide " +
-                    classnames({ active: this.state.activeTab === "2" })
-                  }
-                  onClick={async () => {
-                    this.toggle("2");
-                    setTimeout(
-                      () =>
-                        document.getElementById("id001").scrollIntoView({
-                          behavior: "smooth",
-                          block: "center",
-                          inline: "center",
-                        }),
-                      100
-                    );
-                  }}
-                >
-                  User View
-                </Button>
-              </CardHeader>
-              <br />
-              <br />
-              <Row style={{ justifyContent: "center" }}>
-                <Row>
-                  {" "}
-                  <Card
+                  <CardTitle
                     style={{
-                      width: "auto",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      height: "100%",
-                      marginTop: "-5px",
-                      marginBottom: "-10px",
-                      marginLeft: "25px",
-                      marginRight: "25px",
-                      alignItems: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      marginBottom: "-15px",
                     }}
                   >
-                    <CardTitle
+                    <h4>Main Website Tools:</h4>
+                  </CardTitle>
+                  <span
+                    style={{
+                      marginLeft: "10px",
+                      marginTop: "5px",
+                      display: "block",
+                    }}
+                  >
+                    <button
                       style={{
-                        justifyContent: "center",
-                        alignSelf: "center",
-                        marginBottom: "-15px",
-                      }}
-                    >
-                      <h4>Main Website Tools:</h4>
-                    </CardTitle>
-                    <span
-                      style={{
-                        marginLeft: "10px",
+                        marginTop: "10px",
+                        backgroundColor: "#009900",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
                         marginTop: "5px",
-                        display: "block",
+                      }}
+                      onClick={async () => {
+                        toggle("Documentation");
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
                       }}
                     >
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#009900",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          this.toggle("Documentation");
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                        }}
-                      >
-                        {" "}
-                        Documentation{" "}
-                      </button>
-                      &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#009999",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Content");
-                        }}
-                      >
-                        {" "}
-                        Content Editor{" "}
-                      </button>
-                      &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#006699",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Video");
-                        }}
-                      >
-                        {" "}
-                        Video Manager{" "}
-                      </button>
-                      &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#0033AA",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Users");
-                        }}
-                      >
-                        {" "}
-                        User Management{" "}
-                      </button>
-                      {/* //Comment Manager Button
+                      {" "}
+                      Documentation{" "}
+                    </button>
+                    &nbsp;
+                    <button
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#009999",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Content");
+                      }}
+                    >
+                      {" "}
+                      Content Editor{" "}
+                    </button>
+                    &nbsp;
+                    <button
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#006699",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Video");
+                      }}
+                    >
+                      {" "}
+                      Video Manager{" "}
+                    </button>
+                    &nbsp;
+                    <button
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#0033AA",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Users");
+                      }}
+                    >
+                      {" "}
+                      User Management{" "}
+                    </button>
+                    {/* //Comment Manager Button
                       &nbsp;
                       <button
                         style={{
@@ -500,13 +526,13 @@ export default class ModeratorElements extends Component {
                               }),
                             100
                           );
-                          this.toggle("Comments");
+                          toggle("Comments");
                         }}
                       >
                         {" "}
                         Comments{" "}
                       </button>*/}
-                      {/*
+                    {/*
                       &nbsp;
                       <button
                         style={{
@@ -527,89 +553,89 @@ export default class ModeratorElements extends Component {
                               }),
                             100
                           );
-                          this.toggle("Products");
+                          toggle("Products");
                         }}
                       >
                         {" "}
                         Products{" "}
                       </button>*/}
-                      &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#6600CC",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Events");
-                        }}
-                      >
-                        {" "}
-                        Events{" "}
-                      </button>
-                      &nbsp;
-                      <button
-                        style={{
-                          marginTop: "10px",
-                          backgroundColor: "#BB00CC",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Notes");
-                        }}
-                      >
-                        Team Notes
-                      </button>
-                      &nbsp;
-                      <button
-                        style={{
-                          backgroundColor: "#BB0099",
-                          borderRadius: "16px",
-                          height: "35px",
-                          fontSize: "120%",
-                          marginTop: "5px",
-                        }}
-                        onClick={async () => {
-                          setTimeout(
-                            () =>
-                              document.getElementById("id002").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                                inline: "center",
-                              }),
-                            100
-                          );
-                          this.toggle("Surveys");
-                        }}
-                      >
-                        {" "}
-                        Surveys{" "}
-                      </button>
-                      {/*
+                    &nbsp;
+                    <button
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#6600CC",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Events");
+                      }}
+                    >
+                      {" "}
+                      Events{" "}
+                    </button>
+                    &nbsp;
+                    <button
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#BB00CC",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Notes");
+                      }}
+                    >
+                      Team Notes
+                    </button>
+                    &nbsp;
+                    <button
+                      style={{
+                        backgroundColor: "#BB0099",
+                        borderRadius: "16px",
+                        height: "35px",
+                        fontSize: "120%",
+                        marginTop: "5px",
+                      }}
+                      onClick={async () => {
+                        setTimeout(
+                          () =>
+                            document.getElementById("id002").scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                              inline: "center",
+                            }),
+                          100
+                        );
+                        toggle("Surveys");
+                      }}
+                    >
+                      {" "}
+                      Surveys{" "}
+                    </button>
+                    {/*
                       &nbsp;
                       <button
                         style={{
@@ -629,13 +655,14 @@ export default class ModeratorElements extends Component {
                               }),
                             100
                           );
-                          this.toggle("Live");
+                          toggle("Live");
                         }}
                       >
                         {" "}
                         Live Chat{" "}
                       </button>*/}
-                      &nbsp;
+                    &nbsp;
+                    {/*
                       <button
                         style={{
                           backgroundColor: "#BB0033",
@@ -654,252 +681,253 @@ export default class ModeratorElements extends Component {
                               }),
                             100
                           );
-                          this.toggle("Issue");
+                          toggle("Issue");
                         }}
                       >
                         {" "}
                         Report Issue{" "}
                       </button>
-                      &nbsp;
-                      <br />
-                      <br />
-                    </span>
-                  </Card>
-                </Row>
-                <TabPane
-                  className="ponoTitle"
-                  tabId="1"
+                      &nbsp;*/}
+                    <br />
+                    <br />
+                  </span>
+                </Card>
+              </Row>
+              <TabPane
+                className="ponoTitle"
+                tabId="1"
+                style={{
+                  height: "100%",
+                  backgroundColor: "transparent",
+                  alignContent: "center",
+                  opacity: 100,
+                }}
+              >
+                <Card
                   style={{
-                    height: "100%",
-                    backgroundColor: "transparent",
+                    width: "auto",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                     alignContent: "center",
-                    opacity: 100,
+                    height: "100%",
+                    marginTop: "15px",
+                    alignItems: "center",
+                    marginBottom: "25px",
                   }}
                 >
-                  <Card
+                  <CardTitle
                     style={{
-                      width: "100%",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      height: "100%",
-                      marginTop: "15px",
-                      alignItems: "center",
-                      marginBottom: "25px",
+                      justifyContent: "center",
+                      alignSelf: "center",
                     }}
                   >
-                    <CardTitle
-                      style={{
-                        justifyContent: "center",
-                        alignSelf: "center",
-                      }}
-                    >
-                      <h4>Highlight Metrics:</h4>
-                    </CardTitle>
-                    <h4>
-                      Users: {this.state.userMetric}
-                      <br />
-                      <span id="id002"></span>
-                      Open Issues: {this.state.issuesMetric}
-                    </h4>
-                  </Card>
-                </TabPane>
+                    <h4>Highlight Metrics:</h4>
+                  </CardTitle>
+                  <h4>
+                    Users: {userMetric}
+                    <br />
+                    <span id="id002"></span>
+                    Open Issues: {issuesMetric}
+                  </h4>
+                </Card>
+              </TabPane>
+            </Row>
+            <TabPane id="id001" tabId="User View">
+              <Row style={{ justifyContent: "center" }}>
+                <Card
+                  style={{
+                    backgroundColor: "transparent",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <CardHeader> Registered User View:</CardHeader>
+                  {loadAccountElementsComponent()}
+                </Card>
               </Row>
-              <TabPane id="id001" tabId="2">
-                <Row style={{ justifyContent: "center" }}>
-                  <Card
-                    style={{
-                      backgroundColor: "transparent",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CardHeader> Registered User View:</CardHeader>
-                    <AccountElements />
-                  </Card>
-                </Row>
-              </TabPane>{" "}
-              <TabPane tabId="3">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  ></Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Comments">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CommentManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Events">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <EventManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Products">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ProductManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Content">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ContentManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Notes">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <NoteManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Surveys">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <SurveyManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Live">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <LiveChatManagerComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Documentation">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <DocumentationPage />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Video">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <VideoManager />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Users">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <UserQueryComponent />
-                  </Card>
-                </Row>
-              </TabPane>
-              <TabPane tabId="Issue">
-                <Row style={{ justifyContent: "center" }}>
-                  {" "}
-                  <Card
-                    style={{
-                      width: "26rem",
-                      boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <IssueManager />
-                  </Card>
-                </Row>
-              </TabPane>
-            </TabContent>
-          </ApolloProvider>
-        </Container>
-      </Fragment>
-    );
-  }
+            </TabPane>{" "}
+            <TabPane tabId="3">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                ></Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Comments">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadCommentManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Events">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadEventManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Products">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadProductsComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Content">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadContentManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Notes">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadNoteManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Surveys">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadSurveyManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Live">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadLiveChatManager()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Documentation">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <DocumentationPage />
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Video">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadVideoManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Users">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadUserQueryComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+            <TabPane tabId="Issue">
+              <Row style={{ justifyContent: "center" }}>
+                {" "}
+                <Card
+                  style={{
+                    width: "95%",
+                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {loadIssueManagerComponent()}
+                </Card>
+              </Row>
+            </TabPane>
+          </TabContent>
+        </ApolloProvider>
+      </Container>
+    </Fragment>
+  );
 }
+
+export default ModeratorElements;

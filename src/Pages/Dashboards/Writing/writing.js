@@ -145,20 +145,7 @@ function boxMullerRandom() {
   })();
 }
 
-function randomData(n = 30) {
-  return Array.apply(0, Array(n)).map(boxMullerRandom);
-}
 
-const sampleData = randomData(10);
-const sampleData2 = randomData(15);
-const sampleData3 = randomData(8);
-const sampleData4 = randomData(12);
-console.info({
-  sampleData,
-  sampleData2,
-  sampleData3,
-  sampleData4,
-});
 
 export default class WritingElements extends Component {
   constructor(props) {
@@ -168,7 +155,6 @@ export default class WritingElements extends Component {
     this.state = {
       activeTab2: "222",
       activeTab1: "11",
-      data: makeData(),
     };
   }
 
@@ -191,7 +177,6 @@ export default class WritingElements extends Component {
   render() {
 
 
-    const { data } = this.state;
 
     return (
 

@@ -151,7 +151,6 @@ export default class LoginPageElements extends Component {
   }
   render() {
     let { formName, formEmail, formMessage } = this.state;
-    const { data } = this.state;
 
     return (
       <Fragment>

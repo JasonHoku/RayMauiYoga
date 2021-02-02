@@ -164,7 +164,6 @@ class NoteManagerComponent extends Component {
 
   render() {
     let { formName, formDesc, formEmail, formMessage } = this.state;
-    const { data } = this.state;
 
     const MY_MUTATION_MUTATION = gql`
       mutation DeleteNote {

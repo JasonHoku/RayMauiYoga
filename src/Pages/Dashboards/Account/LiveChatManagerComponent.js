@@ -60,7 +60,6 @@ class NoteManagerComponent extends Component {
     this.getData();
     setTimeout(() => this.getData(), 500);
     setTimeout(() => this.getData(), 2500);
-
   }
   componentWillUnmount() {
     clearInterval(this.state.intervalId);

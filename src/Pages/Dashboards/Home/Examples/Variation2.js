@@ -115,9 +115,8 @@ export default class CRMDashboard2 extends Component {
               </CardHeader>
               <CardBody>
                 <h3>
-                  {" "}
-                  Study and connect with Ray through live, written, &amp; video
-                  events.
+                  <a href="/#/dashboards/account">Study and connect with Ray through live, written, &amp; video
+                  events.</a>
                 </h3>
               </CardBody>
               <CardBody

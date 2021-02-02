@@ -52,12 +52,10 @@ export default class DataTableCustomComps extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: makeData(),
     };
   }
 
   render() {
-    const { data } = this.state;
 
     return (
       <Fragment>

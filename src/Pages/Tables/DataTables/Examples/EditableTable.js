@@ -12,7 +12,6 @@ export default class DataTableEditable extends Component {
   constructor() {
     super();
     this.state = {
-      data: makeData(),
     };
     this.renderEditable = this.renderEditable.bind(this);
   }
@@ -36,7 +35,6 @@ export default class DataTableEditable extends Component {
   }
 
   render() {
-    const { data } = this.state;
     return (
       <Fragment>
         <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}

@@ -1,8 +1,9 @@
-import React, { Component, Fragment, useState } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import { compose, graphql } from "react-apollo";
 import { gql, useQuery } from "@apollo/client";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
+import { toInteger } from "lodash";
 
 import {
   Row,
@@ -31,207 +32,208 @@ import {
 import axios from "axios";
 import Calendar from "react-calendar";
 import "../../../assets/components/Calendar.css";
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: "https://api.raymauiyoga.com/graphql",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  }),
-});
 
-class EventManagerComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authVar: this.props.authVar,
-      textVar: "",
-    };
-    this.startTimer = this.startTimer.bind(this);
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
+import {
+  FirestoreProvider,
+  FirestoreCollection,
+  FirestoreDocument,
+  FirestoreMutation,
+} from "@react-firebase/firestore";
+
+import {
+  FirebaseAuthProvider,
+  FirebaseAuthConsumer,
+  IfFirebaseAuthed,
+  IfFirebaseAuthedAnd,
+} from "@react-firebase/auth";
+
+var firebaseConfig = process.env.REACT_APP_FIREBASE;
+
+function EventManagerComponent() {
+  const [textVar, settextVar] = useState("");
+  const [setDate, setsetDate] = useState(
+    String(
+      new Date().toLocaleTimeString([], {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    )
+  );
+  const [eventsFormDescription, seteventsFormDescription] = useState("");
+
+  function handleInputChange(e) {
+    seteventsFormDescription(e.target.value);
   }
 
-  onSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setsetDate(document.getElementById("eventsFormDate").value);
+    seteventsFormDescription(
+      document.getElementById("eventsFormDescription").value
+    );
+    console.log(eventsFormDescription);
+  });
 
-    const formData = new FormData();
-    if (this.state.images != null) {
-      document.getElementById("apiupform").hidden = true;
-
-      Array.from(this.state.images).forEach((image) => {
-        formData.append("files", image);
-      });
-
-      formData.Title = "asdf";
-      formData.Sizes = "asdf";
-      formData.Shop = "asdf";
-      formData.Price = "asdf";
-      formData.Image = this.state.images[0];
-      console.log(formData);
-
-      axios
-        .post(
-          `https://api.raymauiyoga.com/pcp-products`,
-          JSON.stringify(formData),
-          {
-            headers: {
-              "content-type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.err == null) {
-            alert("Success!");
-            document.getElementById("apiupform").hidden = false;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-  startTimer() {
-    if (!this.timerId) {
-      this.timerId = setInterval(() => {
-        console.log("B");
-        this.setState({
-          timeNow: Intl.DateTimeFormat("en-US", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }).format(Date.now()),
-        }),
-          1000;
-      }, setState(nextState, callback));
-    }
-  }
-
-  stopTimer() {
-    clearInterval(this.timerId);
-  }
-  componentDidMount() {}
-  componentWillUnmount() {
-    this.stopTimer;
-  }
-  onImageChange = (event) => {
-    console.log(event.target.files);
-
-    this.setState({
-      images: event.target.files,
-    });
-  };
-
-  render() {
-    let { formName, formDesc, formEmail, formMessage } = this.state;
-    const { data } = this.state;
-
-    const MY_MUTATION_MUTATION = gql`
-      mutation DeleteChat {
-        createEvents(input: { where: { id: ${this.state.deleteIDVar} } }) {
-          chat {
-            id
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-
-              return (
-                <button
-                  onClick={() =>
-                    MyMutation(formName + formDesc, Date().toString())
-                  }
-                >
-                  Add Event Data
-                </button>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-
-    return (
-      <Fragment>
-        <Card
+  return (
+    <Fragment>
+      <Card style={{ width: "100%" }}>
+        <CardHeader style={{ textAlign: "center" }}>
+          <h3 style={{ textAlign: "center" }}>Event Manager</h3>
+        </CardHeader>
+        <CardBody
           style={{
-            boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-            width: "22rem",
+            width: "100%",
+            boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
+            width: "auto",
+            fontSize: "16px",
           }}
         >
-          <CardHeader> PCP Event Manager</CardHeader>
-          <CardBody>
-            <div
-              style={{
-                boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-                width: "16rem",
-              }}
-            >
-              <p>
-                {Intl.DateTimeFormat("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                }).format(Date.now())}
-              </p>
-            </div>{" "}
-            [ Load Event Data Here]
-            <br />
-            <input style={{ width: "50px" }}></input> &nbsp;
-            <button> Delete Event #</button> <br />
-            <br />
-            <span className="calendarVar">
-              <Calendar
-                className="calendarVar"
-                onChange={(e) => this.setState({ setDate: e })}
-              />
-            </span>{" "}
-            <br />
-            Select Date then Add Data:
-            <div
-              style={{
-                boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-                width: "16rem",
-              }}
-            >
-              {String(this.state.setDate)}
+          <center>
+            <b>Hawaiian Time Zone</b>
+            <Calendar
+              className="calendarVar"
+              onChange={(e) =>
+                setsetDate(
+                  new Date(e).toLocaleTimeString([], {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                )
+              }
+            />
+          </center>
+          <div style={{ textAlign: "left" }}>
+            <div>
+              <b>Selected Date:</b>
             </div>
+            <input
+              style={{ width: "50%" }}
+              id="eventsFormDate"
+              onChange={(e) => setsetDate(e.target.value)}
+              value={setDate}
+            ></input>
             <br />
-            <br /> Description:
+            <div>
+              {" "}
+              <b>Event Description:</b> &nbsp;
+            </div>
             <Input
-              style={{ top: "15px", position: "relative" }}
+              name="eventsFormDescription"
+              id="eventsFormDescription"
+              value={eventsFormDescription}
+              onChange={(e) => handleInputChange(e)}
+              style={{ width: "100%", position: "relative" }}
               type="textarea"
             ></Input>{" "}
-            &nbsp; <br />
-            <br />
-            <MyMutationMutation />
-          </CardBody>
-        </Card>
-        <br />
-      </Fragment>
-    );
-  }
+            &nbsp;
+          </div>
+          <FirestoreProvider {...firebaseConfig} firebase={firebase}>
+            <FirestoreMutation type="add" merge={true} path={`/events/`}>
+              {({ runMutation }) => {
+                return (
+                  <div
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <button
+                      style={{
+                        borderRadius: "5px",
+                        textAlign: "center",
+                        width: "auto",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        runMutation(
+                          {
+                            EventTitle: document.getElementById(
+                              "eventsFormDescription"
+                            ).value,
+                            EventEZID: localStorage.getItem("eventCounter"),
+                            EventDate: document.getElementById("eventsFormDate")
+                              .value,
+                          },
+                          { merge: true }
+                        ).then((res) => {
+                          console.log("Ran mutation ", res);
+                        });
+                      }}
+                    >
+                      <span
+                        style={{
+                          position: "relative",
+                        }}
+                      >
+                        Add Event To Ray's Schedule
+                      </span>
+                    </button>
+                  </div>
+                );
+              }}
+            </FirestoreMutation>
+          </FirestoreProvider>
+          <br />
+          <h5>
+            <b>Events Within 24h of Selected Day:</b>
+          </h5>
+          <FirestoreProvider {...firebaseConfig} firebase={firebase}>
+            <FirestoreCollection path={`/events/`}>
+              {(d) => {
+                if (d) {
+                  let concData = "";
+                  if (!d.isLoading) {
+                    for (var i = 0; i < d.value.length; i++) {
+                      localStorage.setItem("eventCounter", d.value.length);
+                      let gotDate = new Date(d.value[i].EventDate);
+                      let are24hFrom0 = new Date(new Date(setDate));
+                      are24hFrom0.setDate(are24hFrom0.getDate(setDate) - 1);
+                      var are24hFrom1 = new Date(setDate);
+                      are24hFrom1.setDate(are24hFrom1.getDate(setDate) + 1);
+                      if (gotDate >= are24hFrom0) {
+                        if (gotDate <= are24hFrom1) {
+                          concData = concData.concat(
+                            `Event ID#` +
+                              JSON.stringify(d.value[i].EventEZID) +
+                              `\n Title:` +
+                              JSON.stringify(d.value[i].EventTitle) +
+                              `\n Date:` +
+                              JSON.stringify(d.value[i].EventDate).replace(
+                                /(Z|T)/gm,
+                                "  "
+                              ) +
+                              `\n \n `
+                          );
+                        }
+                      }
+                    }
+                    if (concData === "") {
+                      concData = "No Events Found In Selected Period";
+                    }
+                    return (
+                      <div
+                        style={{ whiteSpace: "pre-line", textAlign: "left" }}
+                      >
+                        {concData}
+                      </div>
+                    );
+                  }
+                }
+              }}
+            </FirestoreCollection>
+          </FirestoreProvider>
+        </CardBody>
+      </Card>
+    </Fragment>
+  );
 }
+
 export default EventManagerComponent;

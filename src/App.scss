@@ -360,3 +360,6 @@ h2 {
 #root > div > div.app-main > div.app-main__outer > div.app-main__inner {
   height: min-content;
 }
+.carousel-indicators {
+  z-index: 1;
+}
