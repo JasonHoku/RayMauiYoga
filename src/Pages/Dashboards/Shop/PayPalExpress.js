@@ -43,24 +43,24 @@ class PaypalButton extends Component {
   }
 
   createOrder = (data, actions) => {
-    if (this.props.total <= 0){
-  
-
-setTimeout(function() {    alert("Your Cart Is Empty");},250);
-
+    if (this.props.total <= 0) {
+      setTimeout(function () {
+        alert("Your Cart Is Empty");
+      }, 250);
     } else {
-    return actions.order.create({
-      purchase_units: [
-        {
-          description: +this.props.totalItems,
-          amount: {
-            currency_code: "USD",
-            value: this.props.total,
+      return actions.order.create({
+        purchase_units: [
+          {
+            description: +this.props.totalItems,
+            amount: {
+              currency_code: "USD",
+              value: this.props.total,
+            },
           },
-        },
-      ],
-    });
-  };}
+        ],
+      });
+    }
+  };
   handleCart(e) {
     e.preventDefault();
     this.setState({
@@ -79,15 +79,14 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
 
   componentDidMount() {
     this.setState({ isLoading: true });
- 
-    fetch("https://api.ipify.org") 
-      .then(response => response.text())
-      .then((response) => {
-          CLIIP = response 
-      })
-  .then(function(parsedData) {
-  }) .catch(error => this.setState({ error, isLoading: false }));
 
+    fetch("https://api.ipify.org")
+      .then((response) => response.text())
+      .then((response) => {
+        CLIIP = response;
+      })
+      .then(function (parsedData) {})
+      .catch((error) => this.setState({ error, isLoading: false }));
   }
   componentWillReceiveProps(nextProps) {
     const { isScriptLoaded, isScriptLoadSucceed } = nextProps;
@@ -107,7 +106,6 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
   }
 
   updateCostClick() {
-
     var objectHTMLCollection = document.getElementsByClassName("product-price"),
       x = [].map
         .call(objectHTMLCollection, function (node) {
@@ -122,7 +120,7 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
     }
 
     var objectHTMLCollection = document.getElementsByClassName("cart-item"),
-      string = [].map
+      string = [localStorage.getItem("ProductInfo")].map
         .call(objectHTMLCollection, function (node) {
           return node.textContent || node.innerText || "";
         })
@@ -136,9 +134,8 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
 
     var templateParams = {
       name: "Ray Maui Yoga",
-      message: string,
+      message: localStorage.getItem("ProductInfo"),
       message2: CLIIP,
-      
     };
     emailjs.send(EJSSERVICE, EJSTEMPLATE, templateParams).then(
       function (response) {
@@ -218,11 +215,7 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
                 </div>
 
                 <PayPalButton
-
-
-                  onClick={
-                    
-                    this.updateCostClick.bind(this)}
+                  onClick={this.updateCostClick.bind(this)}
                   createOrder={(data, actions) =>
                     this.createOrder(data, actions)
                   }
@@ -233,13 +226,11 @@ setTimeout(function() {    alert("Your Cart Is Empty");},250);
 
             {paid && (
               <div className="main">
-                <img alt="Order Processed!" />
                 <h2>
-                  Your order has been received!{" "}
-                  <span role="img" aria-label="emoji">
-                    {" "}
-                    🌞
-                  </span>
+                  Thank you and congratulations! <br />
+                  Your order has been received! <br />
+                  <br />
+                  Please expect 1-2 days processing time.
                 </h2>
               </div>
             )}

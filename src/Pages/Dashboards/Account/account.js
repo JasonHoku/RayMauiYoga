@@ -148,7 +148,9 @@ function AccountElements() {
     }
   }
   function loadPayPalButton() {
+
     if (activeTab === "4") {
+      localStorage.setItem("ProductInfo", readyPaymentItems + "X" + localStorage.getItem("username"))
       return (
         <span>
           <center> ${readyPaymentCost}</center>
