@@ -1,15 +1,4 @@
-/* This is an example snippet - you should consider tailoring it
-to your service.
-*/
-/*
-  Add these to your `package.json`:
-    "apollo-boost": "^0.3.1",
-    "graphql": "^14.2.1",
-    "graphql-tag": "^2.10.0",
-    "react-apollo": "^2.5.5"
-*/
-
-import React, { Component, Fragment, useState, useEffect } from "react";
+import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
@@ -63,55 +52,34 @@ import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
 import { relative } from "path";
 import LoginPageElements from "./loginPage";
 import AccountElements from "./account";
-import { resolveModuleName } from "typescript";
 import { get, initial } from "lodash";
 
-// This setup is only needed once per application;
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: "https://api.raymauiyoga.com/graphql",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  }),
-});
-const MY_QUERY_COPY_QUERY = gql`
-  query MyQuery {
-    microComments {
-      name
-      comment
-    }
-  }
-`;
-let respData = "";
-const MyQueryCopyQuery = (props) => {
-  return (
-    <Query query={MY_QUERY_COPY_QUERY}>
-      {({ loading, error, data }) => {
-        if (loading) return <pre>Loading</pre>;
-        if (error)
-          return (
-            <pre>
-              Error in MY_QUERY_COPY_QUERY
-              {JSON.stringify(error, null, 2)}
-            </pre>
-          );
-        if (data) {
-          <pre>
-            {
-              //JSON DATA
-              ((respData = JSON.stringify(data.microComments, null, 1)),
-              console.log("z microComment"))
-            }
-          </pre>;
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
+import {
+  FirestoreProvider,
+  FirestoreCollection,
+  FirestoreDocument,
+  FirestoreMutation,
+} from "@react-firebase/firestore";
 
-          return null;
-        }
-      }}
-    </Query>
-  );
+import {
+  FirebaseAuthProvider,
+  FirebaseAuthConsumer,
+  IfFirebaseAuthed,
+  IfFirebaseAuthedAnd,
+} from "@react-firebase/auth";
+
+var firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE,
+  authDomain: "raymauiyoga-d75b1.firebaseapp.com",
+  projectId: "raymauiyoga-d75b1",
+  storageBucket: "raymauiyoga-d75b1.appspot.com",
+  messagingSenderId: "313463385446",
+  appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
+  measurementId: "G-S8EJTRMN63",
 };
 
 function ModeratorElements() {
@@ -123,6 +91,53 @@ function ModeratorElements() {
   const [issuesMetric, setissuesMetric] = useState("");
   const [fruit, setFruit] = useState("banana");
   const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
+  const [loadedTotalIDs, setloadedTotalIDs] = useState("0");
+  const [loadedTotalUsers, setloadedTotalUsers] = useState("0");
+
+  const [loadStage, setloadStage] = useState("1");
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("X" + loadStage);
+      if (isInitialMount.current) {
+        if (loadStage === "2") {
+          setuserMetric(loadedTotalIDs) & clearInterval(interval);
+          if (loadedTotalUsers != "0") {
+            setloadStage("3");
+          }
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "1") {
+          if (loadedTotalIDs != "0") {
+            setloadStage("2");
+          }
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "3") {
+          setproStatusText("Loading: " + loadedEzID + " / " + loadedTotalIDs);
+          if (localStorage.getItem("gotDownloadURL")) {
+            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
+            setloadStage("4");
+          }
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "4") {
+          setproStatusText("Ready: " + loadedEzID + " / " + loadedTotalIDs);
+          if (localStorage.getItem("gotDownloadURL")) {
+            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
+          }
+          return () => clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+      } else {
+        isInitialMount.current = false;
+        return () => clearInterval(interval);
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  });
+
   function loadProducts(props) {
     if (activeTab === "Products") {
       return <ProductManagerComponent />;
@@ -294,218 +309,216 @@ function ModeratorElements() {
           justifyContent: "center",
         }}
       >
-        <ApolloProvider client={apolloClient}>
-          <TabContent
-            activeTab={activeTab}
+        <TabContent
+          activeTab={activeTab}
+          style={{
+            backgroundColor: "transparent",
+            opacity: 0.9,
+            justifyContent: "center",
+            alignSelf: "center",
+            width: "100%",
+          }}
+        >
+          <CardHeader
+            className="ponoTitle"
             style={{
-              backgroundColor: "transparent",
-              opacity: 0.9,
               justifyContent: "center",
+              backgroundColor: "transparent",
               alignSelf: "center",
+              borderBottom: "none",
+              marginBottom: "-25px",
               width: "100%",
+              opacity: 100,
             }}
           >
-            <CardHeader
-              className="ponoTitle"
-              style={{
-                justifyContent: "center",
-                backgroundColor: "transparent",
-                alignSelf: "center",
-                borderBottom: "none",
-                marginBottom: "-25px",
-                width: "100%",
-                opacity: 100,
+            <h2>
+              <i className="pe-7s-tools icon-gradient bg-plum-plate"></i>
+              Moderator Controls
+            </h2>
+          </CardHeader>
+          <CardHeader
+            style={{
+              marginBottom: "-35px",
+              justifyContent: "center",
+              backgroundColor: "transparent",
+              borderBottom: "none",
+              alignSelf: "center",
+            }}
+          >
+            <Button
+              size="sm"
+              outline
+              color="alternate"
+              className={
+                "btn-pill btn-wide " + classnames({ active: activeTab === "1" })
+              }
+              onClick={() => {
+                toggle("1");
               }}
             >
-              <h2>
-                <i className="pe-7s-tools icon-gradient bg-plum-plate"></i>
-                Moderator Controls
-              </h2>
-            </CardHeader>
-            <CardHeader
-              style={{
-                marginBottom: "-35px",
-                justifyContent: "center",
-                backgroundColor: "transparent",
-                borderBottom: "none",
-                alignSelf: "center",
+              Tools
+            </Button>
+            <Button
+              outline
+              color="alternate"
+              className={
+                "btn-pill btn-wide " +
+                classnames({ active: activeTab === "User View" })
+              }
+              onClick={async () => {
+                toggle("User View");
+                setTimeout(
+                  () =>
+                    document.getElementById("id001").scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                      inline: "center",
+                    }),
+                  100
+                );
               }}
             >
-              <Button
-                size="sm"
-                outline
-                color="alternate"
-                className={
-                  "btn-pill btn-wide " +
-                  classnames({ active: activeTab === "1" })
-                }
-                onClick={() => {
-                  toggle("1");
+              User View
+            </Button>
+          </CardHeader>
+          <br />
+          <br />
+          <Row style={{ justifyContent: "center" }}>
+            <Row>
+              {" "}
+              <Card
+                style={{
+                  width: "auto",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  height: "100%",
+                  marginTop: "-5px",
+                  marginBottom: "-10px",
+                  marginLeft: "25px",
+                  marginRight: "25px",
+                  alignItems: "center",
                 }}
               >
-                Tools
-              </Button>
-              <Button
-                outline
-                color="alternate"
-                className={
-                  "btn-pill btn-wide " +
-                  classnames({ active: activeTab === "User View" })
-                }
-                onClick={async () => {
-                  toggle("User View");
-                  setTimeout(
-                    () =>
-                      document.getElementById("id001").scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                        inline: "center",
-                      }),
-                    100
-                  );
-                }}
-              >
-                User View
-              </Button>
-            </CardHeader>
-            <br />
-            <br />
-            <Row style={{ justifyContent: "center" }}>
-              <Row>
-                {" "}
-                <Card
+                <CardTitle
                   style={{
-                    width: "auto",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    height: "100%",
-                    marginTop: "-5px",
-                    marginBottom: "-10px",
-                    marginLeft: "25px",
-                    marginRight: "25px",
-                    alignItems: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    marginBottom: "-15px",
                   }}
                 >
-                  <CardTitle
+                  <h4>Main Website Tools:</h4>
+                </CardTitle>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                    marginTop: "5px",
+                    display: "block",
+                  }}
+                >
+                  <button
                     style={{
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      marginBottom: "-15px",
-                    }}
-                  >
-                    <h4>Main Website Tools:</h4>
-                  </CardTitle>
-                  <span
-                    style={{
-                      marginLeft: "10px",
+                      marginTop: "10px",
+                      backgroundColor: "#009900",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
                       marginTop: "5px",
-                      display: "block",
+                    }}
+                    onClick={async () => {
+                      toggle("Documentation");
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
                     }}
                   >
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#009900",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        toggle("Documentation");
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                      }}
-                    >
-                      {" "}
-                      Documentation{" "}
-                    </button>
-                    &nbsp;
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#009999",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Content");
-                      }}
-                    >
-                      {" "}
-                      Content Editor{" "}
-                    </button>
-                    &nbsp;
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#006699",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Video");
-                      }}
-                    >
-                      {" "}
-                      Video Manager{" "}
-                    </button>
-                    &nbsp;
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#0033AA",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Users");
-                      }}
-                    >
-                      {" "}
-                      User Management{" "}
-                    </button>
-                    {/* //Comment Manager Button
+                    {" "}
+                    Documentation{" "}
+                  </button>
+                  &nbsp;
+                  <button
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "#009999",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
+                      marginTop: "5px",
+                    }}
+                    onClick={async () => {
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
+                      toggle("Content");
+                    }}
+                  >
+                    {" "}
+                    Content Editor{" "}
+                  </button>
+                  &nbsp;
+                  <button
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "#006699",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
+                      marginTop: "5px",
+                    }}
+                    onClick={async () => {
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
+                      toggle("Video");
+                    }}
+                  >
+                    {" "}
+                    Video Manager{" "}
+                  </button>
+                  &nbsp;
+                  <button
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "#0033AA",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
+                      marginTop: "5px",
+                    }}
+                    onClick={async () => {
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
+                      toggle("Users");
+                    }}
+                  >
+                    {" "}
+                    User Management{" "}
+                  </button>
+                  {/* //Comment Manager Button
                       &nbsp;
                       <button
                         style={{
@@ -532,7 +545,7 @@ function ModeratorElements() {
                         {" "}
                         Comments{" "}
                       </button>*/}
-                    {/*
+                  {/*
                       &nbsp;
                       <button
                         style={{
@@ -559,58 +572,58 @@ function ModeratorElements() {
                         {" "}
                         Products{" "}
                       </button>*/}
-                    &nbsp;
-                    <button
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#6600CC",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Events");
-                      }}
-                    >
-                      {" "}
-                      Events{" "}
-                    </button>
-                    &nbsp;
-                    <button
-                      style={{
-                        backgroundColor: "#BB0099",
-                        borderRadius: "16px",
-                        height: "35px",
-                        fontSize: "120%",
-                        marginTop: "5px",
-                      }}
-                      onClick={async () => {
-                        setTimeout(
-                          () =>
-                            document.getElementById("id002").scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                              inline: "center",
-                            }),
-                          100
-                        );
-                        toggle("Surveys");
-                      }}
-                    >
-                      {" "}
-                      Surveys{" "}
-                    </button>
-                    {/*
+                  &nbsp;
+                  <button
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "#6600CC",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
+                      marginTop: "5px",
+                    }}
+                    onClick={async () => {
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
+                      toggle("Events");
+                    }}
+                  >
+                    {" "}
+                    Events{" "}
+                  </button>
+                  &nbsp;
+                  <button
+                    style={{
+                      backgroundColor: "#BB0099",
+                      borderRadius: "16px",
+                      height: "35px",
+                      fontSize: "120%",
+                      marginTop: "5px",
+                    }}
+                    onClick={async () => {
+                      setTimeout(
+                        () =>
+                          document.getElementById("id002").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "center",
+                          }),
+                        100
+                      );
+                      toggle("Surveys");
+                    }}
+                  >
+                    {" "}
+                    Surveys{" "}
+                  </button>
+                  {/*
                       &nbsp;
                       <button
                         style={{
@@ -636,8 +649,8 @@ function ModeratorElements() {
                         {" "}
                         Live Chat{" "}
                       </button>*/}
-                    &nbsp;
-                    {/*
+                  &nbsp;
+                  {/*
                       <button
                         style={{
                           backgroundColor: "#BB0033",
@@ -663,243 +676,245 @@ function ModeratorElements() {
                         Report Issue{" "}
                       </button>
                       &nbsp;*/}
-                    <br />
-                    <br />
-                  </span>
-                </Card>
-              </Row>
-              <TabPane
-                className="ponoTitle"
-                tabId="1"
+                  <br />
+                  <br />
+                </span>
+              </Card>
+            </Row>
+            <TabPane
+              className="ponoTitle"
+              tabId="1"
+              style={{
+                height: "100%",
+                backgroundColor: "transparent",
+                alignContent: "center",
+                opacity: 100,
+              }}
+            >
+              <Card
                 style={{
-                  height: "100%",
-                  backgroundColor: "transparent",
+                  width: "auto",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
                   alignContent: "center",
-                  opacity: 100,
+                  height: "100%",
+                  marginTop: "15px",
+                  alignItems: "center",
+                  marginBottom: "25px",
                 }}
               >
-                <Card
-                  style={{
-                    width: "auto",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    height: "100%",
-                    marginTop: "15px",
-                    alignItems: "center",
-                    marginBottom: "25px",
-                  }}
-                >
-                  <CardTitle
-                    style={{
-                      justifyContent: "center",
-                      alignSelf: "center",
+                <h4>
+                  Highlight Metrics: <br />
+                  Users: {userMetric}
+                  <br />
+                  <span id="id002"></span>
+                </h4>
+                <FirestoreProvider {...firebaseConfig} firebase={firebase}>
+                  <FirestoreCollection path="/Users/">
+                    {(d) => {
+                      if (loadStage === "1") {
+                        if (d.isLoading === false) {
+                          setloadedTotalIDs(d.value.length);
+                        }
+                      }
                     }}
-                  >
-                    <h4>Highlight Metrics:</h4>
-                  </CardTitle>
-                  <h4>
-                    Users: {userMetric}
-                    <br />
-                    <span id="id002"></span>
-                    Open Issues: {issuesMetric}
-                  </h4>
-                </Card>
-              </TabPane>
+                  </FirestoreCollection>
+                </FirestoreProvider>{" "}
+              </Card>
+            </TabPane>
+          </Row>
+          <TabPane id="id001" tabId="User View">
+            <Row style={{ justifyContent: "center" }}>
+              <Card
+                style={{
+                  backgroundColor: "transparent",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CardHeader> Registered User View:</CardHeader>
+                {loadAccountElementsComponent()}
+              </Card>
             </Row>
-            <TabPane id="id001" tabId="User View">
-              <Row style={{ justifyContent: "center" }}>
-                <Card
-                  style={{
-                    backgroundColor: "transparent",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CardHeader> Registered User View:</CardHeader>
-                  {loadAccountElementsComponent()}
-                </Card>
-              </Row>
-            </TabPane>{" "}
-            <TabPane tabId="3">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                ></Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Comments">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadCommentManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Events">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadEventManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Products">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadProductsComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Content">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadContentManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Notes">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadNoteManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Surveys">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadSurveyManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Live">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadLiveChatManager()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Documentation">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <DocumentationPage />
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Video">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadVideoManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Users">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadUserQueryComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-            <TabPane tabId="Issue">
-              <Row style={{ justifyContent: "center" }}>
-                {" "}
-                <Card
-                  style={{
-                    width: "95%",
-                    boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {loadIssueManagerComponent()}
-                </Card>
-              </Row>
-            </TabPane>
-          </TabContent>
-        </ApolloProvider>
+          </TabPane>{" "}
+          <TabPane tabId="3">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              ></Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Comments">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadCommentManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Events">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadEventManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Products">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadProductsComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Content">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadContentManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Notes">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadNoteManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Surveys">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadSurveyManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Live">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadLiveChatManager()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Documentation">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <DocumentationPage />
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Video">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadVideoManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Users">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadUserQueryComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+          <TabPane tabId="Issue">
+            <Row style={{ justifyContent: "center" }}>
+              {" "}
+              <Card
+                style={{
+                  width: "95%",
+                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loadIssueManagerComponent()}
+              </Card>
+            </Row>
+          </TabPane>
+        </TabContent>
       </Container>
     </Fragment>
   );

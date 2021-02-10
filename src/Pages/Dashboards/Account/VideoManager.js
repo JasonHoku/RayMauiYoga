@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useEffect } from "react";
+import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 import { compose, graphql } from "react-apollo";
 import { gql, useQuery } from "@apollo/client";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
@@ -34,39 +34,74 @@ import axios from "axios";
 var REACT_APP_MUX_TOKEN_ID = process.env.REACT_APP_MUX_TOKEN_ID;
 var REACT_APP_MUX_TOKEN_SECRET = process.env.REACT_APP_MUX_TOKEN_SECRET;
 var REACT_APP_MUX_TOKEN_SECRET2 = process.env.REACT_APP_MUX_TOKEN_SECRET2;
-class VideoManager extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      noteVar: "",
-      deleteIDVar: "26",
-    };
-  }
+function VideoManager() {
+  const [message, setMessage] = useState("Hi there, how are you?");
+  const [formName, setformName] = useState([]);
+  const [formEmail, setformEmail] = useState([]);
+  const [activeTab, setactiveTab] = useState("1");
+  const [userMetric, setuserMetric] = useState("");
+  const [issuesMetric, setissuesMetric] = useState("");
+  const [fruit, setFruit] = useState("banana");
+  const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
+  const [loadedTotalIDs, setloadedTotalIDs] = useState("0");
+  const [loadedTotalUsers, setloadedTotalUsers] = useState("0");
 
-  asyncGet() {
+  const [loadStage, setloadStage] = useState("1");
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("X" + loadStage);
+      if (isInitialMount.current) {
+        if (loadStage === "2") {
+          loadVideoJS();
+          setloadStage("3");
+
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "1") {
+          setloadStage("2");
+
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "3") {
+          clearInterval(interval);
+        }
+        if (loadStage === "4") {
+          setproStatusText("Ready: " + loadedEzID + " / " + loadedTotalIDs);
+          if (localStorage.getItem("gotDownloadURL")) {
+            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
+          }
+          return () => clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+      } else {
+        isInitialMount.current = false;
+        return () => clearInterval(interval);
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  });
+
+  function asyncGet() {
     async () => {
       console.log("Y");
     };
   }
+  function loadVideoJS() {
+    // Replace with your asset's playback ID
+    var playbackId = "8xh00SbnJ00lXDVdBQXVtfLqVwDWYFG6VP012GfZ00gBPAM";
+    var url = "https://stream.mux.com/" + playbackId + ".m3u8";
+    var video = document.getElementById("myVideo");
 
-  async componentDidMount() {
-    {
-      (function () {
-        // Replace with your asset's playback ID
-        var playbackId = "8xh00SbnJ00lXDVdBQXVtfLqVwDWYFG6VP012GfZ00gBPAM";
-        var url = "https://stream.mux.com/" + playbackId + ".m3u8";
-        var video = document.getElementById("myVideo");
-
-        // Let native HLS support handle it if possible
-        if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          video.src = url;
-        } else if (Hls.isSupported()) {
-          // HLS.js-specific setup code
-          let hls = new Hls();
-          hls.loadSource(url);
-          hls.attachMedia(video);
-        }
-      })();
+    // Let native HLS support handle it if possible
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = url;
+    } else if (Hls.isSupported()) {
+      // HLS.js-specific setup code
+      let hls = new Hls();
+      hls.loadSource(url);
+      hls.attachMedia(video);
     }
     if (typeof mux !== "undefined") {
       mux.monitor("#myVideo", {
@@ -107,10 +142,10 @@ class VideoManager extends Component {
       // Response will include everything returned from the API, such as status codes/text, headers, etc
     });
   }
-  componentWillUnmount() {
+  function componentWillUnmount() {
     clearInterval(this.state.intervalId);
   }
-  async getData() {
+  async function getData() {
     const { Video } = new Mux(
       REACT_APP_MUX_TOKEN_ID,
       REACT_APP_MUX_TOKEN_SECRET
@@ -127,24 +162,73 @@ class VideoManager extends Component {
     });
   }
 
-  handleInputChange(event) {
+  function handleInputChange(event) {
     this.setState({
       noteVar: event.target.value,
     });
   }
-  handleInputChange2(event) {
+  function handleInputChange2(event) {
     this.setState({
       deleteIDVar: event.target.value,
     });
   }
 
-  render() {
-    return (
-      <Fragment>
-        <script src="https://src.litix.io/core/3/mux.js"></script>
-        <CardHeader>
-          <h3>Video Manager</h3>
-        </CardHeader>
+  return (
+    <Fragment>
+      <script src="https://src.litix.io/core/3/mux.js"></script>
+      <CardHeader>
+        <h3>Video Manager</h3>
+      </CardHeader>
+      <CardBody>
+        <button
+          style={{
+            marginTop: "10px",
+            backgroundColor: "#990000",
+            borderRadius: "16px",
+            height: "35px",
+            fontSize: "120%",
+            marginTop: "5px",
+          }}
+        >
+          <span
+            className="fillerClassxyxy"
+            style={{ position: "relative", top: "-2px" }}
+          >
+            Create Video
+          </span>
+        </button>{" "}
+        &nbsp;
+        <button
+          style={{
+            marginTop: "10px",
+            backgroundColor: "#336633",
+            borderRadius: "16px",
+            height: "35px",
+            fontSize: "120%",
+            marginTop: "5px",
+          }}
+        >
+          <span
+            className="fillerClassxyxy"
+            style={{ position: "relative", top: "-2px" }}
+          >
+            Manage Videos
+          </span>
+        </button>{" "}
+        &nbsp;
+      </CardBody>
+
+      <TabContent
+        activeTab={activeTab}
+        style={{
+          backgroundColor: "transparent",
+          opacity: 0.9,
+          justifyContent: "center",
+          alignSelf: "center",
+          width: "100%",
+        }}
+      >
+        {" "}
         <CardBody>
           <b>Personal Stream Key: </b>
           <br />
@@ -154,10 +238,9 @@ class VideoManager extends Component {
           <video preload="false" width="350px" id="myVideo" controls></video>
           <br />
         </CardBody>
-
         <br />
-      </Fragment>
-    );
-  }
+      </TabContent>
+    </Fragment>
+  );
 }
 export default VideoManager;

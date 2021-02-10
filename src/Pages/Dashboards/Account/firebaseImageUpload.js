@@ -36,7 +36,8 @@ function FireBaseImageUpload() {
         <input type="file" onChange={handleChange} />
         <center>
           <Button
-            fill={true}
+            hidden={!file}
+            fill="true"
             color="primary"
             disabled={!file}
             style={{

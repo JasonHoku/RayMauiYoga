@@ -60,12 +60,14 @@ var firebaseConfig = {
 };
 function ContentManagerComponent() {
   const [url, setURL] = useState("");
+  const isInitialMount = useRef(true);
   const [noteVar, setnoteVar] = useState("");
   const [textVar2, settextVar2] = useState("Select an Instance To Begin");
   const [textVar, settextVar] = useState("Select an Instance To Begin");
   const [statusVar, setstatusVar] = useState("Viewing HomePage Data");
   const [onlineButton, setonlineButton] = useState("Go Online");
   const [purgeButton, setpurgeButton] = useState("Clear Old Instances");
+  const [proStatusText, setproStatusText] = useState("Loading...");
   const [selectByIDVar, setselectByIDVar] = useState("0");
   const [loadedImgURL, setloadedImgURL] = useState("");
   const [loadedDescription, setloadedDescription] = useState("");
@@ -75,19 +77,16 @@ function ContentManagerComponent() {
   const [ChangeImageURLVar, setChangeImageURLVar] = useState("");
   const [loadedCreatorData, setloadedCreatorData] = useState("");
   const [loadedGMapCoords, setloadedGMapCoords] = useState("");
-  const [loadedCategory, setloadedCategory] = useState("");
+  const [loadedTitle, setloadedTitle] = useState("");
   const [loadedPublic, setloadedPublic] = useState("");
   const [loadedIDData, setloadedIDData] = useState("");
   const [loadStage, setloadStage] = useState("1");
   const [loadedTitleData, setloadedTitleData] = useState("");
-  const [sendReadyCreator, setsendReadyCreator] = useState("");
-  const [sendReadyCategory, setsendReadyCategory] = useState("");
-  const [sendReadyDescription, setsendReadyDescription] = useState("");
-  const [sendReadyGMapCoords, setsendReadyGMapCoords] = useState("");
-  const [sendReadyLocation, setsendReadyLocation] = useState("");
-  const [sendReadyID, setsendReadyID] = useState("");
-  const [sendReadyPublic, setsendReadyPublic] = useState("");
-  const [sendReadyTitle, setsendReadyTitle] = useState("");
+  const [readyCreator, setreadyCreator] = useState("");
+  const [readyTitle, setreadyTitle] = useState("");
+  const [readyDescription, setreadyDescription] = useState("");
+  const [readyID, setreadyID] = useState("");
+  const [readyPublic, setreadyPublic] = useState("");
   const [loadedEzID, setloadedEzID] = useState("1");
   const [loadedTotalIDs, setloadedTotalIDs] = useState("1");
   const [gotDownloadURL, setgotDownloadURL] = useState(
@@ -102,62 +101,52 @@ function ContentManagerComponent() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log(interval);
-      console.log(loadStage);
+      console.log("X" + loadStage);
       if (isInitialMount.current) {
-      } else {
-        isInitialMount.current = false;
         if (loadStage === "2") {
-          checkFormStates() & setloadStage("3");
+          setreadyTitle(loadedTitle);
+          setreadyDescription(loadedDescription);
+          localStorage.setItem("editedDescription", editedDescription);
+          localStorage.setItem("readyTitle", readyTitle) &
+            clearInterval(interval);
+          setloadStage("3");
+          return () => clearInterval(interval);
+        }
+        if (loadStage === "1") {
+          if (loadedTotalIDs != "0") {
+            checkFormStates() & setloadStage("2");
+          }
+          return () => clearInterval(interval);
         }
         if (loadStage === "3") {
-          sethasLoaded("4");
+          setloadedIDData(loadedEzID);
+          console.log("Setting Send Data");
+          seteditedDescription(loadedDescription);
+          setloadStage("4");
+          setstatusVar("Viewing " + loadedEzID + " of: " + loadedTotalIDs);
+          console.log("Y");
+          checkFormStates();
+          setproStatusText("Loading: " + loadedEzID + " / " + loadedTotalIDs);
+          if (localStorage.getItem("gotDownloadURL")) {
+            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
+            setloadStage("4");
+          }
+          return () => clearInterval(interval);
         }
+        if (loadStage === "4") {
+          setproStatusText("Ready: " + loadedEzID + " / " + loadedTotalIDs);
+          if (localStorage.getItem("gotDownloadURL")) {
+            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
+          }
+          return () => clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+      } else {
+        isInitialMount.current = false;
+        return () => clearInterval(interval);
       }
-    }, 1000);
-
+    }, 100);
     return () => clearInterval(interval);
-  });
-  const isInitialMount = useRef(true);
-
-  useEffect(() => {
-    checkFormStates();
-    setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-    {
-    }
-    if (isInitialMount.current) {
-      console.log(loadStage);
-      setloadStage("2");
-      isInitialMount.current = false;
-    } else if (loadStage === "3") {
-      setloadedIDData(loadedEzID);
-      console.log("Setting Send Data");
-      seteditedDescription(loadedDescription);
-      setloadedEzID(loadedIDData);
-      setsendReadyDescription(loadedDescription);
-      setsendReadyCreator(loadedCreatorData);
-      setsendReadyCategory(loadedCategory);
-      setsendReadyLocation(loadedLocationData);
-      setsendReadyTitle(loadedTitleData);
-      setsendReadyID(loadedIDData);
-      setsendReadyGMapCoords(loadedGMapCoords);
-      setsendReadyPublic(loadedPublic);
-      setloadStage("4");
-      setstatusVar("Viewing " + loadedEzID + " of: " + loadedTotalIDs);
-    }
-    {
-      console.log("Y");
-      checkFormStates();
-      localStorage.setItem("editedDescription", editedDescription);
-      localStorage.setItem("sendReadyCategory", sendReadyCategory);
-      localStorage.setItem("sendReadyDescription", sendReadyDescription);
-      localStorage.setItem("sendReadyCreator", sendReadyCreator);
-      localStorage.setItem("sendReadyGMapCoords", sendReadyGMapCoords);
-      localStorage.setItem("sendReadyLocation", sendReadyLocation);
-      localStorage.setItem("sendReadyID", sendReadyID);
-      localStorage.setItem("sendReadyPublic", sendReadyPublic);
-      localStorage.setItem("sendReadyTitle", sendReadyTitle);
-    }
   });
   function onEditorChange(evt) {
     seteditedDescription(evt.editor.getData());
@@ -190,32 +179,10 @@ function ContentManagerComponent() {
   }
   function handleImageUploadState() {
     if (gotDownloadURL === "Upload An Image To Embed") {
-      return (
-        <div>
-          <br />
-          {gotDownloadURL}
-          <br />
-        </div>
-      );
+      return <div>{gotDownloadURL}</div>;
     } else {
       // User Has URL
-      return (
-        <div>
-          <br />
-          {gotDownloadURL}
-          <br />
-          <button
-            style={{ borderRadius: "25px" }}
-            onClick={() => {
-              formResetter() &
-                checkFormStates() &
-                localStorage.setItem("gotDownloadURL", "Upload Image To Embed");
-            }}
-          >
-            Reset Image Form
-          </button>
-        </div>
-      );
+      return <div>{gotDownloadURL}</div>;
     }
   }
   return (
@@ -245,8 +212,8 @@ function ContentManagerComponent() {
         <CardBody>
           ID #:
           <input
-            onChange={(event) =>
-              setloadedEzID(event.target.value) & setloadStage("2")
+            onChange={(e) =>
+              setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
             }
             value={loadedEzID}
             name="loadedEzID"
@@ -330,25 +297,9 @@ function ContentManagerComponent() {
                 <FirestoreProvider {...firebaseConfig} firebase={firebase}>
                   <FirestoreCollection path="/DynamicContent/">
                     {(d) => {
-                      if (loadStage === "2") {
+                      if (loadStage === "1") {
                         if (d.isLoading === false) {
-                          console.log("YYZZZ");
-                          if (loadedEzID - 1 < d.value.length) {
-                            if (loadedEzID > 0) {
-                              setloadedTotalIDs(d.value.length) &
-                                setloadedTitleData(
-                                  d.value[loadedEzID - 1].Title
-                                ) &
-                                setloadedCreatorData(
-                                  d.value[loadedEzID - 1].Creator
-                                ) &
-                                setloadedDescription(
-                                  d.value[loadedEzID - 1].Description
-                                ) &
-                                setloadedIDData(d.value[loadedEzID - 1].ID) &
-                                setloadStage("3");
-                            }
-                          }
+                          setloadedTotalIDs(d.value.length);
                         }
                       }
                     }}
@@ -357,6 +308,25 @@ function ContentManagerComponent() {
               </div>
             )}
           </IfFirebaseAuthed>{" "}
+          <FirestoreProvider {...firebaseConfig} firebase={firebase}>
+            <FirestoreDocument path={`/DynamicContent/${loadedEzID}`}>
+              {(d) => {
+                if (d) {
+                  if (d.value != undefined) {
+                    if (loadStage === "2") {
+                      setloadedTitle(
+                        String(JSON.parse(JSON.stringify(d.value)).Title)
+                      );
+                      setloadedDescription(
+                        String(JSON.parse(JSON.stringify(d.value)).Description)
+                      );
+                      return d.isLoading ? "Loading" : <pre></pre>;
+                    }
+                  }
+                }
+              }}
+            </FirestoreDocument>
+          </FirestoreProvider>
           <IfFirebaseAuthed>
             {() => (
               <div>
@@ -381,14 +351,14 @@ function ContentManagerComponent() {
                                 setloadedIDData("2");
                                 runMutation({
                                   Location: `${localStorage.getItem(
-                                    "sendReadyLocation"
+                                    "readyLocation"
                                   )}`,
                                   Creator: `${localStorage.getItem(
                                     "username"
                                   )}`,
-                                  ID: `${localStorage.getItem("sendReadyID")}`,
+                                  ID: `${localStorage.getItem("readyID")}`,
                                   Title: `${localStorage.getItem(
-                                    "sendReadyTitle"
+                                    "readyTitle"
                                   )}`,
                                   Description: `${localStorage
                                     .getItem("editedDescription")

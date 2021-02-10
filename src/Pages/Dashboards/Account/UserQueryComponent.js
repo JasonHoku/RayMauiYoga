@@ -44,6 +44,7 @@ import {
   IfFirebaseAuthed,
   IfFirebaseAuthedAnd,
 } from "@react-firebase/auth";
+
 var firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE,
   authDomain: "raymauiyoga-d75b1.firebaseapp.com",
@@ -53,6 +54,7 @@ var firebaseConfig = {
   appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
   measurementId: "G-S8EJTRMN63",
 };
+
 class UserQueryComponent extends Component {
   constructor(props) {
     super(props);
@@ -67,19 +69,6 @@ class UserQueryComponent extends Component {
       <Fragment>
         <Card>
           <CardBody>
-            <button
-              style={{
-                backgroundColor: "#335599",
-                height: "40px",
-                alignSelf: "center",
-                borderRadius: "10px",
-                marginBottom: "5px",
-                fontSize: "15px",
-              }}
-              onClick={() => alert("coming soon")}
-            >
-              Email All
-            </button>
             <br />
             <input
               style={{ textAlign: "center" }}
@@ -93,11 +82,25 @@ class UserQueryComponent extends Component {
                 height: "40px",
                 alignSelf: "center",
                 borderRadius: "10px",
+                marginBottom: "5px",
                 fontSize: "15px",
               }}
               onClick={() => alert("coming soon")}
             >
-              Change Powerlevel
+              Email All
+            </button>{" "}
+            &nbsp;
+            <button
+              style={{
+                backgroundColor: "#335599",
+                height: "40px",
+                alignSelf: "center",
+                borderRadius: "10px",
+                fontSize: "15px",
+              }}
+              onClick={() => alert("coming soon")}
+            >
+              Upgrade Account
             </button>{" "}
             &nbsp;
             <button

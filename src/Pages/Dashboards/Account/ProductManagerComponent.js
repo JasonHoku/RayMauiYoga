@@ -26,7 +26,6 @@ import {
   ButtonGroup,
 } from "reactstrap";
 import axios from "axios";
-import { idText } from "typescript";
 import { toHtml } from "@fortawesome/fontawesome-svg-core";
 
 import { gql, useQuery } from "@apollo/client";

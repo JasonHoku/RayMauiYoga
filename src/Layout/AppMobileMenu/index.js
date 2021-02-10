@@ -24,8 +24,46 @@ class AppMobileMenu extends React.Component {
       mobile: false,
       activeSecondaryMenuMobile: false,
     };
+    this.toggleMobileSidebar = this.toggleMobileSidebar.bind(this);
+    this.hashChangeEvent = this.hashChangeEvent.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
+  handleClickOutside(event) {
+    if (String(event.target.className).includes("Burger")) {
+    } else {
+      this.setState({ active: false });
+      this.toggleMobileSidebar;
+      this.toggleMobileSmall;
+    }
+  }
+
+  hashChangeEvent() {
+    this.setState({ active: false });
+    this.toggleMobileSidebar;
+    this.toggleMobileSmall;
+  }
+
+  componentDidMount() {
+    window.addEventListener("hashchange", this.hashChangeEvent, true);
+    document.addEventListener(
+      "click",
+      this.handleClickOutside.bind(this),
+      true
+    );
+  }
+  componentWillUnmount() {
+    document.removeEventListener(
+      "click",
+      this.handleClickOutside.bind(this),
+      false
+    );
+    document.removeEventListener(
+      "hashchange",
+      this.hashChangeEvent.bind(this),
+      false
+    );
+  }
   toggleMobileSidebar = () => {
     let { enableMobileMenu, setEnableMobileMenu } = this.props;
     setEnableMobileMenu(!enableMobileMenu);

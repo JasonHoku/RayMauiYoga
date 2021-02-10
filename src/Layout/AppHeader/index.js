@@ -1,9 +1,13 @@
 import React, { Fragment } from "react";
 import cx from "classnames";
 import axios from "axios";
+import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
+import ReactGA from "react-ga";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+
+import SendToGoogleAnalytics from "./Components/analytics";
 
 import HeaderLogo from "../AppLogo";
 
@@ -25,6 +29,29 @@ class Header extends React.Component {
     this.state = {
       response: [],
     };
+    this.onClickGA = this.onClickGA.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener("click", this.onClickGA.bind(this), false);
+    ReactGA.initialize("UA-102481694-8");
+  }
+  componentDidUnmount() {
+    document.removeEventListener("click", this.onClickGA.bind(this), false);
+  }
+
+  onClickGA(event) {
+    ReactGA.pageview(window.location.href + window.location);
+    const domNode = findDOMNode(event.target);
+    ReactGA.outboundLink(
+      {
+        label: "Clicked :" + domNode.outerHTML,
+      },
+      function () {
+        try {
+        } catch (error) {}
+      }
+    );
   }
 
   render() {
@@ -46,6 +73,7 @@ class Header extends React.Component {
           transitionEnter={false}
           transitionLeave={false}
         >
+          <SendToGoogleAnalytics />
           <HeaderLogo />
           <div
             className={cx("app-header__content", {

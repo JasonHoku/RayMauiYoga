@@ -25,16 +25,6 @@ import {
   TabPane,
 } from "reactstrap";
 import axios from "axios";
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: "https://api.raymauiyoga.com/graphql",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  }),
-});
 
 class NoteManagerComponent extends Component {
   constructor(props) {
@@ -45,13 +35,7 @@ class NoteManagerComponent extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getData();
-    setTimeout(() => this.getData(), 500);
-    setTimeout(() => this.getData(), 1500);
-    setTimeout(() => this.getData(), 2500);
-
-  }
+  componentDidMount() {}
   componentWillUnmount() {
     clearInterval(this.state.intervalId);
   }
@@ -163,78 +147,10 @@ class NoteManagerComponent extends Component {
   };
 
   render() {
-    let { formName, formDesc, formEmail, formMessage } = this.state;
-
-    const MY_MUTATION_MUTATION = gql`
-      mutation DeleteNote {
-        deleteSurvey(input: { where: { id: ${this.state.deleteIDVar} } }) {
-          survey {
-            id
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-
-              return (
-                <button
-                  onClick={() =>
-                    MyMutation(formName + formDesc, Date().toString())
-                  }
-                >
-                  Delete Answer #
-                </button>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-
     return (
       <Fragment>
         <CardHeader>Survey Manager</CardHeader>
-        <CardBody>
-          <div
-            style={{
-              boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-            }}
-          >
-            <span>{this.state.textVar}</span>
-          </div>
-          <input
-            type="number"
-            onChange={() => this.handleInputChange2(event)}
-            style={{ width: "50px" }}
-          ></input>{" "}
-          &nbsp;
-          <MyMutationMutation />
-          <br />
-          <Input
-            value={this.state.noteVar}
-            name="NoteVar"
-            id="NoteVar"
-            onChange={() => this.handleInputChange(event)}
-            style={{ top: "15px", position: "relative" }}
-            type="textarea"
-          ></Input>{" "}
-          &nbsp;
-          <button onClick={() => this.onSubmit()}> Send</button> <br />
-        </CardBody>
+        <CardBody>Not Yet Implemented, used for product growth. </CardBody>
         <br />
       </Fragment>
     );

@@ -363,3 +363,11 @@ h2 {
 .carousel-indicators {
   z-index: 1;
 }
+
+#root
+  > div
+  > div.app-main
+  > div.app-sidebar.sidebar-shadow
+  > div.app-header__logo {
+  display: none;
+}
