@@ -44,12 +44,12 @@
   }
 }
 .MainAnimation2-appear {
-  transform: translateX(30px);
+  transform: translateY(30px);
   opacity: 0;
 
   &.MainAnimation2-appear-active {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
     transition: all 0.5s linear;
   }
 }

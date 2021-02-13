@@ -65,7 +65,7 @@ export default class CRMDashboard2 extends Component {
           transitionAppear={true}
           transitionAppearTimeout={500}
           transitionEnterTimeout={500}
-          transitionEnter={false}
+          transitionEnter={true}
           transitionLeave={false}
         >
           <Row

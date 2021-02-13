@@ -4,6 +4,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
-  opacity: 0.75;
+  transition-duration: 1s;
+  opacity: 0.9;
 }
