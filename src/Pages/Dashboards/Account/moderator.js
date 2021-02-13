@@ -93,49 +93,41 @@ function ModeratorElements() {
   const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
   const [loadedTotalIDs, setloadedTotalIDs] = useState("0");
   const [loadedTotalUsers, setloadedTotalUsers] = useState("0");
+  const [loadedSnapshotData, setloadedSnapshotData] = useState("");
 
   const [loadStage, setloadStage] = useState("1");
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("X" + loadStage);
-      if (isInitialMount.current) {
-        if (loadStage === "2") {
-          setuserMetric(loadedTotalIDs) & clearInterval(interval);
-          if (loadedTotalUsers != "0") {
-            setloadStage("3");
-          }
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "1") {
-          if (loadedTotalIDs != "0") {
+    let concData = [];
+    let concData2 = [];
+    if (isInitialMount.current === true) {
+      console.log("LoadStage: " + loadStage);
+      if (loadStage === "1") {
+        const loadsnapshot = async () => {
+          const snapshot = await firebase.firestore().collection("users").get();
+          snapshot.forEach((doc) => {
+            concData = concData.concat({
+              [doc.id]: [doc.data()],
+            });
+            concData2 = concData2.concat(doc.id);
+          });
+          setloadedSnapshotData(concData);
+        };
+        loadsnapshot().then(async () => {
+          if (loadedSnapshotData != "") {
             setloadStage("2");
           }
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "3") {
-          setproStatusText("Loading: " + loadedEzID + " / " + loadedTotalIDs);
-          if (localStorage.getItem("gotDownloadURL")) {
-            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
-            setloadStage("4");
-          }
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "4") {
-          setproStatusText("Ready: " + loadedEzID + " / " + loadedTotalIDs);
-          if (localStorage.getItem("gotDownloadURL")) {
-            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
-          }
-          return () => clearInterval(interval);
-        }
-        return () => clearInterval(interval);
-      } else {
-        isInitialMount.current = false;
-        return () => clearInterval(interval);
+        });
       }
-    }, 100);
-    return () => clearInterval(interval);
+      if (loadStage === "2") {
+        setuserMetric(loadedSnapshotData.length);
+        setloadStage("3");
+      }
+      if (loadStage === "3") {
+        isInitialMount.current = false;
+      }
+    }
   });
 
   function loadProducts(props) {
@@ -708,17 +700,6 @@ function ModeratorElements() {
                   <br />
                   <span id="id002"></span>
                 </h4>
-                <FirestoreProvider {...firebaseConfig} firebase={firebase}>
-                  <FirestoreCollection path="/Users/">
-                    {(d) => {
-                      if (loadStage === "1") {
-                        if (d.isLoading === false) {
-                          setloadedTotalIDs(d.value.length);
-                        }
-                      }
-                    }}
-                  </FirestoreCollection>
-                </FirestoreProvider>{" "}
               </Card>
             </TabPane>
           </Row>
@@ -795,19 +776,7 @@ function ModeratorElements() {
             </Row>
           </TabPane>
           <TabPane tabId="Content">
-            <Row style={{ justifyContent: "center" }}>
-              {" "}
-              <Card
-                style={{
-                  width: "95%",
-                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                  alignContent: "center",
-                  alignItems: "center",
-                }}
-              >
                 {loadContentManagerComponent()}
-              </Card>
-            </Row>
           </TabPane>
           <TabPane tabId="Notes">
             <Row style={{ justifyContent: "center" }}>
@@ -869,21 +838,7 @@ function ModeratorElements() {
               </Card>
             </Row>
           </TabPane>
-          <TabPane tabId="Video">
-            <Row style={{ justifyContent: "center" }}>
-              {" "}
-              <Card
-                style={{
-                  width: "95%",
-                  boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                  alignContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {loadVideoManagerComponent()}
-              </Card>
-            </Row>
-          </TabPane>
+          <TabPane tabId="Video">{loadVideoManagerComponent()}</TabPane>
           <TabPane tabId="Users">
             <Row style={{ justifyContent: "center" }}>
               {" "}

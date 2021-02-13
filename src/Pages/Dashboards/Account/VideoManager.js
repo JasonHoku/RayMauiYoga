@@ -357,132 +357,102 @@ function ContentManagerComponent() {
   }
   return (
     <Fragment>
-      <Card>
-        <h1>Video&nbsp;Manager</h1>
-        <CardBody>
-          <h2>{statusVar}</h2>
-          <small>ID #:</small>
-          <input
-            onChange={(e) =>
-              setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
-            }
-            value={loadedEzID}
-            name="loadedEzID"
-            style={{ width: "45px" }}
-          ></input>
-          &nbsp; &nbsp;
-          <Button
-            color="primary"
-            onClick={() =>
-              setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("1")
-            }
-          >
-            ←
-          </Button>{" "}
-          &nbsp;
-          <Button
-            color="primary"
-            onClick={() =>
-              setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("1")
-            }
-          >
-            →
-          </Button>{" "}
-          &nbsp;
-          <Button color="success" onClick={() => runSendData()}>
-            Save
-          </Button>{" "}
-          &nbsp;
-          <Button
-            color="secondary"
-            onClick={() =>
-              setloadedEzID(toInteger(loadedTotalIDs) + 1) &
-              setloadStage("2") &
-              seteditedDescription("") &
-              setloadedDescription("")
-            }
-          >
-            New
-          </Button>{" "}
-          &nbsp;
-          <Button
-            color="danger"
-            onClick={() => runDeleteData() & setloadedEzID(1)}
-          >
-            Delete
-          </Button>
-          <br />
-          <br />{" "}
-          <div
-            style={{
-              boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              <CardHeader>Content View:</CardHeader>{" "}
-            </div>
-            <Row>
-              <video
-                preload="false"
-                src={loadedPlaybackId}
-                width="350px"
-                id="myVideo"
-                controls
-              ></video>
-              <Card>
-                <CardBody>
-                  <small>
-                    VideoID: {loadedPlaybackId}
-                    <br /> Meta:
-                    <input
-                      onChange={(event) =>
-                        setreadyVideoMeta(event.target.value)
-                      }
-                      value={readyVideoMeta}
-                    ></input>
-                    <br />
-                    Title:
-                    <input
-                      onChange={(event) =>
-                        setreadyDescription(event.target.value)
-                      }
-                      value={readyDescription}
-                    ></input>
-                  </small>
-                </CardBody>
-              </Card>
-            </Row>
-          </div>
-          &nbsp;
-          <br />
-        </CardBody>
-
-        <TabContent
-          activeTab={activeTab}
+      <CardBody>
+        <h1>Video Manager</h1>
+        <b>Personal Stream Key: </b>
+        <br />
+        69e93363-3e18-db5a-ed77-dc9a33a7f897
+        <h2>{statusVar}</h2>
+        <small>ID #:</small>
+        <input
+          onChange={(e) =>
+            setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
+          }
+          value={loadedEzID}
+          name="loadedEzID"
+          style={{ width: "45px" }}
+        ></input>
+        &nbsp; &nbsp;
+        <Button
+          color="primary"
+          onClick={() =>
+            setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("1")
+          }
+        >
+          ←
+        </Button>{" "}
+        &nbsp;
+        <Button
+          color="primary"
+          onClick={() =>
+            setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("1")
+          }
+        >
+          →
+        </Button>{" "}
+        &nbsp;
+        <Button color="success" onClick={() => runSendData()}>
+          Save
+        </Button>{" "}
+        &nbsp;
+        <Button
+          color="secondary"
+          onClick={() =>
+            setloadedEzID(toInteger(loadedTotalIDs) + 1) &
+            setloadStage("2") &
+            seteditedDescription("") &
+            setloadedDescription("")
+          }
+        >
+          New
+        </Button>{" "}
+        &nbsp;
+        <Button
+          color="danger"
+          onClick={() => runDeleteData() & setloadedEzID(1)}
+        >
+          Delete
+        </Button>
+        <br />
+        <br />
+        <div
           style={{
-            backgroundColor: "transparent",
-            opacity: 0.9,
-            justifyContent: "center",
-            alignSelf: "center",
-            width: "100%",
+            boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
           }}
         >
-          <CardBody>
-            <b>Personal Stream Key: </b>
-            <br />
-            69e93363-3e18-db5a-ed77-dc9a33a7f897
-            <br />
-            <br />
-          </CardBody>
+          <div
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <CardHeader>Content View:</CardHeader>{" "}
+          </div>
+          <video
+            style={{ width: "90%" }}
+            preload="false"
+            src={loadedPlaybackId}
+            id="myVideo"
+            controls
+          ></video>{" "}
           <br />
-        </TabContent>
-      </Card>
+          <br />
+          <small>
+            <br />
+            VideoID: {loadedPlaybackId}
+            <br /> Meta:
+            <input
+              onChange={(event) => setreadyVideoMeta(event.target.value)}
+              value={readyVideoMeta}
+            ></input>
+            <br />
+            Title:
+            <input
+              onChange={(event) => setreadyDescription(event.target.value)}
+              value={readyDescription}
+            ></input>
+          </small>
+        </div>
+      </CardBody>
     </Fragment>
   );
 }

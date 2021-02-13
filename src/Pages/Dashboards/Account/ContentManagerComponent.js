@@ -353,17 +353,14 @@ function ContentManagerComponent() {
             >
               <CardHeader>Content View:</CardHeader>{" "}
             </div>{" "}
-            <Row>
-              <small>
-                {" "}
-                <div
-                  className="listingExample"
-                  dangerouslySetInnerHTML={{
-                    __html: editedDescription,
-                  }}
-                />
-              </small>
-            </Row>{" "}
+            <small>
+              <div
+                className="listingExample"
+                dangerouslySetInnerHTML={{
+                  __html: editedDescription,
+                }}
+              />
+            </small>
           </div>
           &nbsp;
           <br />
@@ -382,46 +379,41 @@ function ContentManagerComponent() {
           <div
             style={{
               boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-              width: "100%",
             }}
           >
             <b> Upload An Image:</b> <br />
-            <div style={{ width: "100%" }}>
-              <form
-                role="imgForm"
-                name="imgForm"
-                id="imgForm"
-                onSubmit={handleUpload}
+            <form
+              role="imgForm"
+              name="imgForm"
+              id="imgForm"
+              onSubmit={handleUpload}
+            >
+              <input type="file" onChange={handleChange} />
+              <Button
+                hidden={!file}
+                fill="true"
+                color="primary"
+                disabled={!file}
+                style={{
+                  alignSelf: "center",
+                  justifySelf: "center",
+                  display: "block",
+                  position: "relative",
+                  width: "55%",
+                }}
+                type="submit"
               >
-                <input type="file" onChange={handleChange} />
-                <center>
-                  <Button
-                    hidden={!file}
-                    fill="true"
-                    color="primary"
-                    disabled={!file}
-                    style={{
-                      alignSelf: "center",
-                      justifySelf: "center",
-                      display: "block",
-                      position: "relative",
-                      width: "55%",
-                    }}
-                    type="submit"
-                  >
-                    <h5 style={{ position: "relative", top: "-2px" }}>
-                      Upload Image
-                    </h5>
-                  </Button>{" "}
-                </center>
-              </form>
-              <img
-                hidden={!hasReceivedImgURL}
-                style={{ maxWidth: "100%" }}
-                src={url}
-                alt=""
-              />
-            </div>
+                <h5 style={{ position: "relative", top: "-2px" }}>
+                  Upload Image
+                </h5>
+              </Button>{" "}
+            </form>
+            <img
+              hidden={!hasReceivedImgURL}
+              style={{ maxWidth: "100%" }}
+              src={url}
+              alt=""
+            />
             <input
               disabled={true}
               hidden={!hasReceivedImgURL}

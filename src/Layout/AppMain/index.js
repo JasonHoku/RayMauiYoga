@@ -5,14 +5,12 @@ import Loader from "react-loaders";
 import { ToastContainer } from "react-toastify";
 
 const Dashboards = lazy(() => import("../../Pages/Dashboards"));
-// const Dashboards = lazy(() => import("../../Pages/Dashboards"));
+const LandingPage = lazy(() => import("../../Pages/landing.js"));
 
-import LandingPage from "../../Pages/landing.js";
 
 const AppMain = () => {
   return (
     <Fragment>
-
       <Suspense
         fallback={
           <div className="loader-container">

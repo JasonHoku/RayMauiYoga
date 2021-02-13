@@ -114,8 +114,6 @@
 
 // DEMO
 
-@import "assets/demo-ui/demo";
-
 // Responsive
 
 @import "assets/layout/responsive/responsive-base";
@@ -393,6 +391,18 @@ h2 {
   transition: opacity 0.3s;
 }
 
+#root
+  > div
+  > div.app-header.header-shadow
+  > div.app-header__content
+  > div.app-header-right
+  > div.header-btn-lg.pr-0
+  > div
+  > div
+  > div:nth-child(1) {
+  position: relative;
+  top: -4px;
+}
 .tooltip2 .tooltip2text::after {
   content: "";
   position: absolute;

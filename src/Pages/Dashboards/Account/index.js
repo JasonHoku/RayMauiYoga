@@ -44,8 +44,16 @@ function Account() {
   var uiConfig = {
     callbacks: {
       signInSuccessWithAuthResult: function (authResult) {
-        console.log(authResult);
-        localStorage.setItem("username", authResult.user.name);
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(authResult.user.uid)
+          .set({
+            user: String(authResult.user.displayName),
+            uuid: String(authResult.user.uid),
+          });
+
+        localStorage.setItem("username", authResult.user.displayName);
         if (
           authResult.user.uid === "zj0jKGLWbUPb7FapAUoCS9zyaoo1" ||
           authResult.user.uid === "8gZKzIAI7le5B03GbynBUKCpyl02"
@@ -72,8 +80,6 @@ function Account() {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    console.log(loadStage);
-    console.log(firebase.auth());
     if (isInitialMount.current === true) {
       if (loadStage === "1") {
         if (firebaseui.auth.AuthUI.getInstance()) {
@@ -90,9 +96,7 @@ function Account() {
         isInitialMount.current = false;
       } else if (loadStage === "3") {
         try {
-          console.log(firebase);
         } catch (e) {
-          console.log(e);
         }
         sethasLoaded("4");
       }

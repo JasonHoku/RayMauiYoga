@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "classnames";
-import ReactTable from "react-table";
-import { Route } from "react-router-dom";
+
 import CarouselBSExample from "./HomeCarousel";
 
 import {
@@ -28,32 +26,6 @@ import {
   CardFooter,
   ButtonGroup,
 } from "reactstrap";
-
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  Tooltip,
-} from "recharts";
-
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import {
-  faAngleUp,
-  faDotCircle,
-  faAngleDown,
-  faStrikethrough,
-  faAlignCenter,
-} from "@fortawesome/free-solid-svg-icons";
-
-import { Sparklines, SparklinesCurve } from "react-sparklines";
-
-import { makeData } from "../../../Tables/DataTables/Examples/utils";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CountUp from "react-countup";
 
 export default class CRMDashboard2 extends Component {
   constructor(props) {
@@ -89,9 +61,10 @@ export default class CRMDashboard2 extends Component {
       <Fragment>
         <CSSTransitionGroup
           component="div"
-          transitionName="TabsAnimation"
+          transitionName="MainAnimation2"
           transitionAppear={true}
-          transitionAppearTimeout={0}
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
           transitionEnter={false}
           transitionLeave={false}
         >
@@ -115,8 +88,10 @@ export default class CRMDashboard2 extends Component {
               </CardHeader>
               <CardBody>
                 <h3>
-                  <a href="/#/dashboards/account">Study and connect with Ray through live, written, &amp; video
-                  events.</a>
+                  <a href="/#/dashboards/account">
+                    Study and connect with Ray through live, written, &amp;
+                    video events.
+                  </a>
                 </h3>
               </CardBody>
               <CardBody
@@ -130,7 +105,16 @@ export default class CRMDashboard2 extends Component {
               </CardBody>
             </Card>
           </Row>
-
+        </CSSTransitionGroup>
+        <CSSTransitionGroup
+          component="div"
+          transitionName="MainAnimation3"
+          transitionAppear={true}
+          transitionAppearTimeout={1000}
+          transitionEnterTimeout={1000}
+          transitionEnter={true}
+          transitionLeave={false}
+        >
           <Card
             className="main-card mb-3"
             style={{
@@ -205,7 +189,6 @@ export default class CRMDashboard2 extends Component {
               }
               id={this.state.hover}
             >
-              {" "}
               <span id="readMore">
                 <span id="readMore">
                   <Button>Click To Read More</Button>

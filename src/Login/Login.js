@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
-const providersNames = ["google"];
-
 const Loginbutton = (props) => (
   <div
     className="app-header-right"
     style={{
-      marginTop: 16,
       alignContent: "center",
     }}
   >
-    {" "}
-    &nbsp;
-    <a href={`${backendUrl}/connect/${props.providerName}`}>
+    <a href={`/#/dashboards/account`}>
       <Button
         className="btn-icon-horizontal btn-transition app-header-right"
         outline
         color="dark"
       >
-        <i className="fa fa-home btn-icon-wrapper"></i>&nbsp; Login
+        <i
+          className="pe-7s-home"
+          style={{
+            fontSize: "20px",
+            alignContent: "center",
+          }}
+        ></i>
+        &nbsp;Account
       </Button>
-    </a>{" "}
+    </a>
   </div>
 );
 
@@ -46,6 +46,7 @@ const LoginAct = (props) => {
     localStorage.removeItem("jwt");
     localStorage.removeItem("username");
     setIsLogged(false);
+    window.location.reload();
   };
 
   let buttons;
@@ -53,44 +54,16 @@ const LoginAct = (props) => {
   if (isLogged) {
     buttons = <Logoutbutton onClick={logout} />;
   } else {
-    buttons = (
-      <ul style={{ listStyleType: "none" }}>
-        {providersNames.map((providerName, i) => (
-          <li key={providerName}>
-            <Loginbutton providerName={providerName} />
-          </li>
-        ))}
-      </ul>
-    );
+    buttons = <Loginbutton />;
   }
 
   let text;
 
   if (isLogged) {
-    text = [
-      `Welcome ${localStorage.getItem("username")}, you are connected!` + " ",
-    ];
-
-    if (isLogged && localStorage.getItem("username") == "jlevien808") {
-      text = `Sup ${localStorage.getItem("username")}, you are connected! `;
-    }
-  } else {
-    text = [
-    ];
+    text = `${localStorage.getItem("username")}`;
   }
 
-  return (
-    <div
-      className="app-header-right"
-      style={{
-        marginTop: 16,
-        alignContent: "center",
-      }}
-    >
-      {text}
-      {buttons}
-    </div>
-  );
+  return <div className="app-header-right">{buttons}</div>;
 };
 
 export default LoginAct;

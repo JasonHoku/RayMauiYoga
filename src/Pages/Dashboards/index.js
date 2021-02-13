@@ -1,28 +1,25 @@
-import React, { Fragment } from "react";
+import React, { lazy, Fragment } from "react";
 import { Route } from "react-router-dom";
 
 // Pages
 
-import HomeDashboard from "./Home/";
-import Services from "./Services/";
-import ShopPage from "./Shop/";
-import GalleryPage from "./Gallery/";
-import Writing from "./Writing/";
-import Retreats from "./Retreats";
-import Videos from "./Videos";
-import Blog from "./Blog";
-import Contact from "./Contact/";
-import Projects from "./Projects/";
-import CalendarPage from "./Calendar/";
-import Account from "./Account/";
+const HomeDashboard = lazy(() => import("./Home/"));
+const ShopPage = lazy(() => import("./Shop/"));
+const GalleryPage = lazy(() => import("./Gallery/"));
+const Contact = lazy(() => import("./Contact/"));
+const Account = lazy(() => import("./Account/"));
+const Writing = lazy(() => import("./Writing/"));
+const CalendarPage = lazy(() => import("./Calendar/"));
+const Services = lazy(() => import("./Services/"));
+const Projects = lazy(() => import("./Projects/"));
+const Retreats = lazy(() => import("./Retreats/"));
+const Videos = lazy(() => import("./Videos/"));
+const Blog = lazy(() => import("./Blog/"));
 // Layout
 
 import AppHeader from "../../Layout/AppHeader/";
 import AppSidebar from "../../Layout/AppSidebar/";
 import AppFooter from "../../Layout/AppFooter/";
-
-// Theme Options
-import ThemeOptions from "../../Layout/ThemeOptions/";
 
 const Dashboards = ({ match }) => (
   <Fragment>

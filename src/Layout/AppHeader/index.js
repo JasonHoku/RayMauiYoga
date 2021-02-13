@@ -75,7 +75,7 @@ class Header extends React.Component {
     document.addEventListener("click", this.onClickGA.bind(this), false);
     ReactGA.initialize("UA-102481694-8");
   }
-  componentDidUnmount() {
+  componentWillUnmount() {
     document.removeEventListener("click", this.onClickGA.bind(this), false);
   }
 
@@ -124,20 +124,16 @@ class Header extends React.Component {
               <MegaMenu />
             </div>
             <div className="app-header-right">
-              <span>
-                {" "}
-                <Router>
-                  <Switch>
-                    <Route
-                      path="/#/dashboards/home/connect/google/redirect"
-                      component={LoginRedirect}
-                    />
-                    <Route exact path="/" component={Login} />
-                    <Login />
-                  </Switch>
-                </Router>
-                &nbsp; &nbsp;
-              </span>
+              <Router>
+                <Switch>
+                  <Route
+                    path="/#/dashboards/home/connect/google/redirect"
+                    component={LoginRedirect}
+                  />
+                  <Route exact path="/" component={Login} />
+                  <Login />
+                </Switch>
+              </Router>
 
               <UserBox />
               <HeaderRightDrawer />
