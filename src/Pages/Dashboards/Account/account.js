@@ -425,7 +425,7 @@ function AccountElements() {
                                 },
                                 { merge: true }
                               ).then((res) => {
-                                console.log("Ran mutation ", res);
+                                alert("Your message has been sent to administration.")
                               });
                             }}
                           >

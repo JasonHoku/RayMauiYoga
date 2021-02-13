@@ -70,6 +70,7 @@ function ContentManagerComponent() {
   const [proStatusText, setproStatusText] = useState("Loading...");
   const [selectByIDVar, setselectByIDVar] = useState("0");
   const [loadedImgURL, setloadedImgURL] = useState("");
+  const [readyImgURL, setreadyImgURL] = useState("");
   const [loadedDescription, setloadedDescription] = useState("");
   const [editedDescription, seteditedDescription] = useState("");
   const [loadedLocationData, setloadedLocationData] = useState("");
@@ -78,10 +79,14 @@ function ContentManagerComponent() {
   const [loadedCreatorData, setloadedCreatorData] = useState("");
   const [loadedGMapCoords, setloadedGMapCoords] = useState("");
   const [loadedTitle, setloadedTitle] = useState("");
+  const [loadedEvents, setloadedEvents] = useState([]);
+  const [loadedEventIDs, setloadedEventIDs] = useState("");
   const [loadedPublic, setloadedPublic] = useState("");
   const [loadedIDData, setloadedIDData] = useState("");
   const [loadStage, setloadStage] = useState("1");
   const [loadedTitleData, setloadedTitleData] = useState("");
+
+  const [hasReceivedImgURL, sethasReceivedImgURL] = useState(false);
   const [readyCreator, setreadyCreator] = useState("");
   const [readyTitle, setreadyTitle] = useState("");
   const [readyDescription, setreadyDescription] = useState("");
@@ -92,6 +97,9 @@ function ContentManagerComponent() {
   const [gotDownloadURL, setgotDownloadURL] = useState(
     "Upload An Image To Embed"
   );
+  const [categoryVar, setcategoryVar] = useState("HomePage");
+
+  const [file, setFile] = useState(null);
 
   function handleInputChangeEvent(event) {
     setState({
@@ -100,58 +108,121 @@ function ContentManagerComponent() {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("X" + loadStage);
-      if (isInitialMount.current) {
-        if (loadStage === "2") {
-          setreadyTitle(loadedTitle);
-          setreadyDescription(loadedDescription);
-          localStorage.setItem("editedDescription", editedDescription);
-          localStorage.setItem("readyTitle", readyTitle) &
-            clearInterval(interval);
-          setloadStage("3");
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "1") {
-          if (loadedTotalIDs != "0") {
-            checkFormStates() & setloadStage("2");
-          }
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "3") {
-          setloadedIDData(loadedEzID);
-          console.log("Setting Send Data");
-          seteditedDescription(loadedDescription);
-          setloadStage("4");
-          setstatusVar("Viewing " + loadedEzID + " of: " + loadedTotalIDs);
-          console.log("Y");
-          checkFormStates();
-          setproStatusText("Loading: " + loadedEzID + " / " + loadedTotalIDs);
-          if (localStorage.getItem("gotDownloadURL")) {
-            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
-            setloadStage("4");
-          }
-          return () => clearInterval(interval);
-        }
-        if (loadStage === "4") {
-          setproStatusText("Ready: " + loadedEzID + " / " + loadedTotalIDs);
-          if (localStorage.getItem("gotDownloadURL")) {
-            setreadyImgURL(localStorage.getItem("gotDownloadURL"));
-          }
-          return () => clearInterval(interval);
-        }
-        return () => clearInterval(interval);
-      } else {
-        isInitialMount.current = false;
-        return () => clearInterval(interval);
+    let concData = [];
+    let concData2 = [];
+    let concData3 = [];
+
+    if (isInitialMount.current === true) {
+      console.log(loadStage);
+      if (loadStage === "1") {
+        const loadsnapshot = async () => {
+          const snapshot = await firebase
+            .firestore()
+            .collection(categoryVar)
+            .get();
+          snapshot.forEach((doc) => {
+            concData = concData.concat({
+              [doc.id]: [doc.data()],
+            });
+            concData2 = concData2.concat(doc.id);
+          });
+          setloadedEvents(concData);
+          setloadedEventIDs(concData2);
+        };
+        console.log(
+          loadsnapshot().then(async () => {
+            setloadStage("2");
+          })
+        );
       }
-    }, 100);
-    return () => clearInterval(interval);
+    }
+    if (loadStage === "2") {
+      try {
+        setloadedTotalIDs(loadedEvents.length);
+
+        setloadedDescription(
+          String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].body)
+        );
+        seteditedDescription(
+          String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].body)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      setstatusVar(
+        "Viewing " + categoryVar + " " + loadedEzID + " of: " + loadedTotalIDs
+      ) & setloadStage("3");
+    }
+    if (loadStage === "3") {
+      setloadStage("4");
+    }
+    if (loadStage === "4") {
+    }
   });
+
   function onEditorChange(evt) {
     seteditedDescription(evt.editor.getData());
   }
+  function copyImgURL() {
+    var copyText = document.getElementById("copyImgURLElement");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
 
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copied: " + copyText.value;
+  }
+
+  function outFunc() {
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+  }
+  function handleUpload(e) {
+    const storage = firebase.storage();
+    e.preventDefault();
+    const uploadTask = storage.ref(`/listings/${file.name}`).put(file);
+    uploadTask.on("state_changed", console.log, console.error, () => {
+      storage
+        .ref("listings")
+        .child(file.name)
+        .getDownloadURL()
+        .then((url) => {
+          setFile(null);
+          setURL(url);
+          setloadedImgURL(url);
+        });
+    });
+  }
+
+  function handleChange(e) {
+    setFile(e.target.files[0]);
+  }
+
+  function runSendData() {
+    console.log(String(loadedEzID));
+    firebase
+      .firestore()
+      .collection(categoryVar)
+      .doc(String(loadedEzID - 1))
+      .set({ body: String(editedDescription) });
+  }
+
+  function runDeleteData() {
+    var answer = window.confirm(
+      "Are you sure you want to delete " + loadedEzID
+    );
+    if (answer) {
+      console.log(String(loadedEzID));
+      firebase
+        .firestore()
+        .collection(categoryVar)
+        .doc(String(loadedEzID - 1))
+        .delete()
+        .then(setloadStage("1") & setloadedTotalIDs(loadedTotalIDs - 1));
+    } else {
+      //some code
+    }
+  }
   function formResetter() {
     try {
       document.forms[1].reset();
@@ -162,21 +233,7 @@ function ContentManagerComponent() {
       setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
     } catch (error) {}
   }
-  function checkFormStates() {
-    setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-    handleImageUploadState();
-    try {
-      if (String(localStorage.getItem(`username`)).length > 3) {
-        console.log("LoadStage :" + loadStage);
-        document.getElementById("finListButton").disabled = false;
-        document.getElementById("finListButton").style.backgroundColor = "blue";
 
-        setfinListButton("Send Listing"),
-          setfinListButtonStatus("Ready To Publish"),
-          setfinListButtonDisable(false);
-      }
-    } catch (e) {}
-  }
   function handleImageUploadState() {
     if (gotDownloadURL === "Upload An Image To Embed") {
       return <div>{gotDownloadURL}</div>;
@@ -188,53 +245,98 @@ function ContentManagerComponent() {
   return (
     <Fragment>
       <Card>
-        <h2>Content&nbsp;Manager</h2>
-        <span>
-          <button
-            onClick={() => alert("Construction Awaiting Client Consultation")}
-          >
-            HomePage
-          </button>{" "}
-          &nbsp;
-          <button
-            onClick={() => alert("Construction Awaiting Client Consultation")}
-          >
-            BlogPage
-          </button>{" "}
-          &nbsp;
-          <button
-            onClick={() => alert("Construction Awaiting Client Consultation")}
-          >
-            EventsPage
-          </button>
-        </span>
-        <h2>Status:&nbsp;{statusVar}</h2>
+        <h1>Content&nbsp;Manager</h1>
         <CardBody>
-          ID #:
+          <span>
+            <Button
+              color="primary"
+              onClick={() =>
+                setcategoryVar("HomePage") &
+                setloadStage("1") &
+                setloadedEzID("1")
+              }
+            >
+              HomePage
+            </Button>{" "}
+            &nbsp;
+            <Button
+              color="primary"
+              onClick={() =>
+                setcategoryVar("BlogPage") &
+                setloadStage("1") &
+                setloadedEzID("1")
+              }
+            >
+              BlogPage
+            </Button>{" "}
+            &nbsp;
+            <Button
+              color="primary"
+              onClick={() =>
+                setcategoryVar("EventsPage") &
+                setloadStage("1") &
+                setloadedEzID("1")
+              }
+            >
+              EventsPage
+            </Button>
+          </span>
+          <h2>{statusVar}</h2>
+          <small>ID #:</small>
           <input
             onChange={(e) =>
               setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
             }
             value={loadedEzID}
             name="loadedEzID"
-            style={{ width: "25px" }}
+            style={{ width: "45px" }}
           ></input>
-          &nbsp;
-          <button
+          &nbsp; &nbsp;
+          <Button
+            color="primary"
             onClick={() =>
-              setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("2")
+              setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("1")
             }
           >
             ←
-          </button>{" "}
+          </Button>{" "}
           &nbsp;
-          <button
+          <Button
+            color="primary"
             onClick={() =>
-              setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("2")
+              setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("1")
             }
           >
             →
-          </button>
+          </Button>{" "}
+          &nbsp;
+          <Button
+            color="success"
+            onClick={() => runSendData() & setloadStage("1")}
+          >
+            Save
+          </Button>{" "}
+          &nbsp;
+          <Button
+            color="secondary"
+            onClick={() =>
+              setloadedEzID(toInteger(loadedTotalIDs) + 1) &
+              setloadStage("2") &
+              seteditedDescription("") &
+              setloadedDescription("")
+            }
+          >
+            New
+          </Button>{" "}
+          &nbsp;
+          <Button
+            color="danger"
+            onClick={() =>
+              runDeleteData() & setloadedEzID(1) & setloadStage("2")
+            }
+          >
+            Delete
+          </Button>
           <br />
           <br />{" "}
           <div
@@ -252,142 +354,93 @@ function ContentManagerComponent() {
               <CardHeader>Content View:</CardHeader>{" "}
             </div>{" "}
             <Row>
-              <Col
-                style={{
-                  width: "90%",
-                }}
-              >
-                Title: <br />
-                <b>{loadedTitleData}</b>
-                <br />
-                <br />
-                Body:{" "}
+              <small>
+                {" "}
                 <div
                   className="listingExample"
                   dangerouslySetInnerHTML={{
                     __html: editedDescription,
                   }}
                 />
-              </Col>
+              </small>
             </Row>{" "}
           </div>
           &nbsp;
-          <br />{" "}
-          <div style={{ width: "100%", textAlign: "center" }}>
+          <br />
+          <div
+            style={{
+              width: "100%",
+              boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
+              textAlign: "center",
+            }}
+          >
+            <CardHeader>Content Editor Tools:</CardHeader>{" "}
             <CKEditor onChange={onEditorChange} data={loadedDescription} />{" "}
             <br />{" "}
           </div>
           <br />
           <div
             style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+              boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
+              width: "100%",
             }}
           >
-            <b> Upload Your Own Image:</b> <br />
-            <FireBaseImageUpload />
-            <br />
-            {handleImageUploadState()}
+            <b> Upload An Image:</b> <br />
+            <div style={{ width: "100%" }}>
+              <form
+                role="imgForm"
+                name="imgForm"
+                id="imgForm"
+                onSubmit={handleUpload}
+              >
+                <input type="file" onChange={handleChange} />
+                <center>
+                  <Button
+                    hidden={!file}
+                    fill="true"
+                    color="primary"
+                    disabled={!file}
+                    style={{
+                      alignSelf: "center",
+                      justifySelf: "center",
+                      display: "block",
+                      position: "relative",
+                      width: "55%",
+                    }}
+                    type="submit"
+                  >
+                    <h5 style={{ position: "relative", top: "-2px" }}>
+                      Upload Image
+                    </h5>
+                  </Button>{" "}
+                </center>
+              </form>
+              <img
+                hidden={!hasReceivedImgURL}
+                style={{ maxWidth: "100%" }}
+                src={url}
+                alt=""
+              />
+            </div>
+            <input
+              disabled={true}
+              hidden={!hasReceivedImgURL}
+              type="text"
+              value={loadedImgURL}
+              id="copyImgURLElement"
+            />{" "}
+            &nbsp;
+            <div hidden={!hasReceivedImgURL} class="tooltip2">
+              <button onClick={() => copyImgURL()} onMouseOut={() => outFunc()}>
+                <span class="tooltip2text" id="myTooltip">
+                  Copy to clipboard
+                </span>
+                Copy text
+              </button>
+            </div>
           </div>
         </CardBody>
-        <br />
-        <CardBody>
-          <IfFirebaseAuthed>
-            {() => (
-              <div>
-                <FirestoreProvider {...firebaseConfig} firebase={firebase}>
-                  <FirestoreCollection path="/DynamicContent/">
-                    {(d) => {
-                      if (loadStage === "1") {
-                        if (d.isLoading === false) {
-                          setloadedTotalIDs(d.value.length);
-                        }
-                      }
-                    }}
-                  </FirestoreCollection>
-                </FirestoreProvider>
-              </div>
-            )}
-          </IfFirebaseAuthed>{" "}
-          <FirestoreProvider {...firebaseConfig} firebase={firebase}>
-            <FirestoreDocument path={`/DynamicContent/${loadedEzID}`}>
-              {(d) => {
-                if (d) {
-                  if (d.value != undefined) {
-                    if (loadStage === "2") {
-                      setloadedTitle(
-                        String(JSON.parse(JSON.stringify(d.value)).Title)
-                      );
-                      setloadedDescription(
-                        String(JSON.parse(JSON.stringify(d.value)).Description)
-                      );
-                      return d.isLoading ? "Loading" : <pre></pre>;
-                    }
-                  }
-                }
-              }}
-            </FirestoreDocument>
-          </FirestoreProvider>
-          <IfFirebaseAuthed>
-            {() => (
-              <div>
-                <FirestoreProvider {...firebaseConfig} firebase={firebase}>
-                  <FirestoreMutation
-                    type="set"
-                    path={`/DynamicContent/` + loadedIDData}
-                  >
-                    {({ runMutation }) => {
-                      if (loadStage === "3") {
-                        return (
-                          <div>
-                            <button
-                              style={{
-                                alignSelf: "center",
-                                display: "block",
-                                position: "relative",
-                                borderRadius: "5px",
-                                width: "100%",
-                              }}
-                              onClick={() => {
-                                setloadedIDData("2");
-                                runMutation({
-                                  Location: `${localStorage.getItem(
-                                    "readyLocation"
-                                  )}`,
-                                  Creator: `${localStorage.getItem(
-                                    "username"
-                                  )}`,
-                                  ID: `${localStorage.getItem("readyID")}`,
-                                  Title: `${localStorage.getItem(
-                                    "readyTitle"
-                                  )}`,
-                                  Description: `${localStorage
-                                    .getItem("editedDescription")
-                                    .replace(/(\r\n|\n|\r)/gm, ``)
-                                    .replace(/(`)/gm, `'`)} `,
-                                }).then((res) => {
-                                  alert("Published");
-                                  if (res) {
-                                    setloadStage("2");
-                                  }
-                                });
-                              }}
-                            >
-                              Publish
-                            </button>
-                          </div>
-                        );
-                      } else {
-                        return null;
-                      }
-                    }}
-                  </FirestoreMutation>
-                </FirestoreProvider>
-              </div>
-            )}
-          </IfFirebaseAuthed>
-        </CardBody>
       </Card>
-      <br />
     </Fragment>
   );
 }

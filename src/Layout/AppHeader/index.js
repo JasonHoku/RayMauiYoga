@@ -11,6 +11,10 @@ import SendToGoogleAnalytics from "./Components/analytics";
 
 import HeaderLogo from "../AppLogo";
 
+import {
+  setEnableMobileMenu,
+  setEnableMobileMenuSmall,
+} from "../../reducers/ThemeOptions";
 import SearchBox from "./Components/SearchBox";
 import MegaMenu from "./Components/MegaMenu";
 import UserBox from "./Components/UserBox";
@@ -32,7 +36,42 @@ class Header extends React.Component {
     this.onClickGA = this.onClickGA.bind(this);
   }
 
+  closePopupOnClick(event) {
+    let { enableMobileMenuSmall, setEnableMobileMenuSmall } = this.props;
+    if (enableMobileMenuSmall) {
+      if (this.state.mobileActive === true) {
+        console.log(String(event.target.id));
+        if (
+          String(event.target.id) === "[object SVGAnimatedString]" ||
+          String(event.target.id) === "MobileMenuID" ||
+          String(event.target.id) === "btn-icon-wrapper" ||
+          String(event.target.id) === "MobileMenuID" ||
+          String(event.target.id) === "MobileMenuIcon"
+        ) {
+          console.log("Yes");
+        } else {
+          console.log(String(event.target.id));
+          this.toggleMobileSmall();
+        }
+      } else {
+        this.setState({ mobileActive: false });
+      }
+      this.setState({ mobileActive: true });
+    } else {
+    }
+  }
+
+  toggleMobileSmall() {
+    let { enableMobileMenuSmall, setEnableMobileMenuSmall } = this.props;
+    setEnableMobileMenuSmall(!enableMobileMenuSmall);
+    this.setState({ mobileActive: false });
+  }
   componentDidMount() {
+    document.addEventListener(
+      "click",
+      this.closePopupOnClick.bind(this),
+      false
+    );
     document.addEventListener("click", this.onClickGA.bind(this), false);
     ReactGA.initialize("UA-102481694-8");
   }
@@ -117,6 +156,10 @@ const mapStateToProps = (state) => ({
   enableMobileMenuSmall: state.ThemeOptions.enableMobileMenuSmall,
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  setEnableMobileMenu: (enable) => dispatch(setEnableMobileMenu(enable)),
+  setEnableMobileMenuSmall: (enable) =>
+    dispatch(setEnableMobileMenuSmall(enable)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

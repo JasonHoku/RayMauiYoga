@@ -1,22 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useEffect, useState, useRef } from "react";
+import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/storage";
-import "firebase/firestore";
-import {
-  FirestoreProvider,
-  FirestoreCollection,
-  FirestoreDocument,
-  FirestoreMutation,
-} from "@react-firebase/firestore";
-
-import {
-  FirebaseAuthProvider,
-  FirebaseAuthConsumer,
-  IfFirebaseAuthed,
-  IfFirebaseAuthedAnd,
-} from "@react-firebase/auth";
 import {
   Row,
   Col,
@@ -37,68 +21,85 @@ import {
   ButtonGroup,
 } from "reactstrap";
 
-// Examples
-
-var firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE,
-  authDomain: "raymauiyoga-d75b1.firebaseapp.com",
-  projectId: "raymauiyoga-d75b1",
-  storageBucket: "raymauiyoga-d75b1.appspot.com",
-  messagingSenderId: "313463385446",
-  appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
-  measurementId: "G-S8EJTRMN63",
-};
-
 import AccountElements from "./account";
-import AdminElements from "./admin";
 import ModeratorElements from "./moderator";
-import LoginPageElements from "./loginPage";
-import { throwServerError } from "@apollo/client";
 //
-
 var CLIIP;
 
-export default class Account extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTab: "1",
-    };
-    this.toggle = this.toggle.bind(this);
-  }
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
 
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
+var firebaseui = require("firebaseui");
+
+function Account() {
+  const [elementAuth, setelementAuth] = useState(null);
+  const [loadStage, setloadStage] = useState("1");
+  const [loadElements, setloadElements] = useState(null);
+
+  function decideUserLoad() {
+    return <div>{loadElements}</div>;
+  }
+  var uiConfig = {
+    callbacks: {
+      signInSuccessWithAuthResult: function (authResult) {
+        console.log(authResult);
+        localStorage.setItem("username", authResult.user.name);
+        if (
+          authResult.user.uid === "zj0jKGLWbUPb7FapAUoCS9zyaoo1" ||
+          authResult.user.uid === "8gZKzIAI7le5B03GbynBUKCpyl02"
+        ) {
+          setloadElements(
+            <span>
+              <ModeratorElements />
+            </span>
+          );
+        } else setloadElements(<AccountElements />);
+        return false;
+      },
+    },
+    // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+    signInFlow: "popup",
+    signInOptions: [
+      // Leave the lines as is for the providers you want to offer your users.
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+    ],
+  };
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    console.log(loadStage);
+    console.log(firebase.auth());
+    if (isInitialMount.current === true) {
+      if (loadStage === "1") {
+        if (firebaseui.auth.AuthUI.getInstance()) {
+          const ui = firebaseui.auth.AuthUI.getInstance();
+          ui.start("#firebaseui-auth-container", uiConfig);
+        } else {
+          const ui = new firebaseui.auth.AuthUI(firebase.auth());
+          ui.start("#firebaseui-auth-container", uiConfig);
+        }
+
+        setloadStage("2");
+      }
+      if (loadStage === "2") {
+        isInitialMount.current = false;
+      } else if (loadStage === "3") {
+        try {
+          console.log(firebase);
+        } catch (e) {
+          console.log(e);
+        }
+        sethasLoaded("4");
+      }
     }
-  }
-  componentDidMount() {
-    this.setState({ isLoading: true });
+  });
 
-    fetch("https://api.ipify.org")
-      .then((response) => response.text())
-      .then((response) => {
-        CLIIP = response;
-      })
-      .then(function (parsedData) {})
-      .catch((error) => this.setState({ error, isLoading: false }));
-  }
-
-  render() {
-    let adminCardEle;
-    {
-      adminCardEle = (
-        <Row
-          style={{
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
-            height: "min-content",
-          }}
-        >
-          <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
+  /*  <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
             <FirebaseAuthConsumer>
               {({ isSignedIn, user, providerId }) => {
                 if (isSignedIn === false) {
@@ -107,7 +108,7 @@ export default class Account extends Component {
                     <Card
                       className="main-card mb-3"
                       style={{
-                        width: "95%",
+                        width: "85%",
                         maxWidth: "750px",
                         backgroundColor: "#CCCCCCC",
                         borderRadius: "25px",
@@ -133,18 +134,19 @@ export default class Account extends Component {
                         style={{
                           backgroundColor: "#CCCCCCC",
                           borderRadius: "10px",
+                          margin: "10px",
                           background:
-                            "linear-gradient(0.25turn, #CCDDFFEE, #FFFFFFAA, #CCDDFFEE)",
+                            "linear-gradient(0.25turn, #CCDDEEEE, #FFFFFFAA, #CCDDEEEE)",
                         }}
                       >
                         <h2>Sign-In to access additional features.</h2>
                         <br />
-                        <div style={{ textAlign: "left" }}>
+                        <div style={{ textAlign: "left", margin: "10px" }}>
                           <h3>
                             {" "}
-                            <li>Live Streams</li>
-                            <li>Video Libraries</li>
-                            <li>Early Access Information</li>
+                            <li>Schedule A Meeting</li> <br />
+                            <li>Chat With The Network</li> <br />
+                            <li>Manage Your Account</li> <br />
                           </h3>
                           <br />
                           <div style={{ width: "100%", textAlign: "center" }}>
@@ -173,9 +175,10 @@ export default class Account extends Component {
                     </Card>
                   );
                 } else {
+                  //Begin Moderator Check
                   if (
-                    user.uid === "zj0jKGLWbUPb7FapAUoCS9zyaoo1" ||
-                    user.uid === "8gZKzIAI7le5B03GbynBUKCpyl02"
+                    user.displayName === "raymauiyoga" ||
+                    user.displayName === "Jason Hoku"
                   ) {
                     localStorage.setItem("username", user.displayName);
                     localStorage.setItem("userEmail", user.email);
@@ -183,7 +186,7 @@ export default class Account extends Component {
                     return (
                       <Card
                         style={{
-                          width: "95%",
+                          width: "85%",
                           maxWidth: "750px",
                           backgroundColor: "#CCCCCCC",
                           borderRadius: "25px",
@@ -235,31 +238,14 @@ export default class Account extends Component {
                         </CardBody>
                       </Card>
                     );
-                  } else {
-                    localStorage.setItem("username", user.displayName);
-                    localStorage.setItem("userEmail", user.email);
-                    localStorage.setItem("userUID", user.uid);
-
-                    if (this.state.username === undefined) {
-                      this.setState({
-                        username: localStorage.getItem("username"),
-                      });
-                    }
-                    if (this.state.userEmail === undefined) {
-                      this.setState({
-                        userEmail: localStorage.getItem("userEmail"),
-                      });
-                    }
-                    if (this.state.userUID === undefined) {
-                      this.setState({
-                        userUID: localStorage.getItem("userUID"),
-                      });
-                    }
-                  }
+                  } else localStorage.setItem("username", user.displayName);
+                  localStorage.setItem("userEmail", user.email);
+                  localStorage.setItem("userUID", user.uid);
+                  console.log(user);
                   return (
                     <Card
                       style={{
-                        width: "95%",
+                        width: "85%",
                         maxWidth: "750px",
                         backgroundColor: "#CCCCCCC",
                         borderRadius: "25px",
@@ -272,11 +258,16 @@ export default class Account extends Component {
                       <CardBody
                         style={{
                           width: "100%",
+                          justifyContent: "center",
+                          alignContent: "center",
                           boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+                          width: "100%",
+                          alignItems: "center",
                           borderRadius: "25px",
                           textAlign: "center",
                         }}
                       >
+                        {" "}
                         <button
                           className="zoom"
                           style={{
@@ -299,21 +290,61 @@ export default class Account extends Component {
                         >
                           Sign&nbsp;Out
                         </button>
-                        <h3> Welcome, {localStorage.getItem("username")}</h3>
+                        <h2> Welcome, {localStorage.getItem("username")}</h2>
+                        <IfFirebaseAuthed>
+                          <AccountElements />
+                        </IfFirebaseAuthed>
                       </CardBody>
-                      <IfFirebaseAuthed>
-                        <AccountElements />
-                      </IfFirebaseAuthed>
                     </Card>
                   );
                 }
               }}
             </FirebaseAuthConsumer>
-          </FirebaseAuthProvider>
+            </FirebaseAuthProvider> */
+  return (
+    <Fragment>
+      <CSSTransitionGroup
+        component="div"
+        transitionName="TabsAnimation"
+        transitionAppear={true}
+        transitionAppearTimeout={0}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <Row
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignContent: "center",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <Card
+            style={{
+              width: "100%",
+              backgroundColor: "#CCCCCCC",
+              justifyContent: "center",
+              marginRight: "-25px",
+              justifySelf: "center",
+              borderRadius: "25px",
+              background:
+                "linear-gradient(0.25turn, #30CCCCDD, #FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD, #30CCCCDD)",
+            }}
+          >
+            <CardBody
+              style={{
+                justifyContent: "center",
+                textAlign: "center",
+              }}
+            >
+              <h1>Welcome</h1>
+              <div id="firebaseui-auth-container">{decideUserLoad()}</div>
+            </CardBody>
+          </Card>
         </Row>
-      );
-    }
-
-    return <Fragment>{adminCardEle}</Fragment>;
-  }
+      </CSSTransitionGroup>
+    </Fragment>
+  );
 }
+export default Account;
