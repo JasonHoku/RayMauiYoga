@@ -32,7 +32,6 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-import axios from "axios";
 import CKEditor from "ckeditor4-react";
 
 import FireBaseImageUpload from "./firebaseImageUpload";
@@ -56,6 +55,7 @@ import {
   IfFirebaseAuthedAnd,
 } from "@react-firebase/auth";
 
+import axios from "axios";
 var firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE,
   authDomain: "raymauiyoga-d75b1.firebaseapp.com",
@@ -67,7 +67,6 @@ var firebaseConfig = {
 };
 
 const REACT_APP_MUX_TOKEN_SECRET = process.env.REACT_APP_MUX_TOKEN_SECRET;
-
 function ContentManagerComponent() {
   const [url, setURL] = useState("");
   const isInitialMount = useRef(true);
@@ -173,6 +172,40 @@ function ContentManagerComponent() {
         ) & setloadStage("3");
       }
       if (loadStage === "3") {
+        if (window.location.hostname === "localhost") {
+          require("firebase/functions");
+          firebase.functions().useEmulator("localhost", 5001);
+          var addMessage = firebase.functions().httpsCallable("addMessage");
+          addMessage({ text: "X" })
+            .then((result) => {
+              // Read result of the Cloud Function.
+              console.log(result);
+            })
+            .catch((error) => {
+              // Getting the Error details.
+              var code = error.code;
+              var message = error.message;
+              var details = error.details;
+              console.log(details, code, message);
+              // ...
+            });
+        } else {
+          require("firebase/functions");
+          var addMessage = firebase.functions().httpsCallable("addMessage");
+          addMessage({ text: "X" })
+            .then((result) => {
+              // Read result of the Cloud Function.
+              console.log(result);
+            })
+            .catch((error) => {
+              // Getting the Error details.
+              var code = error.code;
+              var message = error.message;
+              var details = error.details;
+              console.log(details, code, message);
+              // ...
+            });
+        }
         loadVideoJS() & setloadStage("4");
       }
       if (loadStage === "4") {
@@ -250,30 +283,10 @@ function ContentManagerComponent() {
       }
     }
     const Mux = require("@mux/mux-node");
-    const { Video, Data } = new Mux(
-      process.env.REACT_APP_MUX_TOKEN_ID,
-      process.env.REACT_APP_MUX_TOKEN_SECRET
-    );
-    console.log(Video, Data);
     const muxClient = new Mux(
       process.env.REACT_APP_MUX_TOKEN_ID,
       process.env.REACT_APP_MUX_TOKEN_SECRET
     ); // Success!
-    muxClient.Video.on("request", (req) => {
-      // Request will contain everything being sent such as `headers, method, base url, etc
-      body = {
-        playback_policy: ["public"],
-        new_asset_settings: {
-          playback_policy: ["public"],
-        },
-      };
-      console.log(req);
-    });
-
-    muxClient.Video.on("response", (res) => {
-      console.log(res);
-      // Response will include everything returned from the API, such as status codes/text, headers, etc
-    });
   }
   function componentWillUnmount() {
     clearInterval(this.state.intervalId);

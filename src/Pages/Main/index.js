@@ -7,18 +7,9 @@ import ResizeDetector from "react-resize-detector";
 
 import AppMain from "../../Layout/AppMain";
 
+import AppAuth from "../../Layout/AppAuth/index.js";
+
 import firebase from "firebase/app";
-
-
-var firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE,
-  authDomain: "raymauiyoga-d75b1.firebaseapp.com",
-  projectId: "raymauiyoga-d75b1",
-  storageBucket: "raymauiyoga-d75b1.appspot.com",
-  messagingSenderId: "313463385446",
-  appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
-  measurementId: "G-S8EJTRMN63",
-};
 
 class Main extends React.Component {
   constructor(props) {
@@ -29,9 +20,6 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
     window.addEventListener("hashchange", this.toggle1, false);
   }
 

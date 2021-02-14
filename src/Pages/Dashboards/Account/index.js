@@ -21,6 +21,8 @@ import {
   ButtonGroup,
 } from "reactstrap";
 
+import AppAuth from "../../../Layout/AppAuth/index.js";
+
 import AccountElements from "./account";
 import ModeratorElements from "./moderator";
 //
@@ -77,6 +79,9 @@ function Account() {
     ],
   };
 
+  function logout() {
+    firebase.auth().signOut();
+  }
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -96,8 +101,7 @@ function Account() {
         isInitialMount.current = false;
       } else if (loadStage === "3") {
         try {
-        } catch (e) {
-        }
+        } catch (e) {}
         sethasLoaded("4");
       }
     }
@@ -342,8 +346,8 @@ function Account() {
                 textAlign: "center",
               }}
             >
-              <h1>Welcome</h1>
-              <div id="firebaseui-auth-container">{decideUserLoad()}</div>
+              Welcome
+              <AppAuth />
             </CardBody>
           </Card>
         </Row>
