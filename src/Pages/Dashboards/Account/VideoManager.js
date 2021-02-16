@@ -67,7 +67,7 @@ var firebaseConfig = {
 };
 
 const REACT_APP_MUX_TOKEN_SECRET = process.env.REACT_APP_MUX_TOKEN_SECRET;
-function ContentManagerComponent() {
+function VideoManagerComponent() {
   const [url, setURL] = useState("");
   const isInitialMount = useRef(true);
   const [noteVar, setnoteVar] = useState("");
@@ -89,6 +89,7 @@ function ContentManagerComponent() {
   const [loadedGMapCoords, setloadedGMapCoords] = useState("");
   const [loadedTitle, setloadedTitle] = useState("");
   const [loadedEvents, setloadedEvents] = useState([]);
+  const [loadedMuxData, setloadedMuxData] = useState([]);
   const [loadedEventIDs, setloadedEventIDs] = useState("");
   const [loadedPublic, setloadedPublic] = useState("");
   const [loadedIDData, setloadedIDData] = useState("");
@@ -105,6 +106,8 @@ function ContentManagerComponent() {
   const [loadedTotalIDs, setloadedTotalIDs] = useState("1");
   const [loadedPlaybackId, setloadedPlaybackId] = useState("1");
   const [readyVideoMeta, setreadyVideoMeta] = useState("");
+  const [isLoadedOnce, setisLoadedOnce] = useState("1");
+
   const [loadedVideoMeta, setloadedVideoMeta] = useState("");
   const [gotDownloadURL, setgotDownloadURL] = useState(
     "Upload An Image To Embed"
@@ -122,9 +125,8 @@ function ContentManagerComponent() {
   useEffect(() => {
     let concData = [];
     let concData2 = [];
-    let concData3 = [];
 
-    console.log(loadStage);
+    console.log("Updating, Stage: " + loadStage);
     if (isInitialMount.current === true) {
       if (loadStage === "1") {
         if (loadedEzID > 0) {
@@ -140,15 +142,17 @@ function ContentManagerComponent() {
               concData2 = concData2.concat(doc.id);
             });
             setloadedEvents(concData);
-            setloadedEventIDs(concData2);
           };
           loadsnapshot().then(async () => {
-            setloadStage("2");
+            if (loadedEvents != "") {
+              setloadStage("2");
+            }
           });
         }
       }
       if (loadStage === "2") {
         try {
+          setisLoadedOnce("1");
           setloadedDescription(
             String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].Title)
           );
@@ -172,41 +176,43 @@ function ContentManagerComponent() {
         ) & setloadStage("3");
       }
       if (loadStage === "3") {
-        if (window.location.hostname === "localhost") {
-          require("firebase/functions");
-          firebase.functions().useEmulator("localhost", 5001);
-          var addMessage = firebase.functions().httpsCallable("addMessage");
-          addMessage({ text: "X" })
-            .then((result) => {
-              // Read result of the Cloud Function.
-              console.log(result);
-            })
-            .catch((error) => {
-              // Getting the Error details.
-              var code = error.code;
-              var message = error.message;
-              var details = error.details;
-              console.log(details, code, message);
-              // ...
-            });
-        } else {
-          require("firebase/functions");
-          var addMessage = firebase.functions().httpsCallable("addMessage");
-          addMessage({ text: "X" })
-            .then((result) => {
-              // Read result of the Cloud Function.
-              console.log(result);
-            })
-            .catch((error) => {
-              // Getting the Error details.
-              var code = error.code;
-              var message = error.message;
-              var details = error.details;
-              console.log(details, code, message);
-              // ...
-            });
+        if (isLoadedOnce === "1") {
+          if (window.location.hostname === "localhost") {
+            require("firebase/functions");
+            firebase.functions().useEmulator("localhost", 5001);
+            var addMessage = firebase.functions().httpsCallable("addMessage");
+            addMessage({ text: "X" })
+              .then((result) => {
+                // Read result of the Cloud Function.
+                setloadedMuxData(result);
+              })
+              .catch((error) => {
+                // Getting the Error details.
+                var code = error.code;
+                var message = error.message;
+                var details = error.details;
+                console.log(details, code, message);
+                // ...
+              });
+          } else {
+            require("firebase/functions");
+            var addMessage = firebase.functions().httpsCallable("addMessage");
+            addMessage({ text: "X" })
+              .then((result) => {
+                // Read result of the Cloud Function.
+                setloadedMuxData(JSON.stringify(result));
+              })
+              .catch((error) => {
+                // Getting the Error details.
+                var code = error.code;
+                var message = error.message;
+                var details = error.details;
+                console.log(details, code, message);
+                // ...
+              });
+          }
+          loadVideoJS() & setloadStage("4") & setisLoadedOnce("2");
         }
-        loadVideoJS() & setloadStage("4");
       }
       if (loadStage === "4") {
         console.log("Fully Loaded");
@@ -217,6 +223,7 @@ function ContentManagerComponent() {
   function onEditorChange(evt) {
     seteditedDescription(evt.editor.getData());
   }
+
   function copyImgURL() {
     var copyText = document.getElementById("copyImgURLElement");
     copyText.select();
@@ -440,13 +447,15 @@ function ContentManagerComponent() {
           >
             <CardHeader>Content View:</CardHeader>{" "}
           </div>
+          <br />
+          <div>{loadedMuxData}</div>
           <video
             style={{ width: "90%" }}
             preload="false"
             src={loadedPlaybackId}
             id="myVideo"
             controls
-          ></video>{" "}
+          ></video>
           <br />
           <br />
           <small>
@@ -469,4 +478,4 @@ function ContentManagerComponent() {
     </Fragment>
   );
 }
-export default ContentManagerComponent;
+export default VideoManagerComponent;

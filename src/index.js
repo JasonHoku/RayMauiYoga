@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 
 import { Route } from "react-router-dom";
 
-import * as serviceWorker from "./serviceWorker";
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import { HashRouter } from "react-router-dom";
 import "./App.scss";
@@ -30,6 +30,6 @@ ReactDOM.render(
   rootElement
 );
 
-serviceWorker.register();
+serviceWorkerRegistration.register();
 
 reportWebVitals();

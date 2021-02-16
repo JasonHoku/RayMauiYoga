@@ -39,13 +39,15 @@ class Header extends React.Component {
   closePopupOnClick(event) {
     let { enableMobileMenuSmall, setEnableMobileMenuSmall } = this.props;
     if (enableMobileMenuSmall) {
+      console.log(String(event.target.id));
+      console.log(String(event.target.className));
       if (this.state.mobileActive === true) {
-        console.log(String(event.target.id));
         if (
-          String(event.target.id) === "[object SVGAnimatedString]" ||
+          String(event.target.className) === "[object SVGAnimatedString]" ||
           String(event.target.id) === "MobileMenuID" ||
           String(event.target.id) === "btn-icon-wrapper" ||
           String(event.target.id) === "MobileMenuID" ||
+          String(event.target.className) === "MobileMenuID" ||
           String(event.target.id) === "MobileMenuIcon"
         ) {
           console.log("Yes");

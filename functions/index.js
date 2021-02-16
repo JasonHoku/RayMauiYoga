@@ -4,56 +4,43 @@ let muxTID = null;
 let muxTS = null;
 const Mux = require("@mux/mux-node");
 
-exports.addMessage = functions.https.onCall(async (data) => {
-  const text = data.text;
-  let text2 = [];
-  let setLoaded = "1";
-  console.log(text);
+const admin = require("firebase-admin");
 
-  const admin = require("firebase-admin");
-  if (!admin.apps.length) {
-    admin.initializeApp();
-  }
-  const snapshot = await admin.firestore().collection("apis").doc("0").get();
-  if (!snapshot.exists) {
-    console.log("No such document!");
-  } else {
-    console.log((muxTS = snapshot.data().muxTS));
+exports.addMessage = functions.https.onCall(async () => {
+  return new Promise((resolve, reject) => {
+    var colors = {};
     try {
-      const { Video } = new Mux(muxTID, muxTS);
-      Video.Assets.list().then((asset) => {
-        return { data: "x" };
-      });
-    } catch (err) {
-      return { data: "y" };
+      admin.initializeApp();
+    } catch (error) {
+      console.log(error);
     }
-    return { data: "y" };
-  }
-  return { data: "y" };
-});
-
-exports.muxEvents = functions.https.onRequest((request, response) => {
-  const admin = require("firebase-admin");
-  if (!admin.apps.length) {
-    admin.initializeApp();
-  }
-  const loadsnapshot = async () => {
-    const snapshot = await admin.firestore().collection("apis").doc("0").get();
-    if (!snapshot.exists) {
-      console.log("No such document!");
-    } else {
-      console.log((muxTS = snapshot.data().muxTS));
-      console.log((muxTID = snapshot.data().muxTID));
-
-      try {
-        const { Video } = new Mux(muxTID, muxTS);
-        Video.Assets.list().then((asset) => {
-          response.send(asset);
+    var db = admin.firestore();
+    db.collection("apis")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          var key = doc.id;
+          var color = doc.data();
+          color["key"] = key;
+          colors[key] = color;
         });
-      } catch (err) {
-        return response.send(err);
-      }
-    }
-  };
-  loadsnapshot();
+
+        var colorsStr = JSON.stringify(colors, null, "\t");
+        console.log("colors callback result : " + colorsStr);
+        muxTID = JSON.parse(JSON.stringify(colors["0"])).muxTID;
+        muxTS = JSON.parse(JSON.stringify(colors["0"])).muxTS;
+        try {
+          const { Video } = new Mux(muxTID, muxTS);
+          Video.Assets.list().then((asset) => {
+            resolve(asset);
+          });
+        } catch (err) {
+          return resolve(err);
+        }
+      })
+      .catch((reason) => {
+        console.log('db.collection("colors").get gets err, reason: ' + reason);
+        reject(reason);
+      });
+  });
 });

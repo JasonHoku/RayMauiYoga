@@ -11,6 +11,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Button } from "reactstrap";
 
+import { FiMoreVertical } from "react-icons/fi";
+
+import { IconContext } from "react-icons";
+
 import {
   setEnableMobileMenu,
   setEnableMobileMenuSmall,
@@ -86,7 +90,7 @@ class AppMobileMenu extends React.Component {
   render() {
     return (
       <Fragment>
-        <div className="app-header__mobile-menu">
+        <div id="MobileMenuID" className="app-header__mobile-menu">
           <div onClick={this.toggleMobileSidebar}>
             <Slider
               width={26}
@@ -98,7 +102,7 @@ class AppMobileMenu extends React.Component {
             />
           </div>
         </div>
-        <div className="app-header__menu">
+        <div id="MobileMenuID" className="app-header__menu">
           <span onClick={this.toggleMobileSmall}>
             <Button
               id="MobileMenuID"
@@ -114,8 +118,12 @@ class AppMobileMenu extends React.Component {
                 })
               }
             >
-              <div className="btn-icon-wrapper">
-                <FontAwesomeIcon icon={faEllipsisV} />
+              <div id="MobileMenuID" className="btn-icon-wrapper">
+                <IconContext.Provider
+                  value={{ color: "white", className: "MobileMenuID" }}
+                >
+                  <FiMoreVertical style={{ transform: "scale(2)", position:"relative",top:"-2px" }} />
+                </IconContext.Provider>
               </div>
             </Button>
           </span>

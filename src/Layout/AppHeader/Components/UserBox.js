@@ -52,18 +52,18 @@ class UserBox extends React.Component {
     return (
       <Fragment>
         <div className="header-btn-lg pr-0">
-          <div className="widget-content p-0">
-            <div className="widget-content-wrapper">
-              <div className="widget-content-left">
-                <UncontrolledButtonDropdown>
-                  <DropdownToggle color="link" className="p-0">
-                    <img
+          <div className="widget-content p-0 ">
+            <div className="widget-content-wrapper ">
+              <div className="widget-content-left ">
+                <UncontrolledButtonDropdown id="MobileMenuID">
+                  <DropdownToggle color="link" className="p-0 ">
+                    <img  id="MobileMenuID"
                       width={42}
-                      className="rounded-circle"
+                      className="rounded-circle "
                       src={avatar1}
                       alt=""
                     />
-                    <FontAwesomeIcon className="ml-2" icon={faAngleDown} />
+                    <FontAwesomeIcon  id="MobileMenuID" className="ml-2" icon={faAngleDown} />
                   </DropdownToggle>
                   <DropdownMenu right className="rm-pointers dropdown-menu-lg">
                     <div className="dropdown-menu-header">

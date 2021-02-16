@@ -98,7 +98,7 @@ function ContentManagerComponent() {
     "Upload An Image To Embed"
   );
   const [categoryVar, setcategoryVar] = useState("HomePage");
-
+  const [isLoadedOnce, setisLoadedOnce] = useState("1");
   const [file, setFile] = useState(null);
 
   function handleInputChangeEvent(event) {
@@ -113,31 +113,35 @@ function ContentManagerComponent() {
     let concData3 = [];
 
     if (isInitialMount.current === true) {
-      console.log(loadStage);
+      console.log("Updating, Stage: " + loadStage);
       if (loadStage === "1") {
-        const loadsnapshot = async () => {
-          const snapshot = await firebase
-            .firestore()
-            .collection(categoryVar)
-            .get();
-          snapshot.forEach((doc) => {
-            concData = concData.concat({
-              [doc.id]: [doc.data()],
+        if (isLoadedOnce === "1") {
+          const loadsnapshot = async () => {
+            const snapshot = await firebase
+              .firestore()
+              .collection(categoryVar)
+              .get();
+            snapshot.forEach((doc) => {
+              concData = concData.concat({
+                [doc.id]: [doc.data()],
+              });
+              concData2 = concData2.concat(doc.id);
             });
-            concData2 = concData2.concat(doc.id);
-          });
-          setloadedEvents(concData);
-          setloadedEventIDs(concData2);
-        };
-        console.log(
-          loadsnapshot().then(async () => {
-            setloadStage("2");
-          })
-        );
+            setloadedEvents(concData);
+            setloadedEventIDs(concData2);
+          };
+          console.log(
+            loadsnapshot().then(async () => {
+              setloadStage("2");
+            })
+          );
+          setisLoadedOnce("2");
+        }
       }
     }
     if (loadStage === "2") {
       try {
+        setisLoadedOnce("1");
         setloadedTotalIDs(loadedEvents.length);
 
         setloadedDescription(
@@ -157,6 +161,7 @@ function ContentManagerComponent() {
       setloadStage("4");
     }
     if (loadStage === "4") {
+      console.log("Finished Loading!");
     }
   });
 
@@ -422,9 +427,9 @@ function ContentManagerComponent() {
               id="copyImgURLElement"
             />{" "}
             &nbsp;
-            <div hidden={!hasReceivedImgURL} class="tooltip2">
+            <div hidden={!hasReceivedImgURL} className="tooltip2">
               <button onClick={() => copyImgURL()} onMouseOut={() => outFunc()}>
-                <span class="tooltip2text" id="myTooltip">
+                <span className="tooltip2text" id="myTooltip">
                   Copy to clipboard
                 </span>
                 Copy text

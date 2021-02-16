@@ -32,22 +32,42 @@ export default class CalendarPage extends Component {
             <Row>
               <Col className="colJustText">
                 <CardBody>
-                  <p>
-                    <b>TUESDAY</b>: <b>8-9am</b> JODO MISSION LAHAINA
-                  </p>
-                  <p>
-                    <b>TUESDAY</b>: <b>5:30-7PM</b> ISLAND SPIRIT YOGA LAHAINA{" "}
-                  </p>
-                </CardBody>
-              </Col>
-              <Col>
-                <CardBody>
-                  <p>
-                    <b>FRIDAY</b>: <b>8-9AM</b> JODO MISSION LAHAINA
-                  </p>
-                  <p>
-                    <b>SATURDAY</b>: <b>9-10:15AM</b> ISLAND SPIRIT YOGA LAHAINA
-                  </p>
+                  <center>
+                    <table border="1" cellpadding="1" cellspacing="1">
+                      <tbody>
+                        <tr>
+                          <td style={{ padding: "25px" }}>
+                            <p>
+                              {" "}
+                              <strong>Wednesday</strong>:{" "}
+                              <strong>7:30-8:30am</strong>&nbsp;JODO MISSION
+                              LAHAINA
+                            </p>
+
+                            <p>
+                              <strong>TUESDAY</strong>:&nbsp;
+                              <strong>5:30-7PM</strong>&nbsp;ISLAND SPIRIT YOGA
+                              LAHAINA
+                            </p>
+                          </td>
+                          <td style={{ padding: "25px" }}>
+                            <p>
+                              <strong>FRIDAY</strong>:{" "}
+                              <strong>7:30am-8:30amAM</strong>&nbsp;JODO MISSION
+                              LAHAINA
+                            </p>
+
+                            <p>
+                              <strong>SATURDAY</strong>:&nbsp;
+                              <strong>9-10:15AM</strong>&nbsp;ISLAND SPIRIT YOGA
+                              LAHAINA
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </center>
+                  <p>&nbsp;</p>
                 </CardBody>
               </Col>
             </Row>
