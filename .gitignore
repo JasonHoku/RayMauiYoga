@@ -1,24 +1,36 @@
-.firebase
-.firebase/
-/.firebase
-/.firebase/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-node_modules/
+# dependencies
 /node_modules
 /.pnp
 .pnp.js
+
+# testing
 /coverage
+
 # production
 /build
-# ssl certs
-/ssl
+
 # misc
-.env
+
+
+.eslintcache
+.eslintcache/
+/.eslintcache
+.eslintcache*
+
 .DS_Store
+
+/.env
+.env/
+/.env/
+.env*
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+/functions/.env
 
 npm-debug.log*
 yarn-debug.log*

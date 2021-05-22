@@ -7,6 +7,7 @@ import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
+    this.vantaRef = React.createRef();
     this.handleClickX = this.handleClick.bind(this);
 
     this.state = {
@@ -14,8 +15,11 @@ class LandingPage extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
+  componentWillUnmount() {
+  }
   handleClick() {}
 
   render() {

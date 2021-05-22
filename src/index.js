@@ -2,12 +2,16 @@ import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 import "./polyfills";
 
+import "core-js";
+
+import "core-js/features/set";
+
 import React from "react";
 import ReactDOM from "react-dom";
 
 import { Route } from "react-router-dom";
 
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import { HashRouter } from "react-router-dom";
 import "./App.scss";

@@ -1,40 +1,44 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import scriptLoader from "react-async-script-loader";
-import EmptyCart from "./empty-states/EmptyCart";
 import { Card } from "reactstrap";
 import { toNumber } from "lodash";
 
 import emailjs from "emailjs-com";
 import { init } from "emailjs-com";
+import { NavLink } from "react-router-dom";
 
-import PaypalExpressBtn from "react-paypal-express-checkout";
-
-var EJSSERVICE = process.env.REACT_APP_EJSSERVICE;
-var EJSTEMPLATE = process.env.REACT_APP_EJSTEMPLATE;
-var EJSUSER = process.env.REACT_APP_EJSUSER;
+const EJSSERVICE = process.env.REACT_APP_EJSSERVICE;
+const EJSTEMPLATE = process.env.REACT_APP_EJSTEMPLATE;
+const EJSUSER = process.env.REACT_APP_EJSUSER;
+const PPCLIENT = process.env.REACT_APP_PPCLIENT;
 
 init(EJSUSER);
 
 var CLIIP;
-const client = {
-  sandbox:
-    "AZxbOtVrH_ATWedumcHIEjAxvHajRr8N6fHopzOPMGUHz6gllYlpfhwIlM6CMYCFUi3t8qFV3bAvk--l",
-  production:
-    "AZxbOtVrH_ATWedumcHIEjAxvHajRr8N6fHopzOPMGUHz6gllYlpfhwIlM6CMYCFUi3t8qFV3bAvk--l",
+
+const CLIENT = {
+  sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
+  production: process.env.PAYPAL_CLIENT_ID_PRODUCTION,
 };
 
-let PayPalButton;
+const CLIENT_ID =
+  process.env.NODE_ENV === "production" ? CLIENT.production : CLIENT.sandbox;
+
+let PayPalButton = null;
 
 class PaypalButton extends Component {
   constructor(props) {
     super(props);
     this.updateCostClick = this.updateCostClick.bind(this);
+    this.checkCart = this.checkCart.bind(this);
     this.state = {
       showCart: false,
       cart: this.props.cartItems,
       mobileSearch: false,
       showButtons: false,
+      cartText: [],
+      infoCLI: [],
       loading: true,
       paid: false,
     };
@@ -43,23 +47,17 @@ class PaypalButton extends Component {
   }
 
   createOrder = (data, actions) => {
-    if (this.props.total <= 0) {
-      setTimeout(function () {
-        alert("Your Cart Is Empty");
-      }, 250);
-    } else {
-      return actions.order.create({
-        purchase_units: [
-          {
-            description: +this.props.totalItems,
-            amount: {
-              currency_code: "USD",
-              value: this.props.total,
-            },
+    return actions.order.create({
+      purchase_units: [
+        {
+          description: +this.props.totalItems,
+          amount: {
+            currency_code: "USD",
+            value: this.props.total,
           },
-        ],
-      });
-    }
+        },
+      ],
+    });
   };
   handleCart(e) {
     e.preventDefault();
@@ -75,9 +73,6 @@ class PaypalButton extends Component {
       PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
       this.setState({ loading: false, showButtons: true });
     }
-  }
-
-  componentDidMount() {
     this.setState({ isLoading: true });
 
     fetch("https://api.ipify.org")
@@ -88,7 +83,7 @@ class PaypalButton extends Component {
       .then(function (parsedData) {})
       .catch((error) => this.setState({ error, isLoading: false }));
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { isScriptLoaded, isScriptLoadSucceed } = nextProps;
 
     const scriptJustLoaded =
@@ -104,6 +99,50 @@ class PaypalButton extends Component {
       }
     }
   }
+  checkCart() {
+    let latitude;
+    let longitude;
+    const location = window.navigator && window.navigator.geolocation;
+
+    if (location) {
+      location.getCurrentPosition((position) => {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+      });
+    }
+
+    this.state.infoCLI = JSON.stringify({
+      timeOpened: new Date(),
+      timezone: new Date().getTimezoneOffset() / 60,
+      pageon: window.location.pathname,
+      referrer: document.referrer,
+      previousSites: window.history.length,
+      browserName: window.navigator.appName,
+      browserEngine: window.navigator.product,
+      browserVersion1a: window.navigator.appVersion,
+      browserVersion1b: navigator.userAgent,
+      browserLanguage: navigator.language,
+      browserOnline: navigator.onLine,
+      browserPlatform: navigator.platform,
+      sizeScreenW: window.screen.width,
+      sizeScreenH: window.screen.height,
+      sizeInW: window.innerWidth,
+      sizeInH: window.innerHeight,
+      sizeAvailW: window.screen.availWidth,
+      sizeAvailH: window.screen.availHeight,
+      latitude,
+      longitude,
+    })
+      .split(",")
+      .map((str) => "    |||    " + `  \r\n \n ` + str);
+    try {
+      if (JSON.stringify(localStorage.getItem("localData2")).length <= 5) {
+        this.state.cartText = `Your cart is empty!`;
+      } else {
+        this.state.cartText = localStorage.getItem("localData2").toString();
+      }
+    } catch (error) {}
+  }
 
   updateCostClick() {
     var objectHTMLCollection = document.getElementsByClassName("product-price"),
@@ -118,9 +157,8 @@ class PaypalButton extends Component {
     for (var i = 0; i < l; i++) {
       document.write(x[i].tagName + "<br>");
     }
-
     var objectHTMLCollection = document.getElementsByClassName("cart-item"),
-      string = [localStorage.getItem("ProductInfo")].map
+      string = [].map
         .call(objectHTMLCollection, function (node) {
           return node.textContent || node.innerText || "";
         })
@@ -131,15 +169,20 @@ class PaypalButton extends Component {
     for (var i = 0; i < l; i++) {
       document.write(x[i].tagName + "<br>");
     }
-
+    {
+      this.checkCart();
+    }
     var templateParams = {
-      name: "Ray Maui Yoga",
-      message: localStorage.getItem("ProductInfo"),
-      message2: CLIIP,
+      name: `PonoMap | CheckOut Submission From: ${CLIIP}`,
+      message:
+        `Guest Checkout Cart Items:  ${this.state.cartText}` +
+        "Total : " +
+        this.props.total,
+      message2: `ClientInfo: ${CLIIP} :: ${this.state.infoCLI}`,
     };
     emailjs.send(EJSSERVICE, EJSTEMPLATE, templateParams).then(
       function (response) {
-        console.log("SUCCESS!", response.status, response.text);
+        console.log("SUCCESS!");
       },
       function (error) {
         console.log("FAILED...", error);
@@ -163,55 +206,24 @@ class PaypalButton extends Component {
     const { showButtons, loading, paid } = this.state;
     let cartItems;
     cartItems = this.state.cart.map((product) => {
-      return (
-        <li className="cart-item" key={product.name}>
-          <img className="product-image" src={product.image} />
-          <div className="product-info">
-            <p className="product-name">{product.name}</p>
-            <p className="product-price">{product.price}</p>
-          </div>
-          <div className="product-total">
-            <p className="quantity">
-              {product.quantity} {product.quantity > 1 ? "Nos." : "No."}{" "}
-            </p>
-            <p className="amount">{product.quantity * product.price}</p>
-          </div>
-          <div id="smart-button-container">
-            <div style="text-align: center;">
-              <div id="paypal-button-container"></div>
-            </div>
-          </div>
-
-          <a
-            className="product-remove"
-            href="#"
-            onClick={this.props.removeProduct.bind(this, product.id)}
-          >
-            ×
-          </a>
-        </li>
-      );
+      return null;
     });
     return (
       <center>
-        <Card style={{ width: "13rem" }}>
-          <div className="main" style={{ width: "13rem" }}>
+        <Card
+          className="PayPalButtonBackground"
+          style={{
+            width: "15rem",
+            borderRadius1: "25px",
+          }}
+        >
+          <div className="main" style={{ width: "15rem" }}>
             {loading}
 
             {showButtons && (
               <div>
                 <div>
-                  {" "}
-                  <div className="cart-info">
-                    {" "}
-                    <p> </p>
-                    <strong>
-                      Orders:{(Pro1 = this.props.totalItems)}
-                    </strong>{" "}
-                    &nbsp;
-                    <strong> Total: ${(Pro2 = this.props.total)}</strong>
-                    <p></p>
-                  </div>{" "}
+                  <div className="cart-info2">&nbsp;</div>
                 </div>
 
                 <PayPalButton
@@ -227,10 +239,8 @@ class PaypalButton extends Component {
             {paid && (
               <div className="main">
                 <h2>
-                  Thank you and congratulations! <br />
-                  Your order has been received! <br />
-                  <br />
-                  Please expect 1-2 days processing time.
+                  Your Order Has Been Received!{" "}
+                  <span role="img" aria-label="emoji"></span>
                 </h2>
               </div>
             )}
@@ -241,5 +251,5 @@ class PaypalButton extends Component {
   }
 }
 export default scriptLoader(
-  `https://www.paypal.com/sdk/js?client-id=${"AZxbOtVrH_ATWedumcHIEjAxvHajRr8N6fHopzOPMGUHz6gllYlpfhwIlM6CMYCFUi3t8qFV3bAvk--l"}`
+  `https://www.paypal.com/sdk/js?client-id=${PPCLIENT}`
 )(PaypalButton);

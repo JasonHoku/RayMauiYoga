@@ -1,14 +1,6 @@
 import React, { Component, Fragment } from "react";
-import scriptLoader from "react-async-script-loader";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "classnames";
-import ReactTable from "react-table";
-import { Route } from "react-router-dom";
-
 import emailjs from "emailjs-com";
-import { init } from "emailjs-com";
-
-import PaypalExpressBtn from "react-paypal-express-checkout";
 
 import {
   Row,

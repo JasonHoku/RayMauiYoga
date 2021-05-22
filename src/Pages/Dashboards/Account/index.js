@@ -1,6 +1,20 @@
-import React, { Component, Fragment, useEffect, useState, useRef } from "react";
+import React, {
+  Component,
+  useContext,
+  Fragment,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import { Helmet } from "react-helmet";
 
+import { unregister } from "../../../serviceWorker";
+import AppAuth from "../../../Layout/AppAuth/index.js";
+
+import "firebase/auth";
+import "firebase/storage";
+import "firebase/firestore";
 import {
   Row,
   Col,
@@ -10,6 +24,7 @@ import {
   FormGroup,
   Label,
   Container,
+  CardTitle,
   Input,
   FormText,
   CardHeader,
@@ -20,339 +35,165 @@ import {
   CardFooter,
   ButtonGroup,
 } from "reactstrap";
-
-import AppAuth from "../../../Layout/AppAuth/index.js";
-
-import AccountElements from "./account";
-import ModeratorElements from "./moderator";
-//
-var CLIIP;
-
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/storage";
-import "firebase/firestore";
 
-var firebaseui = require("firebaseui");
+import { toast } from "react-toastify";
 
-function Account() {
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
+var CLIIP;
+
+function AccountPage() {
+  const isInitialMount = useRef(true);
+
+  const UserContext = React.createContext({});
+  const user = useContext(UserContext);
+  const UserProvider = UserContext.Provider;
+  const UserConsumer = UserContext.Consumer;
+
   const [elementAuth, setelementAuth] = useState(null);
   const [loadStage, setloadStage] = useState("1");
   const [loadElements, setloadElements] = useState(null);
+  const [loadedSnapshotData, setloadedSnapshotData] = useState("");
+  const [loadedSnapshotDataIDs, setloadedSnapshotDataIDs] = useState("");
+  const [loadedOnce, setloadedOnce] = useState(1);
 
-  function decideUserLoad() {
-    return <div>{loadElements}</div>;
-  }
-  var uiConfig = {
-    callbacks: {
-      signInSuccessWithAuthResult: function (authResult) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(authResult.user.uid)
-          .set({
-            user: String(authResult.user.displayName),
-            uuid: String(authResult.user.uid),
-          });
 
-        localStorage.setItem("username", authResult.user.displayName);
-        if (
-          authResult.user.uid === "zj0jKGLWbUPb7FapAUoCS9zyaoo1" ||
-          authResult.user.uid === "8gZKzIAI7le5B03GbynBUKCpyl02"
-        ) {
-          setloadElements(
-            <span>
-              <ModeratorElements />
-            </span>
-          );
-        } else setloadElements(<AccountElements />);
-        return false;
-      },
-    },
-    // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-    signInFlow: "popup",
-    signInOptions: [
-      // Leave the lines as is for the providers you want to offer your users.
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-    ],
-  };
-
-  function logout() {
-    firebase.auth().signOut();
-  }
-  const isInitialMount = useRef(true);
-
-  useEffect(() => {
-    if (isInitialMount.current === true) {
-      if (loadStage === "1") {
-        if (firebaseui.auth.AuthUI.getInstance()) {
-          const ui = firebaseui.auth.AuthUI.getInstance();
-          ui.start("#firebaseui-auth-container", uiConfig);
-        } else {
-          const ui = new firebaseui.auth.AuthUI(firebase.auth());
-          ui.start("#firebaseui-auth-container", uiConfig);
-        }
-
-        setloadStage("2");
-      }
-      if (loadStage === "2") {
-        isInitialMount.current = false;
-      } else if (loadStage === "3") {
-        try {
-        } catch (e) {}
-        sethasLoaded("4");
-      }
-    }
-  });
-
-  /*  <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
-            <FirebaseAuthConsumer>
-              {({ isSignedIn, user, providerId }) => {
-                if (isSignedIn === false) {
-                  console.log(user);
-                  return (
-                    <Card
-                      className="main-card mb-3"
-                      style={{
-                        width: "85%",
-                        maxWidth: "750px",
-                        backgroundColor: "#CCCCCCC",
-                        borderRadius: "25px",
-                        background:
-                          "linear-gradient(0.25turn, #CCDDFFEE, #FFFFFFAA, #CCDDFFEE)",
-
-                        boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      }}
-                    >
-                      <CardHeader
-                        style={{
-                          justifyContent: "center",
-                          alignContent: "center",
-                          boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                          borderRadius: "25px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <h2>Login</h2>{" "}
-                      </CardHeader>
-                      <br />
-                      <CardBody
-                        style={{
-                          backgroundColor: "#CCCCCCC",
-                          borderRadius: "10px",
-                          margin: "10px",
-                          background:
-                            "linear-gradient(0.25turn, #CCDDEEEE, #FFFFFFAA, #CCDDEEEE)",
-                        }}
-                      >
-                        <h2>Sign-In to access additional features.</h2>
-                        <br />
-                        <div style={{ textAlign: "left", margin: "10px" }}>
-                          <h3>
-                            {" "}
-                            <li>Schedule A Meeting</li> <br />
-                            <li>Chat With The Network</li> <br />
-                            <li>Manage Your Account</li> <br />
-                          </h3>
-                          <br />
-                          <div style={{ width: "100%", textAlign: "center" }}>
-                            <button
-                              className="zoom"
-                              style={{
-                                width: "120px",
-                                backgroundColor: "#335599",
-                                height: "60px",
-                                alignSelf: "center",
-                                fontSize: "15px",
-                                borderRadius: "10px",
-                              }}
-                              onClick={() => {
-                                const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-                                firebase
-                                  .auth()
-                                  .signInWithPopup(googleAuthProvider);
-                              }}
-                            >
-                              Sign In With Google
-                            </button>{" "}
-                          </div>
-                        </div>
-                      </CardBody>
-                    </Card>
-                  );
-                } else {
-                  //Begin Moderator Check
-                  if (
-                    user.displayName === "raymauiyoga" ||
-                    user.displayName === "Jason Hoku"
-                  ) {
-                    localStorage.setItem("username", user.displayName);
-                    localStorage.setItem("userEmail", user.email);
-                    localStorage.setItem("userUID", user.uid);
-                    return (
-                      <Card
-                        style={{
-                          width: "85%",
-                          maxWidth: "750px",
-                          backgroundColor: "#CCCCCCC",
-                          borderRadius: "25px",
-                          background:
-                            "linear-gradient(0.25turn, #CCDDFFEE, #FFFFFFAA, #CCDDFFEE)",
-
-                          boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                        }}
-                      >
-                        <CardBody
-                          style={{
-                            width: "100%",
-                            justifyContent: "center",
-                            alignContent: "center",
-                            boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                            width: "100%",
-                            alignItems: "center",
-                            borderRadius: "25px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {" "}
-                          <button
-                            className="zoom"
-                            style={{
-                              width: "90px",
-                              backgroundColor: "#AA3322",
-                              height: "33px",
-                              alignSelf: "right",
-                              float: "right",
-                              display: "flex",
-                              position: "relative",
-                              borderRadius: "10px",
-                              fontSize: "15px",
-                            }}
-                            onClick={() => {
-                              firebase.auth().signOut() &
-                                localStorage.setItem("username", null);
-                              localStorage.setItem("jwt", null);
-                              window.location.reload();
-                            }}
-                          >
-                            Sign&nbsp;Out
-                          </button>
-                          <h2> Welcome, {localStorage.getItem("username")}</h2>
-                          <IfFirebaseAuthed>
-                            <ModeratorElements />
-                          </IfFirebaseAuthed>
-                        </CardBody>
-                      </Card>
-                    );
-                  } else localStorage.setItem("username", user.displayName);
-                  localStorage.setItem("userEmail", user.email);
-                  localStorage.setItem("userUID", user.uid);
-                  console.log(user);
-                  return (
-                    <Card
-                      style={{
-                        width: "85%",
-                        maxWidth: "750px",
-                        backgroundColor: "#CCCCCCC",
-                        borderRadius: "25px",
-                        background:
-                          "linear-gradient(0.25turn, #CCDDFFEE, #FFFFFFAA, #CCDDFFEE)",
-
-                        boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                      }}
-                    >
-                      <CardBody
-                        style={{
-                          width: "100%",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-                          width: "100%",
-                          alignItems: "center",
-                          borderRadius: "25px",
-                          textAlign: "center",
-                        }}
-                      >
-                        {" "}
-                        <button
-                          className="zoom"
-                          style={{
-                            width: "90px",
-                            backgroundColor: "#AA3322",
-                            height: "33px",
-                            alignSelf: "right",
-                            float: "right",
-                            display: "flex",
-                            position: "relative",
-                            borderRadius: "10px",
-                            fontSize: "15px",
-                          }}
-                          onClick={() => {
-                            firebase.auth().signOut() &
-                              localStorage.setItem("username", null);
-                            localStorage.setItem("jwt", null);
-                            window.location.reload();
-                          }}
-                        >
-                          Sign&nbsp;Out
-                        </button>
-                        <h2> Welcome, {localStorage.getItem("username")}</h2>
-                        <IfFirebaseAuthed>
-                          <AccountElements />
-                        </IfFirebaseAuthed>
-                      </CardBody>
-                    </Card>
-                  );
-                }
-              }}
-            </FirebaseAuthConsumer>
-            </FirebaseAuthProvider> */
   return (
     <Fragment>
-      <CSSTransitionGroup
-        component="div"
-        transitionName="TabsAnimation"
-        transitionAppear={true}
-        transitionAppearTimeout={0}
-        transitionEnter={false}
-        transitionLeave={false}
+      <Helmet>
+        <title>RayMauiYoga.com Account Tools</title>
+        <meta
+          name="description"
+          content="Authenticated section for chat, admin and tools."
+        />
+        <meta name="theme-color" content="#008f68" />
+        <link
+          rel="canonical"
+          href="https://microhawaii.com/dashboards/account"
+        />
+      </Helmet>
+      <Card
+        className="AccountBackground"
+        style={{
+          justifyContent: "center",
+          textAlign: "center",
+          marginLeft: "-10px",
+          borderRadius: "35px",
+          background:
+            "linear-gradient(0.25turn, #10306655, #FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD, #10306655)",
+        }}
       >
-        <Row
+        <CardBody
           style={{
-            width: "100%",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
-            alignItems: "center",
+            backgroundColor: "transparent",
+            paddingRight: "-55px",
+            paddingLeft: "-55px",
           }}
         >
-          <Card
+          <CardHeader
             style={{
-              width: "100%",
-              backgroundColor: "#CCCCCCC",
-              justifyContent: "center",
-              marginRight: "-25px",
-              justifySelf: "center",
-              borderRadius: "25px",
-              background:
-                "linear-gradient(0.25turn, #30CCCCDD, #FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD, #30CCCCDD)",
+              backgroundColor: "transparent",
+              paddingRight: "-25px",
+              paddingLeft: "-25px",
             }}
           >
-            <CardBody
-              style={{
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              Welcome
-              <AppAuth />
-            </CardBody>
-          </Card>
-        </Row>
-      </CSSTransitionGroup>
+            <h2>Account Tools</h2>
+          </CardHeader>
+          <AppAuth />
+          <VersionCheck />
+        </CardBody>
+      </Card>
     </Fragment>
   );
 }
-export default Account;
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+
+// function handleInputChangeEvent(event) {
+//   setState({
+//     [event.target.name]: event.target.value,
+//   });
+// }
+
+function showNotification() {
+  function iOS() {
+    return (
+      [
+        "iPad Simulator",
+        "iPhone Simulator",
+        "iPod Simulator",
+        "iPad",
+        "iPhone",
+        "iPod",
+      ].includes(navigator.platform) ||
+      // iPad on iOS 13 detection
+      (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+    );
+  }
+  if (!iOS) {
+    navigator.serviceWorker.register("sw2.js");
+    Notification.requestPermission(function (result) {
+      if (result === "granted") {
+        navigator.serviceWorker.ready.then(function (registration) {
+          var options = {
+            body:
+              "A new version of this website is available, please reload after saving any work to load new website content.",
+            icon: "logo.png",
+            vibrate: [100, 50, 100],
+            data: {
+              dateOfArrival: Date.now(),
+              primaryKey: 1,
+            },
+          };
+          registration.showNotification("Site Update", options);
+        });
+      }
+    });
+  }
+}
+
+function showNotification2(e) {
+  toast(
+    "A new version of this website is available, please reload after saving any work to load new website content.",
+    {
+      position: "top-right",
+      autoClose: false,
+      containerId: 1,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      onClose: () => unregister,
+      draggable: true,
+    }
+  );
+}
+
+function VersionCheck() {
+  const dummy = useRef();
+  const messagesRef = firestore.collection("version");
+  const query = messagesRef.limit(25);
+
+  const [messages] = useCollectionData(query);
+  if (messages) {
+    let concData = JSON.parse(JSON.stringify(messages[0])).version;
+    if (!localStorage.getItem("appVersion")) {
+      localStorage.setItem("appVersion", concData);
+    } else if (localStorage.getItem("appVersion") != concData) {
+      showNotification();
+      showNotification2();
+      if (caches) {
+        caches.keys().then(function (names) {
+          for (let name of names) caches.delete(name);
+        });
+        localStorage.setItem("appVersion", concData);
+      }
+    }
+  }
+  console.log("X");
+  return null;
+}
+export default AccountPage;

@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useEffect } from "react";
-import { gql, useQuery } from "@apollo/client";
+
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
 
@@ -118,48 +118,6 @@ class DocumentationPage extends Component {
   };
 
   render() {
-    let { formName, formDesc, formEmail, formMessage } = this.state;
-
-    const MY_MUTATION_MUTATION = gql`
-      mutation DeleteNote {
-        deleteSurvey(input: { where: { id: ${this.state.deleteIDVar} } }) {
-          survey {
-            id
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-
-              return (
-                <button
-                  onClick={() =>
-                    MyMutation(formName + formDesc, Date().toString())
-                  }
-                >
-                  Activate Chat #
-                </button>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-
     return (
       <Fragment>
         <CardHeader>

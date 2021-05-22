@@ -1,553 +1,508 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 
-import SubmitListingAsUser from "./UserListingAction";
-
-import PayPalButton from "../Shop/PayPalExpress";
+import PayPalButton from "./PayPalExpress";
 
 import { toInteger } from "lodash";
 
 import classnames from "classnames";
 import {
-  Row,
-  Col,
-  Button,
-  UncontrolledButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Nav,
-  NavItem,
-  ListGroup,
-  CardTitle,
-  ListGroupItem,
-  Card,
-  CardBody,
-  Form,
-  FormGroup,
-  Label,
-  Container,
-  Input,
-  FormText,
-  CardHeader,
-  CardLink,
-  CardImg,
-  NavLink,
-  TabContent,
-  TabPane,
-  Progress,
-  CardFooter,
-  ButtonGroup,
+	Row,
+	Col,
+	Button,
+	UncontrolledButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+	Nav,
+	NavItem,
+	ListGroup,
+	CardTitle,
+	ListGroupItem,
+	Card,
+	CardBody,
+	Form,
+	FormGroup,
+	Label,
+	Container,
+	Input,
+	FormText,
+	CardHeader,
+	CardLink,
+	CardImg,
+	NavLink,
+	TabContent,
+	TabPane,
+	Progress,
+	CardFooter,
+	ButtonGroup,
 } from "reactstrap";
 
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
-import {
-  FirestoreProvider,
-  FirestoreCollection,
-  FirestoreDocument,
-  FirestoreMutation,
-} from "@react-firebase/firestore";
 
 var firebaseConfig = process.env.REACT_APP_FIREBASE;
 
 function AccountElements() {
-  const [activeTab, setactiveTab] = useState("1");
-  const [formTitle, setformTitle] = useState("");
-  const [formName, setformName] = useState("");
-  const [formCategory, setformCategory] = useState("");
-  const [formLoc, setformLoc] = useState("");
-  const [finListButtonDisable, setfinListButtonDisable] = useState(true);
-  const [formScoreReason, setformScoreReason] = useState("");
-  const [loadedImgURL, setloadedImgURL] = useState("");
-  const [loadedLocationData, setloadedLocationData] = useState("");
-  const [loadedDescription, setloadedDescription] = useState("");
-  const [editedDescription, seteditedDescription] = useState("");
-  const [gotDownloadURL, setgotDownloadURL] = useState("");
-  const [formGMapCoords, setformGMapCoords] = useState("");
-  const [loadedEzID, setloadedEzID] = useState("");
-  const [hasLoaded, sethasLoaded] = useState("1");
-  const [imgUpped, setimgUpped] = useState("");
-  const [readyPaymentCost, setreadyPaymentCost] = useState("2");
-  const [readyPaymentItems, setreadyPaymentItems] = useState(
-    "Tier 1: $2 / Month"
-  );
-  const [formPublicType, setformPublicType] = useState("");
-  const [sendCommentButtonText, setsendCommentButtonText] = useState(
-    "Send Message"
-  );
+	const [activeTab, setactiveTab] = useState("1");
+	const [formTitle, setformTitle] = useState("");
+	const [formName, setformName] = useState("");
+	const [formCategory, setformCategory] = useState("");
+	const [formLoc, setformLoc] = useState("");
+	const [finListButtonDisable, setfinListButtonDisable] = useState(true);
+	const [formScoreReason, setformScoreReason] = useState("");
+	const [loadedImgURL, setloadedImgURL] = useState("");
+	const [loadedLocationData, setloadedLocationData] = useState("");
+	const [loadedDescription, setloadedDescription] = useState("");
+	const [editedDescription, seteditedDescription] = useState("");
+	const [gotDownloadURL, setgotDownloadURL] = useState("");
+	const [formGMapCoords, setformGMapCoords] = useState("");
+	const [loadedEzID, setloadedEzID] = useState("");
+	const [hasLoaded, sethasLoaded] = useState("1");
+	const [imgUpped, setimgUpped] = useState("");
+	const [readyPaymentCost, setreadyPaymentCost] = useState("2");
+	const [readyPaymentItems, setreadyPaymentItems] = useState(
+		"Tier 1: $2 / Month"
+	);
+	const [formPublicType, setformPublicType] = useState("");
+	const [sendCommentButtonText, setsendCommentButtonText] = useState(
+		"Send Message"
+	);
 
-  const [formDesc, setformDesc] = useState("");
-  const [intervalId, setintervalId] = useState("");
-  const [finListButton, setfinListButton] = useState("Fill Form Entirely");
-  const [finListButtonStatus, setfinListButtonStatus] = useState(
-    "Form Not Filled Entirely"
-  );
+	const [formDesc, setformDesc] = useState("");
+	const [intervalId, setintervalId] = useState("");
+	const [finListButton, setfinListButton] = useState("Fill Form Entirely");
+	const [finListButtonStatus, setfinListButtonStatus] = useState(
+		"Form Not Filled Entirely"
+	);
 
-  const [seconds, setSeconds] = useState(0);
-  const isInitialMount = useRef(true);
+	const [seconds, setSeconds] = useState(0);
+	const isInitialMount = useRef(true);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log(interval);
-      if (isInitialMount.current) {
-      } else {
-        isInitialMount.current = false;
-        if (hasLoaded === "2") {
-          loadSubmitUserListing() & sethasLoaded("3");
-        }
-        if (hasLoaded === "3") {
-          sethasLoaded("4");
-        }
-      }
-    }, 1000);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			console.log(interval);
+			if (isInitialMount.current) {
+			} else {
+				isInitialMount.current = false;
+				if (hasLoaded === "2") {
+					loadSubmitUserListing();
+					sethasLoaded("3");
+				}
+				if (hasLoaded === "3") {
+					sethasLoaded("4");
+				}
+			}
+		}, 1000);
 
-    return () => clearInterval(interval);
-  });
-  function loadSubmitUserListing() {
-    console.log("TRigg");
-    if (hasLoaded === "1") {
-      console.log("TRigg2");
-      return <SubmitListingAsUser />;
-    }
-  }
-  function onEditorChange(evt) {
-    seteditedDescription(evt.editor.getData());
-  }
-  function toggle(tab) {
-    if (activeTab !== tab) {
-      setactiveTab(tab);
-    }
-  }
-  function handleImageUploadState() {
-    if (gotDownloadURL === "Upload An Image To Embed") {
-      return (
-        <div>
-          {gotDownloadURL}
-          <br />
-        </div>
-      );
-    } else {
-      // User Has URL
-      return (
-        <div style={{ borderRadius: "25px", textAlign: "center" }}>
-          {gotDownloadURL}
-          <br />
-          <button
-            style={{ borderRadius: "25px", textAlign: "center" }}
-            onClick={() => {
-              formResetter() &
-                localStorage.setItem("gotDownloadURL", "Upload Image To Embed");
-            }}
-          >
-            Reset Image Form
-          </button>
-        </div>
-      );
-    }
-  }
-  function loadPayPalButton() {
+		return () => clearInterval(interval);
+	});
+	function loadSubmitUserListing() {
+		console.log("TRigg");
+		if (hasLoaded === "1") {
+			console.log("TRigg2");
+			const auth = firebase.auth();
+			firebase
+				.firestore()
+				.collection("users")
+				.doc(auth.currentUser.uid)
+				.update({
+					user: `${auth.currentUser.displayName}`,
+					uuid: `${auth.currentUser.uid}`,
+					email: `${auth.currentUser.email}`,
+				});
+		}
+	}
+	function onEditorChange(evt) {
+		seteditedDescription(evt.editor.getData());
+	}
+	function toggle(tab) {
+		if (activeTab !== tab) {
+			setactiveTab(tab);
+		}
+	}
+	function handleImageUploadState() {
+		if (gotDownloadURL === "Upload An Image To Embed") {
+			return (
+				<div>
+					{gotDownloadURL}
+					<br />
+				</div>
+			);
+		} else {
+			// User Has URL
+			return (
+				<div style={{ borderRadius: "25px", textAlign: "center" }}>
+					{gotDownloadURL}
+					<br />
+					<button
+						style={{ borderRadius: "25px", textAlign: "center" }}
+						onClick={() => {
+							formResetter();
 
-    if (activeTab === "4") {
-      localStorage.setItem("ProductInfo", readyPaymentItems + "X" + localStorage.getItem("username"))
-      return (
-        <span>
-          <center> ${readyPaymentCost}</center>
-          <PayPalButton
-            valueCheck={valueCheck()}
-            cart={readyPaymentCost
-              .toString()
-              .split("\n")
-              .map((str) => (
-                <p key={str}>{str}</p>
-              ))}
-            total={toInteger(readyPaymentCost)}
-            cartItems={readyPaymentItems
-              .toString()
-              .split("\n")
-              .map((str) => (
-                <p key={str}>{str}</p>
-              ))}
-            removeProduct={handleRemoveProduct}
-            style={{ width: "15rem" }}
-          />
-          {readyPaymentItems
-            .toString()
-            .split("\n")
-            .map((str) => (
-              <p key={str}>{str}</p>
-            ))}
-        </span>
-      );
-    }
-  }
-  function formResetter() {
-    try {
-      document.forms[1].reset();
-      document.forms[2].reset();
-      document.forms[3].reset();
-      document.forms[4].reset();
-      document.forms[5].reset();
-      setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-    } catch (error) {}
-  }
+							localStorage.setItem("gotDownloadURL", "Upload Image To Embed");
+						}}
+					>
+						Reset Image Form
+					</button>
+				</div>
+			);
+		}
+	}
+	function loadPayPalButton() {
+		if (activeTab === "4") {
+			localStorage.setItem(
+				"ProductInfo",
+				readyPaymentItems + "X" + localStorage.getItem("username")
+			);
+			return (
+				<span>
+					<center> ${readyPaymentCost}</center>
+					<PayPalButton
+						valueCheck={valueCheck()}
+						cart={readyPaymentCost
+							.toString()
+							.split("\n")
+							.map((str) => (
+								<p key={str}>{str}</p>
+							))}
+						total={toInteger(readyPaymentCost)}
+						cartItems={readyPaymentItems
+							.toString()
+							.split("\n")
+							.map((str) => (
+								<p key={str}>{str}</p>
+							))}
+						removeProduct={handleRemoveProduct}
+						style={{ width: "15rem" }}
+					/>
+					{readyPaymentItems
+						.toString()
+						.split("\n")
+						.map((str) => (
+							<p key={str}>{str}</p>
+						))}
+				</span>
+			);
+		}
+	}
+	function formResetter() {
+		try {
+			document.forms[1].reset();
+			document.forms[2].reset();
+			document.forms[3].reset();
+			document.forms[4].reset();
+			document.forms[5].reset();
+			setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
+		} catch (error) {}
+	}
 
-  function postListingImage() {
-    console.log("x");
-    setproStatusText("Awaiting Initialize");
-    const formData = new FormData();
-    if (images != null) {
-      Array.from(images).forEach((image) => {
-        formData.append("files", image);
-      });
-      formData.Image = images[0];
-      axios
-        .post(`https://api.ponomap.com/upload`, formData, {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          if (res.err == null) {
-            document.getElementById("imageUpped").hidden = false;
-            console.log(res);
-            setactiveProURL("http://api.ponomap.com" + res.data[0].url);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
+	// function postListingImage() {
+	// 	console.log("x");
+	// 	// setproStatusText("Awaiting Initialize");
+	// 	const formData = new FormData();
+	// 	if (images != null) {
+	// 		Array.from(images).forEach((image) => {
+	// 			formData.append("files", image);
+	// 		});
+	// 		formData.Image = images[0];
+	// 		axios
+	// 			.post(`https://api.ponomap.com/upload`, formData, {
+	// 				headers: {
+	// 					"content-type": "multipart/form-data",
+	// 				},
+	// 			})
+	// 			.then((res) => {
+	// 				if (res.err == null) {
+	// 					document.getElementById("imageUpped").hidden = false;
+	// 					console.log(res);
+	// 					setactiveProURL("http://api.ponomap.com" + res.data[0].url);
+	// 				}
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 			});
+	// 	}
+	// }
 
-  function valueCheck() {
-    if (!localStorage.getItem("localData3")) {
-      localStorage.setItem("localData3", 0);
-    }
-  }
-  function handleRemoveProduct(id, e) {
-    let cart = this.state.cart;
-    let index = cart.findIndex((x) => x.id == id);
-    cart.splice(index, 1);
-    this.setState({
-      cart: cart,
-    });
-    this.sumTotalItems(this.state.cart);
-    this.sumTotalAmount(this.state.cart);
-    e.preventDefault();
-  }
+	function valueCheck() {
+		if (!localStorage.getItem("localData3")) {
+			localStorage.setItem("localData3", 0);
+		}
+	}
+	function handleRemoveProduct(id, e) {
+		let cart = this.state.cart;
+		let index = cart.findIndex((x) => x.id === id);
+		cart.splice(index, 1);
 
-  //Reset Quantity
-  function updateQuantity(qty) {
-    console.log("quantity added...");
-    this.setState({
-      quantity: qty,
-    });
-  }
-  function checkFormStates() {
-    setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-    handleImageUploadState();
-    setformGMapCoords(localStorage.getItem("LocationDataCoords"));
-    try {
-      if (String(formTitle).length > 1) {
-        console.log("ZZZ");
-        if (String(localStorage.getItem(`username`)).length > 3) {
-          if (String(formLoc.length) > 3) {
-            if (String(editedDescription.length) > 2) {
-              if (String(formCategory).length > 1) {
-                if (String(formPublicType) !== "") {
-                  if (String(formGMapCoords).length > 3) {
-                    document.getElementById("finListButton").disabled = false;
-                    document.getElementById(
-                      "finListButton"
-                    ).style.backgroundColor = "blue";
+		this.sumTotalItems(this.state.cart);
+		this.sumTotalAmount(this.state.cart);
+		e.preventDefault();
+	}
 
-                    setfinListButton("Send Listing"),
-                      setfinListButtonStatus("Ready To Publish"),
-                      setfinListButtonDisable(false);
-                  }
-                }
-              }
-            }
-          }
-        }
-      } else {
-        document.getElementById("finListButton").disabled = true;
-      }
-    } catch (e) {}
-  }
+	//Reset Quantity
+	function updateQuantity(qty) {
+		console.log("quantity added...");
+		this.setState({
+			quantity: qty,
+		});
+	}
+	function checkFormStates() {
+		setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
+		handleImageUploadState();
+		setformGMapCoords(localStorage.getItem("LocationDataCoords"));
+		try {
+			if (String(formTitle).length > 1) {
+				console.log("ZZZ");
+				if (String(localStorage.getItem(`username`)).length > 3) {
+					if (String(formLoc.length) > 3) {
+						if (String(editedDescription.length) > 2) {
+							if (String(formCategory).length > 1) {
+								if (String(formPublicType) !== "") {
+									if (String(formGMapCoords).length > 3) {
+										document.getElementById("finListButton").disabled = false;
+										document.getElementById("finListButton").style.backgroundColor =
+											"blue";
 
-  function handleInputChange(event) {
-    setformName(event.target.value);
-  }
-  function handleInputChange(event) {
-    setformName(event.target.value);
-  }
-  function handleInputChange2(event) {
-    setformDesc(event.target.value);
-  }
+										// setfinListButton("Send Listing"),
+										// 	setfinListButtonStatus("Ready To Publish"),
+										// 	setfinListButtonDisable(false);
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				document.getElementById("finListButton").disabled = true;
+			}
+		} catch (e) {}
+	}
 
-  function toggle(tab) {
-    if (activeTab !== tab) {
-      setactiveTab(tab);
-    }
-  }
-  function submitContact() {
-    let { formName, formEmail, formMessage } = state;
+	function handleInputChange(event) {
+		setformName(event.target.value);
+	}
+	function handleInputChange(event) {
+		setformName(event.target.value);
+	}
+	function handleInputChange2(event) {
+		setformDesc(event.target.value);
+	}
 
-    if (formName.length !== null && formName.length < 1) {
-      alert("You must fill this form entirely.");
-    } else {
-      console.log("success");
-    }
-  }
-  return (
-    <Fragment>
-      <TabContent
-        activeTab={activeTab}
-        style={{
-          backgroundColor: "transparent",
-          opacity: 0.9,
-          justifyContent: "center",
-          alignSelf: "center",
-          width: "100%",
-        }}
-      >
-        <CardHeader
-          className="ponoTitle"
-          style={{
-            backgroundColor: "transparent",
-            justifyContent: "center",
-            alignSelf: "center",
-            width: "100%",
+	function toggle(tab) {
+		if (activeTab !== tab) {
+			setactiveTab(tab);
+		}
+	}
+	// function submitContact() {
+	// 	let { formName, formEmail, formMessage } = state;
 
-            opacity: 100,
-          }}
-        >
-          <Button
-            size="sm"
-            fill={true}
-            color="alternate"
-            className={
-              "btn-pill btn-wide " + classnames({ active: activeTab === "1" })
-            }
-            onClick={() => {
-              toggle("1");
-            }}
-          >
-            Welcome
-          </Button>
-          &nbsp;
-          <Button
-            size="sm"
-            fill={true}
-            color="alternate"
-            className={
-              "btn-pill btn-wide " + classnames({ active: activeTab === "3" })
-            }
-            onClick={() => {
-              toggle("3");
-            }}
-          >
-            Your Account
-          </Button>
-        </CardHeader>
-        <TabPane tabId="1">
-          <Card
-            style={{
-              boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-            }}
-          >
-            {loadSubmitUserListing()}
-            <CardBody
-              style={{
-                backgroundColor: "transparent",
-              }}
-            >
-              <h3>Tools and events coming soon.</h3>
-              <div style={{ textAlign: "left" }}>
-                <li>Live Streams</li>
-                <li>Video Libraries</li>
-                <li>Early Access</li>
-                <li>Notifications</li>
-              </div>
-              <br />
-              <h3>Send a message:</h3>
-              <Form
-                style={{
-                  justifyContent: "center",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ textAlign: "left" }}> Contact Information:</div>
-                <Input
-                  style={{ width: "250px" }}
-                  onChange={handleInputChange}
-                  name="formName"
-                  type="text"
-                  value={formName}
-                ></Input>
-                <div style={{ textAlign: "left" }}>Message:</div>
-                <Input
-                  style={{ width: "250px" }}
-                  onChange={handleInputChange2}
-                  name="formDesc"
-                  type="textarea"
-                  value={formDesc}
-                ></Input>
+	// 	if (formName.length !== null && formName.length < 1) {
+	// 		alert("You must fill this form entirely.");
+	// 	} else {
+	// 		console.log("success");
+	// 	}
+	// }
+	return (
+		<Fragment>
+			<TabContent
+				activeTab={activeTab}
+				style={{
+					backgroundColor: "transparent",
+					opacity: 0.9,
+					justifyContent: "center",
+					alignSelf: "center",
+					width: "100%",
+				}}
+			>
+				<CardHeader
+					className="ponoTitle"
+					style={{
+						backgroundColor: "transparent",
+						justifyContent: "center",
+						alignSelf: "center",
+						width: "100%",
 
-                <FirestoreProvider {...firebaseConfig} firebase={firebase}>
-                  <FirestoreMutation
-                    type="add"
-                    merge={true}
-                    path={`/comments/`}
-                  >
-                    {({ runMutation }) => {
-                      return (
-                        <div
-                          style={{
-                            textAlign: "center",
-                          }}
-                        >
-                          <button
-                            style={{
-                              borderRadius: "5px",
-                              textAlign: "center",
-                              width: "auto",
-                            }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              runMutation(
-                                {
-                                  From: formName,
-                                  Message: formDesc,
-                                },
-                                { merge: true }
-                              ).then((res) => {
-                                alert("Your message has been sent to administration.")
-                              });
-                            }}
-                          >
-                            <span
-                              style={{
-                                position: "relative",
-                                top: "-4px",
-                              }}
-                            >
-                              {sendCommentButtonText}
-                            </span>
-                          </button>
-                        </div>
-                      );
-                    }}
-                  </FirestoreMutation>
-                </FirestoreProvider>
-              </Form>
-            </CardBody>
-          </Card>
-        </TabPane>
-        <TabPane tabId="3">
-          <Row>
-            <Card
-              style={{
-                width: "95%",
-                maxWidth: "750px",
-                backgroundColor: "#CCCCCCC",
-                borderRadius: "25px",
-                boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
-              }}
-            >
-              <CardBody>
-                <h3> Account Information:</h3>
-                <h5>
-                  {" "}
-                  <div style={{ textAlign: "left" }}>
-                    <b>Username:</b> {localStorage.getItem("username")} <br />
-                    <b> E-Mail:</b> {localStorage.getItem("userEmail")}
-                    <br />
-                    <b>Status:</b> Regular User
-                    <br />
-                    <br />
-                    <br />
-                    <a href="#" onClick={(e) => e.preventDefault() & setactiveTab("4")}>
-                      {" "}
-                      Upgrade Account Status{" "}
-                    </a>
-                    <br />
-                    <br />
-                  </div>
-                </h5>
-              </CardBody>
-            </Card>
-          </Row>
-        </TabPane>
-        <TabPane tabId="4">
-          <Row>
-            <Card
-              style={{
-                width: "95%",
-                maxWidth: "750px",
-                backgroundColor: "#CCCCCCC",
-                borderRadius: "25px",
-                boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
-              }}
-            >
-              <CardBody>
-                <h3> Upgrade Account:</h3>
-                <h5>
-                  {" "}
-                  <div style={{ textAlign: "left" }}>
-                    <b>Username:</b> {localStorage.getItem("username")} <br />
-                    <br />
-                    <b> E-Mail:</b> {localStorage.getItem("userEmail")}
-                    <br />
-                    <br />
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        e.preventDefault() &
-                        setreadyPaymentCost("2") &
-                        setreadyPaymentItems("Tier 1: $2 / Month")
-                      }
-                    >
-                      Tier 1
-                    </a>{" "}
-                    &nbsp;
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        e.preventDefault() &
-                        setreadyPaymentCost("5") &
-                        setreadyPaymentItems("Tier 2: $5 / Month")
-                      }
-                    >
-                      Tier 2
-                    </a>{" "}
-                    &nbsp;
-                    <a
-                      href="#"
-                      onClick={(e) =>
-                        e.preventDefault() &
-                        setreadyPaymentCost("25") &
-                        setreadyPaymentItems("Tier 3: $25 / Month")
-                      }
-                    >
-                      Tier 3
-                    </a>
-                    <br />
-                    <br />
-                    <br />
-                    {loadPayPalButton()}
-                    <br />
-                  </div>
-                </h5>
-              </CardBody>
-            </Card>
-          </Row>
-        </TabPane>
-      </TabContent>
-    </Fragment>
-  );
+						opacity: 100,
+					}}
+				>
+					<Button
+						size="sm"
+						fill={true}
+						color="alternate"
+						className={
+							"btn-pill btn-wide " + classnames({ active: activeTab === "1" })
+						}
+						onClick={() => {
+							toggle("1");
+						}}
+					>
+						Welcome
+					</Button>
+					&nbsp;
+					<Button
+						size="sm"
+						fill={true}
+						color="alternate"
+						className={
+							"btn-pill btn-wide " + classnames({ active: activeTab === "3" })
+						}
+						onClick={() => {
+							toggle("3");
+						}}
+					>
+						Your Account
+					</Button>
+				</CardHeader>
+				<TabPane tabId="1">
+					<Card
+						style={{
+							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+						}}
+					>
+						{loadSubmitUserListing()}
+						<CardBody
+							style={{
+								backgroundColor: "transparent",
+							}}
+						>
+							<h3>Tools and events coming soon.</h3>
+							<div style={{ textAlign: "left" }}>
+								<li>Live Streams</li>
+								<li>Video Libraries</li>
+								<li>Early Access</li>
+								<li>Notifications</li>
+							</div>
+							<br />
+							<h3>Send a message:</h3>
+							<Form
+								style={{
+									justifyContent: "center",
+									textAlign: "center",
+								}}
+							>
+								<div style={{ textAlign: "left" }}> Contact Information:</div>
+								<Input
+									style={{ width: "250px" }}
+									onChange={handleInputChange}
+									name="formName"
+									type="text"
+									value={formName}
+								></Input>
+								<div style={{ textAlign: "left" }}>Message:</div>
+								<Input
+									style={{ width: "250px" }}
+									onChange={handleInputChange2}
+									name="formDesc"
+									type="textarea"
+									value={formDesc}
+								></Input>
+							</Form>
+						</CardBody>
+					</Card>
+				</TabPane>
+				<TabPane tabId="3">
+					<Row>
+						<Card
+							style={{
+								width: "95%",
+								maxWidth: "750px",
+								backgroundColor: "#CCCCCCC",
+								borderRadius: "25px",
+								boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
+							}}
+						>
+							<CardBody>
+								<h3> Account Information:</h3>
+								<h5>
+									{" "}
+									<div style={{ textAlign: "left" }}>
+										<b>Username:</b> {localStorage.getItem("username")} <br />
+										<b> E-Mail:</b> {localStorage.getItem("userEmail")}
+										<br />
+										<b>Status:</b> Regular User
+										<br />
+										<br />
+										<br />
+										<a href="#" onClick={(e) => e.preventDefault() & setactiveTab("4")}>
+											{" "}
+											Upgrade Account Status{" "}
+										</a>
+										<br />
+										<br />
+									</div>
+								</h5>
+							</CardBody>
+						</Card>
+					</Row>
+				</TabPane>
+				<TabPane tabId="4">
+					<Row>
+						<Card
+							style={{
+								width: "95%",
+								maxWidth: "750px",
+								backgroundColor: "#CCCCCCC",
+								borderRadius: "25px",
+								boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
+							}}
+						>
+							<CardBody>
+								<h3> Upgrade Account:</h3>
+								<h5>
+									{" "}
+									<div style={{ textAlign: "left" }}>
+										<b>Username:</b> {localStorage.getItem("username")} <br />
+										<br />
+										<b> E-Mail:</b> {localStorage.getItem("userEmail")}
+										<br />
+										<br />
+										<a
+											href="#"
+											onClick={(e) =>
+												e.preventDefault() &
+												setreadyPaymentCost("2") &
+												setreadyPaymentItems("Tier 1: $2 / Month")
+											}
+										>
+											Tier 1
+										</a>{" "}
+										&nbsp;
+										<a
+											href="#"
+											onClick={(e) =>
+												e.preventDefault() &
+												setreadyPaymentCost("5") &
+												setreadyPaymentItems("Tier 2: $5 / Month")
+											}
+										>
+											Tier 2
+										</a>{" "}
+										&nbsp;
+										<a
+											href="#"
+											onClick={(e) =>
+												e.preventDefault() &
+												setreadyPaymentCost("25") &
+												setreadyPaymentItems("Tier 3: $25 / Month")
+											}
+										>
+											Tier 3
+										</a>
+										<br />
+										<br />
+										<br />
+										{loadPayPalButton()}
+										<br />
+									</div>
+								</h5>
+							</CardBody>
+						</Card>
+					</Row>
+				</TabPane>
+			</TabContent>
+		</Fragment>
+	);
 }
 export default AccountElements;

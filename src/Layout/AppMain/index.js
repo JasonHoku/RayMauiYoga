@@ -49,11 +49,7 @@ const AppMain = () => {
       </Suspense>
 
       <Route exact path="/" render={() => <Redirect to="/welcome" />} />
-      <Route
-        exact
-        path="/dash"
-        render={() => <Redirect to="/dashboards/home" />}
-      />
+   
       <ToastContainer />
     </Fragment>
   );

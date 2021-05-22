@@ -1,5 +1,3 @@
-// Icons
-@import "./Pages/Dashboards/Shop/scss/style.scss";
 @import "assets/linear/style";
 @import "assets/pe7/pe-icon-7-stroke/css/pe-icon-7-stroke";
 @import "assets/pe7/pe-icon-7-stroke/css/helper";
@@ -119,210 +117,210 @@
 @import "assets/layout/responsive/responsive-base";
 
 div.card {
-  box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)";
+	box-shadow: "0px 0px 0px 5px rgba(50,50,50, .8)";
 }
 
 div.card {
-  font-size: larger;
+	font-size: larger;
 }
 
 body {
-  .crossfade > figure {
-    animation: imageAnimation 2s linear;
-    backface-visibility: hidden;
-    color: transparent;
-    height: 100%;
-    left: 0px;
-    opacity: 1;
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    z-index: 0;
-  }
+	.crossfade > figure {
+		animation: imageAnimation 2s linear;
+		backface-visibility: hidden;
+		color: transparent;
+		height: 100%;
+		left: 0px;
+		opacity: 1;
+		position: fixed;
+		top: 0px;
+		width: 100%;
+		z-index: 0;
+	}
 
-  @keyframes imageAnimation {
-    0% {
-      animation-timing-function: ease-in;
-      opacity: 0;
-    }
-    100% {
-      opacity: 0.75;
-    }
-  }
+	@keyframes imageAnimation {
+		0% {
+			animation-timing-function: ease-in;
+			opacity: 0;
+		}
+		100% {
+			opacity: 0.75;
+		}
+	}
 }
 .row {
-  justify-content: center;
+	justify-content: center;
 }
 
 .landingContent {
-  background-image: linear-gradient(
-    180deg,
-    #1c238033 20%,
-    #05045aff 100%
-  ) !important;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: whitesmoke;
-  padding-left: 50px;
-  padding-right: 50px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	background-image: linear-gradient(
+		180deg,
+		#1c238033 20%,
+		#05045aff 100%
+	) !important;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	align-self: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: whitesmoke;
+	padding-left: 50px;
+	padding-right: 50px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .spin {
-  margin: 20px;
-  width: 100px;
-  opacity: 0.9;
-  height: 100px;
-  -webkit-animation-name: spin;
-  -webkit-animation-duration: 24000ms;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: spin;
-  -moz-animation-duration: 24000ms;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  -ms-animation-name: spin;
-  -ms-animation-duration: 24000ms;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-timing-function: linear;
+	margin: 20px;
+	width: 100px;
+	opacity: 0.9;
+	height: 100px;
+	-webkit-animation-name: spin;
+	-webkit-animation-duration: 24000ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: spin;
+	-moz-animation-duration: 24000ms;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-animation-name: spin;
+	-ms-animation-duration: 24000ms;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
 
-  animation-name: spin;
-  animation-duration: 24000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+	animation-name: spin;
+	animation-duration: 24000ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
 }
 @-ms-keyframes spin {
-  from {
-    -ms-transform: rotate(0deg);
-  }
-  to {
-    -ms-transform: rotate(360deg);
-  }
+	from {
+		-ms-transform: rotate(0deg);
+	}
+	to {
+		-ms-transform: rotate(360deg);
+	}
 }
 @-moz-keyframes spin {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-  }
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(360deg);
+	}
 }
 @-webkit-keyframes spin {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
 }
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 h1 {
-  font-weight: bolder;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-weight: bolder;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 h2 {
-  font-weight: bolder;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-weight: bolder;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 #hiddenText {
-  max-height: 113px; /* h*n */
-  overflow: hidden;
+	max-height: 113px; /* h*n */
+	overflow: hidden;
 
-  -webkit-animation: ellipsis ease 5s infinite; /*for test*/
+	-webkit-animation: ellipsis ease 5s infinite; /*for test*/
 }
 
 #hiddenText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
 }
 #visibleText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
 }
 .ellipsis .xd123 {
-  position: relative;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-pack: center;
-  font-size: 50px; /* w */
-  line-height: 20px; /* line-height h */
-  color: transparent;
-  -webkit-line-clamp: 3; /* max row number n */
-  vertical-align: top;
+	position: relative;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-pack: center;
+	font-size: 50px; /* w */
+	line-height: 20px; /* line-height h */
+	color: transparent;
+	-webkit-line-clamp: 3; /* max row number n */
+	vertical-align: top;
 }
 .ellipsis .text {
-  display: inline;
-  vertical-align: top;
-  font-size: 14px;
+	display: inline;
+	vertical-align: top;
+	font-size: 14px;
 }
 .ellipsis .overlay {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
 
-  /**
+	/**
   overflow: visible;
   left: 0;
   background: rgba(0,0,0,.5);
   /**/
 }
 .ellipsis .overlay:before {
-  content: "";
-  display: block;
-  float: left;
-  width: 50%;
-  height: 100%;
+	content: "";
+	display: block;
+	float: left;
+	width: 50%;
+	height: 100%;
 
-  /**
+	/**
   background: lightgreen;
   /**/
 }
 .ellipsis .placeholder {
-  float: left;
-  width: 50%;
-  height: 40px; /* h*n */
+	float: left;
+	width: 50%;
+	height: 40px; /* h*n */
 
-  /**
+	/**
   background: lightblue;
   /**/
 }
 .ellipsis .more {
-  position: relative;
-  top: -20px; /* -h */
-  left: -50px; /* -w */
-  float: left;
-  color: #000;
-  width: 50px; /* width of the .more w */
-  height: 20px; /* h */
-  font-size: 14px;
+	position: relative;
+	top: -20px; /* -h */
+	left: -50px; /* -w */
+	float: left;
+	color: #000;
+	width: 50px; /* width of the .more w */
+	height: 20px; /* h */
+	font-size: 14px;
 
-  /**
+	/**
   top: 0;
   left: 0;
   background: orange;
@@ -330,91 +328,275 @@ h2 {
 }
 
 .CarouselCard img {
-  max-width: 300px;
-  max-height: 500px;
+	max-width: 300px;
+	max-height: 500px;
 }
 
 .CarouselCard {
-  height: 400px;
-  max-height: 500px;
-  max-width: 300px;
+	height: 400px;
+	max-height: 500px;
+	max-width: 300px;
 }
 
 .colJustText {
-  width: 100%;
-  text-align: right;
-  align-items: center;
+	width: 100%;
+	text-align: right;
+	align-items: center;
 }
 #root > div > div.app-main > div.app-main__outer > div.app-footer > div {
-  background: linear-gradient(
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1) 50.71%
-  );
-  border: none;
-  box-shadow: none;
+	background: linear-gradient(
+		rgba(255, 255, 255, 0),
+		rgba(255, 255, 255, 0),
+		rgba(255, 255, 255, 1) 50.71%
+	);
+	border: none;
+	box-shadow: none;
+}
+
+#root
+	> div
+	> div.app-header.header-shadow
+	> div.app-header__mobile-menu
+	> div
+	> button {
+	text-decoration: none;
+	background-color: transparent;
 }
 
 #root > div > div.app-main > div.app-main__outer > div.app-main__inner {
-  height: min-content;
+	height: min-content;
 }
 .carousel-indicators {
-  z-index: 1;
+	z-index: 1;
 }
 
 #root
-  > div
-  > div.app-main
-  > div.app-sidebar.sidebar-shadow
-  > div.app-header__logo {
-  display: none;
+	> div
+	> div.app-main
+	> div.app-sidebar.sidebar-shadow
+	> div.app-header__logo {
+	display: none;
 }
 .tooltip2 {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .tooltip2 .tooltip2text {
-  visibility: hidden;
-  width: 140px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 150%;
-  left: 50%;
-  margin-left: -75px;
-  opacity: 0;
-  transition: opacity 0.3s;
+	visibility: hidden;
+	width: 140px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: 50%;
+	margin-left: -75px;
+	opacity: 0;
+	transition: opacity 0.3s;
 }
 
 #root
-  > div
-  > div.app-header.header-shadow
-  > div.app-header__content
-  > div.app-header-right
-  > div.header-btn-lg.pr-0
-  > div
-  > div
-  > div:nth-child(1) {
-  position: relative;
-  top: -4px;
+	> div
+	> div.app-header.header-shadow
+	> div.app-header__content
+	> div.app-header-right
+	> div.header-btn-lg.pr-0
+	> div
+	> div
+	> div:nth-child(1) {
+	position: relative;
+	top: -4px;
 }
 .tooltip2 .tooltip2text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
 }
 
 .tooltip2:hover .tooltip2text {
-  visibility: visible;
-  opacity: 1;
+	visibility: visible;
+	opacity: 1;
+}
+
+button {
+	height: 36px;
+	border-radius: 2px;
+	text-align: center;
+	color: $white;
+	background: #005bd3;
+	border: 0;
+	font-weight: 400;
+	padding: 0 16px;
+	font-family: inherit;
+	font-size: inherit;
+	cursor: pointer;
+	&:hover {
+		background: lighten(#005bd3, 10%);
+	}
+	&:focus {
+		outline: none;
+	}
+	&:active {
+		background: lighten(#005bd3, 15%);
+	}
+}
+
+#particle-js {
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	transition-duration: 1s;
+	transition: opacity 2s;
+}
+
+.metricsClass {
+	box-decoration-break: slice;
+	-webkit-box-decoration-break: slice;
+	box-shadow: 8px 8px 10px 0 #ff1493, -5px -5px 5px 0 #00f, 5px 5px 15px 0 #ff0;
+}
+
+.gradientBtn {
+	border-radius: 10px;
+	display: inline-block;
+	white-space: nowrap;
+	transition: 1s;
+	background: transparent;
+	color: black;
+	text-align: left;
+}
+.spin2 {
+	animation: roto 10s linear infinite;
+}
+
+.button {
+	text-decoration: none;
+}
+#root
+	> div
+	> div.app-header.header-shadow
+	> div.app-header__mobile-menu
+	> div
+	> button {
+	text-decoration: none;
+	background-color: transparent;
+}
+
+@keyframes roto {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-0%) rotate(360deg);
+	}
+}
+.gradientBtn:hover {
+	transition: 1s;
+	background-image: linear-gradient(
+		to right,
+		#00d2ff 100%,
+		#3a7bd5 51%,
+		#00d2ff 0%
+	);
+	background-position: right center;
+}
+
+.sidebarLinks {
+	font-family: "Courier New", Courier, monospace;
+	font-weight: 600;
+	margin-bottom: 25px;
+}
+#root
+	> div
+	> div.app-main
+	> div.app-sidebar.sidebar-shadow
+	> div.scrollbar-container.ps
+	> div.app-sidebar__inner
+	> a {
+	margin-bottom: 45px;
+	margin-top: 45px;
+}
+.metismenu-item {
+	margin-bottom: 45px;
+	margin-top: 45px;
+}
+
+.HoverToTeal:hover {
+	color: #159696;
+}
+
+.HoverToTeal a:link {
+	color: #003377;
+}
+
+.HoverToTeal a:visited {
+	color: #003377;
+}
+
+.HoverToTeal a:active {
+	color: #003377;
+}
+
+.HoverToTeal {
+	color: #003377;
+}
+
+@media screen and (max-width: 500px) {
+	.AccountBackground {
+		width: 105%;
+	}
+}
+
+@media screen and (max-width: 400px) and (min-width: 300px) {
+	.ModeratorBackground {
+		width: 107%;
+		position: relative;
+		left: -11px;
+	}
+}
+
+@media screen and (max-width: 452px) and (min-width: 400px) {
+	.ModeratorBackground {
+		width: 107%;
+		position: relative;
+		left: -14px;
+	}
+}
+@media screen and (max-width: 475px) and (min-width: 452px) {
+	.ModeratorBackground {
+		width: 107%;
+		position: relative;
+		left: -17px;
+	}
+}
+@media screen and (max-width: 492px) and (min-width: 475px) {
+	.ModeratorBackground {
+		width: 106%;
+		position: relative;
+		left: -15px;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	.AccountBackground {
+		width: 102%;
+	}
+	.ModeratorBackground {
+		width: 100%;
+	}
+}
+#EventCalendarSpan{
+	transition: opacity 2s;
+
+}
+#EventsWithinDateSpan {
+	transition: opacity 2s;
 }

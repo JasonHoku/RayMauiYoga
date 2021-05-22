@@ -1,27 +1,14 @@
-import React, { Component, Fragment } from "react";
-import scriptLoader from "react-async-script-loader";
+import React, { Component, Fragment, setState } from "react";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "classnames";
-import ReactTable from "react-table";
-import { Route } from "react-router-dom";
-
 import CKEditor from "ckeditor4-react";
+
+import firebase from "firebase";
 
 import {
   Row,
-  Col,
   Button,
-  UncontrolledButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Nav,
-  NavItem,
-  ListGroup,
-  ListGroupItem,
   Card,
   CardBody,
-  Input,
   CardHeader,
   CardLink,
   CardImg,
@@ -33,63 +20,15 @@ import {
   ButtonGroup,
 } from "reactstrap";
 
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  Tooltip,
-} from "recharts";
-
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import {
-  faAngleUp,
-  faDotCircle,
-  faAngleDown,
-  faStrikethrough,
-} from "@fortawesome/free-solid-svg-icons";
-
-import { makeData } from "../../Tables/DataTables/Examples/utils";
-
-const CLIENT = {
-  sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
-  production: process.env.PAYPAL_CLIENT_ID_PRODUCTION,
-};
-
-function boxMullerRandom() {
-  let phase = true,
-    x1,
-    x2,
-    w;
-
-  return (function () {
-    if (phase) {
-      do {
-        x1 = 2.0 * Math.random() - 1.0;
-        x2 = 2.0 * Math.random() - 1.0;
-        w = x1 * x1 + x2 * x2;
-      } while (w >= 1.0);
-
-      w = Math.sqrt((-2.0 * Math.log(w)) / w);
-      return x1 * w;
-    } else {
-      return x2 * w;
-    }
-  })();
-}
-
-
-
 export default class BlogElements extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle2 = this.toggle2.bind(this);
     this.state = {
       activeTab2: "222",
       content: "Hello World",
+      gotFirestoreBlogs: [],
+      selectedBlog: 0,
       activeTab1: "11",
     };
     this.setContent = this.setContent.bind(this);
@@ -106,26 +45,49 @@ export default class BlogElements extends Component {
 
   onBlur(evt) {}
 
-  afterPaste(evt) {}
+  getFirestoreBlogData() {
+    let tempDataArray = [];
+    console.log("");
+    var db = firebase.firestore();
+    db.collection("BlogPage")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((ele) => {
+          console.log(ele.data());
+          tempDataArray.push(ele.data());
+        });
+        console.log(tempDataArray);
 
-  toggle2(tab) {
-    if (this.state.activeTab2 !== tab) {
-      this.setState({
-        activeTab2: tab,
+        this.setState({
+          gotFirestoreBlogs: tempDataArray,
+        });
+        document.getElementById("BlogBodyDiv").innerHTML =
+          tempDataArray[this.state.selectedBlog].body;
       });
-    }
   }
 
-  toggle1(tab) {
-    if (this.state.activeTab1 !== tab) {
-      this.setState({
-        activeTab1: tab,
+  componentDidMount() {
+    let tempDataArray = [];
+    console.log("");
+    var db = firebase.firestore();
+    db.collection("BlogPage")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((ele) => {
+          console.log(ele.data());
+          tempDataArray.push(ele.data());
+        });
+        console.log(tempDataArray);
+
+        this.setState({
+          gotFirestoreBlogs: tempDataArray,
+        });
+        document.getElementById("BlogBodyDiv").innerHTML =
+          tempDataArray[this.state.selectedBlog].body;
       });
-    }
   }
 
   render() {
-
     return (
       <Fragment>
         <CSSTransitionGroup
@@ -155,21 +117,28 @@ export default class BlogElements extends Component {
                 <h1>Blog Explorer</h1>
               </CardHeader>
               <CardHeader style={{ width: "100%", justifyContent: "center" }}>
-                <Button> A </Button> &nbsp;&nbsp;&nbsp;
-                <Button> B </Button> &nbsp;&nbsp;&nbsp;
-                <Button> C </Button> &nbsp;&nbsp;&nbsp;
-                <Button> ... </Button>
+                {this.state.gotFirestoreBlogs.map((el, index) => {
+                  return (
+                    <span>
+                      <Button
+                        onClick={() => {
+                          this.setState({ selectedBlog: index });
+                          this.getFirestoreBlogData();
+                          console.log(index);
+                        }}
+                      >
+                        {index + 1}
+                      </Button>{" "}
+                      &nbsp;&nbsp;&nbsp;
+                    </span>
+                  );
+                })}
               </CardHeader>
               <TabContent>
-                {" "}
                 <TabPane id="1">
                   <Card>
-                    <CardBody>
-                      {" "}
-                      Recent Updates, Written Articles &amp; Notifications
-                      Coming Soon.
-                    </CardBody>
-                  </Card>{" "}
+                    <pre id="BlogBodyDiv"> </pre>
+                  </Card>
                 </TabPane>
               </TabContent>
             </Card>

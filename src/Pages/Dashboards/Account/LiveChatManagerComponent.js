@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
+
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
 
@@ -237,38 +237,6 @@ class NoteManagerComponent extends Component {
       });
   };
   onSubmit = () => {
-    const MY_MUTATION_MUTATION3 = gql`
-      mutation UpdateChat {
-        updateLiveChat(
-          input: { where: { id: ${this.state.deleteIDVar} }, data: { messageAdmin: "Test" } }
-        ) {
-          liveChat {
-            messageAdmin
-          }
-        }
-      }
-    `;
-    try {
-      <Mutation mutation={MY_MUTATION_MUTATION3}>
-        {(MyMutation, { loading, error, data }) => {
-          try {
-            if (loading) return <pre>Loading</pre>;
-
-            if (error) {
-            }
-          } catch (error) {}
-          const dataEl = data ? (
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          ) : null;
-          if (data) {
-            this.runGetLive();
-            console.log(data);
-          }
-
-          return MyMutation(formName + formDesc, Date().toString());
-        }}
-      </Mutation>;
-    } catch (error) {}
   };
 
   runGetLive() {
@@ -356,83 +324,6 @@ class NoteManagerComponent extends Component {
   };
 
   render() {
-    const MY_MUTATION_MUTATION3 = gql`
-      mutation UpdateChat {
-        updateLiveChat(
-          input: { where: { id: ${this.state.deleteIDVar} }, data: { messageAdmin: "Welcome!" ,messageUser: " " } }
-        ) {
-          liveChat {
-            messageAdmin
-            messageUser
-          }
-        }
-      }
-    `;
-    const MyMutationMutation3 = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION3}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-              if (data) {
-                this.runGetLive();
-              }
-
-              return <button onClick={() => MyMutation()}>Initialize</button>;
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-    const MY_MUTATION_MUTATION2 = gql`
-      mutation UpdateChat {
-        updateLiveChat(
-          input: { where: { id: ${
-            this.state.deleteIDVar
-          } }, data: { messageAdmin: "${
-      String(this.state.loadedAdminMessage) + " xyzVar " + this.state.noteVar
-    }" } }
-        ) {
-          liveChat {
-            messageAdmin
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation2 = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION2}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-              if (data) {
-                this.runGetLive();
-                this.setState({ noteVar: "" });
-              }
-
-              return <button onClick={() => MyMutation()}>Send</button>;
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
     return (
       <Fragment>
         <CardHeader

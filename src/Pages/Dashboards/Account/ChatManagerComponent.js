@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useEffect } from "react";
 import { compose, graphql } from "react-apollo";
-import { gql, useQuery } from "@apollo/client";
+
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
 
@@ -192,48 +192,6 @@ class NoteManagerComponent extends Component {
   };
 
   render() {
-    let { formName, formDesc, formEmail, formMessage } = this.state;
-
-    const MY_MUTATION_MUTATION = gql`
-      mutation DeleteChat {
-        deleteChat(input: { where: { id: ${this.state.deleteIDVar} } }) {
-          chat {
-            id
-          }
-        }
-      }
-    `;
-
-    const MyMutationMutation = (props) => {
-      try {
-        return (
-          <Mutation mutation={MY_MUTATION_MUTATION}>
-            {(MyMutation, { loading, error, data }) => {
-              try {
-                if (loading) return <pre>Loading</pre>;
-
-                if (error) {
-                }
-              } catch (error) {}
-              const dataEl = data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              ) : null;
-
-              return (
-                <button
-                  onClick={() =>
-                    MyMutation(formName + formDesc, Date().toString())
-                  }
-                >
-                  Delete Comment #
-                </button>
-              );
-            }}
-          </Mutation>
-        );
-      } catch (error) {}
-    };
-
     return (
       <Fragment>
         <CardHeader> PCP Site Comment Manager</CardHeader>
