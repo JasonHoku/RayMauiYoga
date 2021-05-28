@@ -2,6 +2,8 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 
+import "firebaseui/dist/firebaseui.css";
+
 import { Card, CardBody, CardHeader } from "reactstrap";
 import AccountElements from "../../Pages/Dashboards/Account/account";
 import ModeratorElements from "../../Pages/Dashboards/Account/moderator";

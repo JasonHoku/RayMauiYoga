@@ -86,40 +86,49 @@ function ContentManagerComponent() {
 	const [isLoadedOnce, setisLoadedOnce] = useState("1");
 	const [file, setFile] = useState(null);
 
+	const loadStageRef = useRef(0);
+
 	useEffect(() => {
-		let concData = [];
-		let concData2 = [];
-		let concData3 = [];
+		console.log(loadedEvents);
+		console.log(loadStageRef.current);
+		console.log(loadedEvents);
 
-		if (isInitialMount.current === true) {
-			console.log("Updating, Stage: " + loadStage);
-			if (loadStage === "1") {
-				if (isLoadedOnce === "1") {
-					const loadsnapshot = async () => {
-						const snapshot = await firebase.firestore().collection(categoryVar).get();
-						snapshot.forEach((doc) => {
-							concData = concData.concat({
-								[doc.id]: [doc.data()],
-							});
-							concData2 = concData2.concat(doc.id);
-						});
-						setloadedEvents(concData);
-						setloadedEventIDs(concData2);
-					};
-					console.log(
-						loadsnapshot().then(async () => {
-							setloadStage("2");
-						})
-					);
-					setisLoadedOnce("2");
-				}
-			}
+		console.log("State Refresh");
+		//loads last, EveryTime
+		// console.log("Running UseEffect2");
+		// Listen To Snapshot & Update
+
+		if (loadStageRef.current === 0) {
+			loadStageRef.current = 1;
 		}
-		if (loadStage === "2") {
-			try {
-				setisLoadedOnce("1");
-				setloadedTotalIDs(loadedEvents.length);
 
+		if (loadStageRef.current === 1) {
+			console.log("State Stage: " + loadStageRef.current);
+			let concData = [];
+			let concData2 = [];
+			let dbData = {};
+			let imgSrcArray = [];
+			let gotLoadedObjectData = [];
+			let gameObjectData = {};
+			var db = firebase.firestore();
+			db
+				.collection(categoryVar)
+				.get()
+				.then((snapshot) => {
+					snapshot.forEach((doc) => {
+						concData = concData.concat({
+							[doc.id]: [doc.data()],
+						});
+						concData2 = concData2.concat(doc.id);
+					});
+					setloadedEvents(concData);
+					setloadedEventIDs(concData2);
+					loadStageRef.current = 2;
+				});
+		}
+		if (loadStageRef.current === 2) {
+			try {
+				setloadedTotalIDs(loadedEvents.length);
 				setloadedDescription(
 					String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].body)
 				);
@@ -129,26 +138,44 @@ function ContentManagerComponent() {
 			} catch (error) {
 				console.log(error);
 			}
+			loadStageRef.current = 3;
+
 			setstatusVar(
 				"Viewing " + categoryVar + " " + loadedEzID + " of: " + loadedTotalIDs
-			) && setloadStage("3");
+			);
 		}
-		if (loadStage === "3") {
+		if (loadStageRef.current === 3) {
 			setloadStage("4");
+			loadStageRef.current = 4;
 		}
-		if (loadStage === "4") {
+		if (loadStageRef.current === 4) {
+			loadStageRef.current = 0
 			console.log("Finished Loading!");
 		}
-	});
+
+		isInitialMount.current = false;
+	}, [categoryVar, loadStage, loadedEvents, loadedEzID, loadedTotalIDs]);
 
 	function onEditorChange(evt) {
+		loadStageRef.current = 3;
+
+		console.log(evt.editor.getData());
 		seteditedDescription(evt.editor.getData());
+		setloadedDescription(evt.editor.getData());
 	}
 	function copyImgURL() {
 		var copyText = document.getElementById("copyImgURLElement");
 		copyText.select();
 		copyText.setSelectionRange(0, 99999);
 		document.execCommand("copy");
+		navigator.clipboard.writeText(copyText.value).then(
+			function () {
+				console.log("Async: Copying to clipboard was successful!");
+			},
+			function (err) {
+				console.error("Async: Could not copy text: ", err);
+			}
+		);
 
 		var tooltip = document.getElementById("myTooltip");
 		tooltip.innerHTML = "Copied: " + copyText.value;
@@ -161,7 +188,7 @@ function ContentManagerComponent() {
 	function handleUpload(e) {
 		const storage = firebase.storage();
 		e.preventDefault();
-		const uploadTask = storage.ref(`/listings/${file.name}`).put(file);
+		const uploadTask = storage.ref(`/images/${file.name}`).put(file);
 		uploadTask.on("state_changed", console.log, console.error, () => {
 			storage
 				.ref("listings")
@@ -171,6 +198,7 @@ function ContentManagerComponent() {
 					setFile(null);
 					setURL(url);
 					setloadedImgURL(url);
+					sethasReceivedImgURL(true);
 				});
 		});
 	}
@@ -238,9 +266,12 @@ function ContentManagerComponent() {
 						&nbsp;
 						<Button
 							color="primary"
-							onClick={() =>
-								setcategoryVar("BlogPage") & setloadStage("1") & setloadedEzID("1")
-							}
+							onClick={() => {
+								setcategoryVar("BlogPage");
+								setloadStage("1");
+								setloadedEzID("1");
+								loadStageRef.current = 1;
+							}}
 						>
 							BlogPage
 						</Button>{" "}
