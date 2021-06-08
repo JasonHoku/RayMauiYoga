@@ -191,7 +191,7 @@ function ContentManagerComponent() {
 		const uploadTask = storage.ref(`/images/${file.name}`).put(file);
 		uploadTask.on("state_changed", console.log, console.error, () => {
 			storage
-				.ref("listings")
+				.ref("images")
 				.child(file.name)
 				.getDownloadURL()
 				.then((url) => {

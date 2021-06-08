@@ -1,18 +1,21 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import "firebaseui/dist/firebaseui.css";
+import { Row } from "reactstrap";
 
 import { Card, CardBody, CardHeader } from "reactstrap";
 import AccountElements from "../../Pages/Dashboards/Account/account";
 import ModeratorElements from "../../Pages/Dashboards/Account/moderator";
 
+import "firebaseui/dist/firebaseui.css";
+import * as firebaseui from "firebaseui";
+
 const defaultUser = { loggedIn: false, email: "" };
 const UserContext = React.createContext({});
 const UserProvider = UserContext.Provider;
 const UserConsumer = UserContext.Consumer;
-
 var firebaseConfig = {
 	apiKey: process.env.REACT_APP_FIREBASE,
 	authDomain: "raymauiyoga-d75b1.firebaseapp.com",
@@ -22,6 +25,7 @@ var firebaseConfig = {
 	appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
 	measurementId: "G-S8EJTRMN63",
 };
+
 if (!firebase.apps.length) {
 	firebase.initializeApp(firebaseConfig);
 }
@@ -100,6 +104,9 @@ function AppAuth() {
 						email: String(authResult.user.email),
 					});
 
+				localStorage.setItem("username", authResult.user.displayName);
+				localStorage.setItem("email", authResult.user.email);
+
 				return false;
 			},
 		},
@@ -110,6 +117,8 @@ function AppAuth() {
 			firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 			firebase.auth.EmailAuthProvider.PROVIDER_ID,
 		],
+		tosUrl: "/termsofservice",
+		privacyPolicyUrl: "/privacy",
 	};
 	function decideUserLoad() {
 		if (user.loggedIn) {
@@ -129,7 +138,7 @@ function AppAuth() {
 								float: "right",
 								display: "flex",
 								position: "absolute",
-								top: "0px",
+								top: "25px",
 								right: "25px",
 								borderRadius: "10px",
 								fontSize: "15px",
@@ -164,10 +173,11 @@ function AppAuth() {
 								backgroundColor: "#AA3322",
 								height: "30px",
 								position: "absolute",
-								top: "0px",
+								top: "20px",
 								right: "15px",
 								borderRadius: "10px",
 								fontSize: "15px",
+								zIndex: 9999,
 							}}
 							onClick={() => {
 								firebase.auth().signOut();
@@ -193,8 +203,6 @@ function AppAuth() {
 		}
 	}
 
-	var firebaseui = require("firebaseui");
-
 	useEffect(() => {
 		if (firebaseui.auth.AuthUI.getInstance()) {
 			const ui = firebaseui.auth.AuthUI.getInstance();
@@ -217,20 +225,28 @@ function AppAuth() {
 
 	if (!user.loggedIn) {
 		return (
-			<CardBody
+			<Card
 				style={{
-					backgroundColor: "#303030",
+					backgroundColor: "#CCCCCCC",
+					boxShadow: "0px 0px 0px 5px rgba(50,50,50, .9)",
 					borderRadius: "10px",
-					color: "black",
-					background: "transparent",
-					width: "100%",
+					opacity: 100,
 					justifyContent: "center",
+					marginLeft: "-5px",
+					marginRight: "-5px",
+					color: "black",
+					background:
+						"linear-gradient(0.25turn, #103066FF, #FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD,#FFFFFFDD, #103066FF)",
 				}}
 			>
-				<div
+				<br />
+				<CardBody
 					style={{
-						paddingLeft: "15px",
-						paddingRight: "25px",
+						backgroundColor: "#303030",
+						borderRadius: "10px",
+						color: "black",
+						background: "transparent",
+						minHeight: "70vh",
 					}}
 				>
 					<h2
@@ -241,31 +257,44 @@ function AppAuth() {
 					>
 						<b> An account is required to:</b>
 					</h2>
-					<br />
-					<div style={{ textAlign: "center", justifyContent: "center" }}>
-						<h4
-							style={{
-								color: "black",
-								textAlign: "left",
-								paddingLeft: "25px",
-							}}
-						>
-							<li>Subscribe to Updates</li>
-							<br />
-							<li>Schedule a Meeting</li>
-							<br />
-							<li>Chat Amongst the Community</li>
-							<br />
-							<li>Access Moderator Tools</li>
-							<br />
-							<li>And more!</li>
-						</h4>
+					<Row
+						style={{
+							justifyContent: "center",
+							width: "100%",
+							alignItems: "center",
+							justifyContent: "center",
+							alignContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<br />
+						<div style={{ textAlign: "center", justifyContent: "center" }}>
+							<h4
+								style={{
+									color: "black",
+									textAlign: "left",
+									paddingLeft: "25px",
+								}}
+							>
+								<br />
+								<li>Subscribe to Updates</li>
+								<br />
+								<li>Schedule a Meeting</li>
+								<br />
+								<li>Chat Amongst the Community</li>
+								<br />
+								<li>Access Moderator Tools</li>
+								<br />
+								<li>And more!</li>
+							</h4>
+						</div>
 						<br />
 						<div style={{ width: "100%", textAlign: "center" }}></div>
-					</div>
-				</div>
-				<div id="firebaseui-auth-container">{decideUserLoad()}</div>
-			</CardBody>
+						<div id="firebaseui-auth-container">{decideUserLoad()}</div> <br /> <br />{" "}
+						<br />
+					</Row>
+				</CardBody>
+			</Card>
 		);
 	} else {
 		return (

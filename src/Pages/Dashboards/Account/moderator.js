@@ -102,7 +102,7 @@ function ModeratorElements() {
 				isInitialMount.current = false;
 			}
 		}
-	});
+	}, [loadStage, loadedSnapshotData]);
 
 	function loadProducts(props) {
 		if (activeTab === "Products") {
@@ -173,17 +173,6 @@ function ModeratorElements() {
 		}
 	}
 
-	function loadEventsComponent(props) {
-		if (activeTab === "Events") {
-			return <EventManagerComponent />;
-		}
-	}
-
-	function loadContentManagerComponent(props) {
-		if (activeTab === "Content") {
-			return <ContentManagerComponent />;
-		}
-	}
 
 	function loadCommentManagerComponent(props) {
 		if (activeTab === "Comments") {
@@ -213,11 +202,6 @@ function ModeratorElements() {
 		}
 	}
 
-	function loadUserQueryComponent(props) {
-		if (activeTab === "Users") {
-			return <UserQueryComponent />;
-		}
-	}
 	// function loadListingManagerComponent() {
 	// 	if (activeTab === "Listing Manager") {
 	// 		return <ListingManagerComponent />;
@@ -226,16 +210,6 @@ function ModeratorElements() {
 	function loadEventManagerComponent(props) {
 		if (activeTab === "Events") {
 			return <EventManagerComponent />;
-		}
-	}
-	function loadContentManagerComponent(props) {
-		if (activeTab === "Content") {
-			return <ContentManagerComponent />;
-		}
-	}
-	function loadCommentManagerComponent(props) {
-		if (activeTab === "Comments") {
-			return <CommentManagerComponent />;
 		}
 	}
 
@@ -262,7 +236,6 @@ function ModeratorElements() {
 				className="ModeratorBackground"
 				fluid
 				style={{
-					backgroundColor: "transparent",
 					backgroundColor: "#FFFFFFDD",
 					borderRadius: "55px",
 				}}
@@ -374,7 +347,6 @@ function ModeratorElements() {
 								>
 									<button
 										style={{
-											marginTop: "10px",
 											backgroundColor: "#009900",
 											borderRadius: "16px",
 											height: "35px",
@@ -400,7 +372,6 @@ function ModeratorElements() {
 									&nbsp;
 									<button
 										style={{
-											marginTop: "10px",
 											backgroundColor: "#009999",
 											borderRadius: "16px",
 											height: "35px",
@@ -426,7 +397,6 @@ function ModeratorElements() {
 									&nbsp;
 									<button
 										style={{
-											marginTop: "10px",
 											backgroundColor: "#006699",
 											borderRadius: "16px",
 											height: "35px",
@@ -452,7 +422,6 @@ function ModeratorElements() {
 									&nbsp;
 									<button
 										style={{
-											marginTop: "10px",
 											backgroundColor: "#0033AA",
 											borderRadius: "16px",
 											height: "35px",
