@@ -173,7 +173,6 @@ function ModeratorElements() {
 		}
 	}
 
-
 	function loadCommentManagerComponent(props) {
 		if (activeTab === "Comments") {
 			return <CommentManagerComponent />;
@@ -183,11 +182,6 @@ function ModeratorElements() {
 	function loadUserQueryComponent(props) {
 		if (activeTab === "Users") {
 			return <UserQueryComponent />;
-		}
-	}
-	function documentationPageLoader() {
-		if (activeTab === "Documentation") {
-			return <DocumentationPage />;
 		}
 	}
 	// function loadLiveChatManager() {
@@ -345,7 +339,7 @@ function ModeratorElements() {
 										display: "block",
 									}}
 								>
-									<button
+									{/* <button
 										style={{
 											backgroundColor: "#009900",
 											borderRadius: "16px",
@@ -369,7 +363,7 @@ function ModeratorElements() {
 										{" "}
 										Documentation{" "}
 									</button>
-									&nbsp;
+									&nbsp; */}
 									<button
 										style={{
 											backgroundColor: "#009999",
@@ -391,8 +385,10 @@ function ModeratorElements() {
 											toggle("Content");
 										}}
 									>
-										{" "}
-										Content Editor{" "}
+										<span style={{ position: "relative", top: "-4px" }}>
+											{" "}
+											Content Editor{" "}
+										</span>
 									</button>
 									&nbsp;
 									<button
@@ -416,8 +412,10 @@ function ModeratorElements() {
 											toggle("Video");
 										}}
 									>
-										{" "}
-										Video Manager{" "}
+										<span style={{ position: "relative", top: "-4px" }}>
+											{" "}
+											Video Manager{" "}
+										</span>
 									</button>
 									&nbsp;
 									<button
@@ -441,8 +439,10 @@ function ModeratorElements() {
 											toggle("Users");
 										}}
 									>
-										{" "}
-										User Management{" "}
+										<span style={{ position: "relative", top: "-4px" }}>
+											{" "}
+											User Management{" "}
+										</span>
 									</button>
 									{/* //Comment Manager Button
                       &nbsp;

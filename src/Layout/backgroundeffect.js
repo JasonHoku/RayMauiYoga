@@ -44,6 +44,13 @@ function init() {
 	container = document.createElement("div");
 	document.querySelector("#bgEffectDOM").appendChild(container);
 
+	container.style.opacity = 0;
+
+	container.style.transition = "opacity 2s";
+
+	setTimeout(() => {
+		container.style.opacity = 1;
+	}, 1000);
 	camera = new THREE.PerspectiveCamera(
 		60,
 		window.innerWidth / window.innerHeight,
