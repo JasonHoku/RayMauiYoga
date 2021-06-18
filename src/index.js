@@ -21,6 +21,7 @@ import { Provider } from "react-redux";
 import LoginRedirect from "./Login/LoginRedirect";
 import reportWebVitals from "./reportWebVitals";
 
+import "./Layout/backgroundeffect";
 const store = configureStore();
 const rootElement = document.getElementById("root");
 

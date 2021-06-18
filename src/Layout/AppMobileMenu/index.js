@@ -5,15 +5,11 @@ import { Slider } from "react-burgers";
 
 import cx from "classnames";
 
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { Button } from "reactstrap";
-
 import { FiMoreVertical } from "react-icons/fi";
 
 import { IconContext } from "react-icons";
+
+import { Button } from "reactstrap";
 
 import {
 	setEnableMobileMenu,
@@ -29,7 +25,6 @@ class AppMobileMenu extends React.Component {
 			activeSecondaryMenuMobile: false,
 		};
 		this.toggleMobileSidebar = this.toggleMobileSidebar.bind(this);
-		this.hashChangeEvent = this.hashChangeEvent.bind(this);
 		this.handleClickOutside = this.handleClickOutside.bind(this);
 	}
 
@@ -42,13 +37,7 @@ class AppMobileMenu extends React.Component {
 		}
 	}
 
-	hashChangeEvent() {
-		this.setState({ active: false });
-		this.toggleMobileSidebar();
-		this.toggleMobileSmall();
-	}
-
-	componentDidMount() {
+	UNSAFE_componentWillMount() {
 		window.addEventListener("hashchange", this.hashChangeEvent, true);
 		document.addEventListener("click", this.handleClickOutside.bind(this), true);
 	}
@@ -64,6 +53,7 @@ class AppMobileMenu extends React.Component {
 			false
 		);
 	}
+
 	toggleMobileSidebar = () => {
 		let { enableMobileMenu, setEnableMobileMenu } = this.props;
 		setEnableMobileMenu(!enableMobileMenu);
@@ -86,24 +76,26 @@ class AppMobileMenu extends React.Component {
 	render() {
 		return (
 			<Fragment>
-				<div id="MobileMenuID" className="app-header__mobile-menu">
-					<div onClick={this.toggleMobileSidebar}>
+				<div className="app-header__mobile-menu">
+					<div
+						style={{ position: "relative", top: "-8px", right: "15px" }}
+						onClick={this.toggleMobileSidebar}
+					>
 						<Slider
-							width={26}
-							lineHeight={2}
-							lineSpacing={5}
+							width={46}
+							lineHeight={3}
+							lineSpacing={6}
 							color="#6c757d"
 							active={this.state.active}
 							onClick={() => this.setState({ active: !this.state.active })}
 						/>
 					</div>
 				</div>
-				<div id="MobileMenuID" className="app-header__menu">
+				<div className="app-header__menu">
 					<span onClick={this.toggleMobileSmall}>
 						<Button
-							id="MobileMenuID"
 							size="sm"
-							className={cx("btn-icon btn-icon-only", {
+							className={cx("btn-icon btn-icon-only MobileMenuID", {
 								active: this.state.activeSecondaryMenuMobile,
 							})}
 							color="primary"
@@ -118,9 +110,13 @@ class AppMobileMenu extends React.Component {
 									value={{ color: "white", className: "MobileMenuID" }}
 								>
 									<FiMoreVertical
-										style={{ transform: "scale(2)", position: "relative", top: "-2px" }}
+										style={{
+											transform: "scale(2)",
+											position: "relative",
+											top: "-2px",
+										}}
 									/>
-								</IconContext.Provider>
+								</IconContext.Provider>{" "}
 							</div>
 						</Button>
 					</span>
