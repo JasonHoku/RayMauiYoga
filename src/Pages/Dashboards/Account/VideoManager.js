@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, {
+	Fragment,
+	useState,
+	useEffect,
+	useRef,
+	useCallback,
+} from "react";
 
 import mux from "mux-embed";
 
@@ -49,11 +55,10 @@ function VideoManagerComponent() {
 	const [loadedTitle, setloadedTitle] = useState("");
 	const [loadedSnapshotData, setloadedSnapshotData] = useState([]);
 	const [loadedSnapshotDataIDs, setloadedSnapshotDataIDs] = useState([]);
-	const [loadedMuxData, setloadedMuxData] = useState([]);
+	const [loadedMuxData, setloadedMuxData] = useState(null);
 	const [loadedEventIDs, setloadedEventIDs] = useState("");
 	const [loadedPublic, setloadedPublic] = useState("");
 	const [loadedIDData, setloadedIDData] = useState("");
-	const [loadStage, setloadStage] = useState("1");
 	const [loadedTitleData, setloadedTitleData] = useState("");
 
 	const [hasReceivedImgURL, sethasReceivedImgURL] = useState(false);
@@ -78,170 +83,14 @@ function VideoManagerComponent() {
 
 	const [file, setFile] = useState(null);
 
-	let dbData = {};
-	let dbData2 = {};
-	let dataArray = [];
-	let dbDataArray = [];
+	const loadStage = useRef(0);
 
+	let dbData = {};
+	let dbDataArray = [];
 	let dbDataKeyArray = [];
 
-	useEffect(() => {
-		console.log("Updating, Stage: " + loadStage);
-		if (isInitialMount.current === true) {
-			if (loadStage === "1") {
-				if (loadedEzID > 0) {
-					const loadsnapshot = async () => {
-						await firebase
-							.firestore()
-							.collection(categoryVar)
-							.get()
-							.then((snapshot) => {
-								snapshot.forEach((doc) => {
-									var key = doc.id;
-									var data = doc.data();
-									data["key"] = key;
-									dbData[key] = data;
-									dbDataArray.push(data);
-									dbDataKeyArray.push(data.key);
-								});
-								setloadedSnapshotData(dbData);
-							});
-					};
-					loadsnapshot().then(async () => {
-						try {
-							if (loadedSnapshotData != "") {
-								setloadedDescription(dbData[dbDataKeyArray[loadedEzID - 1]].Title);
-
-								setloadedPlaybackId(dbData[dbDataKeyArray[loadedEzID - 1]].playbackId);
-
-								setloadedVideoMeta(dbData[dbDataKeyArray[loadedEzID - 1]].meta);
-							}
-							console.log(dbDataArray.length);
-
-							setreadyVideoMeta(loadedVideoMeta);
-							setreadyDescription(loadedDescription);
-						} catch (error) {}
-						setloadedTotalIDs(dbDataArray.length);
-						setloadStage("2");
-					});
-				}
-			}
-			if (loadStage === "2") {
-				try {
-					setisLoadedOnce("1");
-				} catch (error) {
-					console.log(error);
-				}
-				setstatusVar(
-					"Viewing " + categoryVar + " " + loadedEzID + " of: " + loadedTotalIDs
-				);
-				setloadStage("3");
-			}
-			if (loadStage === "3") {
-				if (isLoadedOnce === "1") {
-					if (!window.location.hostname === "localhost") {
-						require("firebase/functions");
-						firebase.functions().useEmulator("localhost", 5001);
-						var addMessage = firebase.functions().httpsCallable("addMessage");
-						addMessage({ text: "X" })
-							.then((result) => {
-								console.log("Mux API Query Results:");
-								console.log(result);
-								// Read result of the Cloud Function.
-								const tempVar = [];
-								result.data.forEach((element) => {
-									tempVar.push(element.playback_ids[0].id);
-								});
-
-								setloadedMuxData(tempVar);
-
-								console.log(loadedMuxData);
-							})
-							.catch((error) => {
-								// Getting the Error details.
-								var code = error.code;
-								var message = error.message;
-								var details = error.details;
-								console.log(details, code, message);
-								// ...
-							});
-					}
-
-					loadVideoJS();
-					setloadStage("4");
-					setisLoadedOnce("2");
-				}
-			}
-			if (loadStage === "4") {
-				console.log("Fully Loaded");
-			}
-		}
-	});
-
-	function sendAssetsToDatabase() {
-		let splitted = [];
-		console.log(loadedMuxData);
-
-		loadedMuxData.split(`[{"policy":"public","id":"`).forEach((element) => {
-			if (element != "") {
-				splitted.push(element.split(`"}],"mp4_support":"standard"`)[0]);
-			}
-		});
-
-		// if (splitted != "") {
-		//   if (splitted.length < 120) {
-		//     splitted.forEach((element) => {
-		//       firebase
-		//         .firestore()
-		//         .collection("VideoData")
-		//         .doc(element)
-		//         .set({
-		//           Title: "",
-		//           playbackId: String(element),
-		//           meta: "",
-		//         });
-		//     });
-		//   }
-		// }
-	}
-
-	function copyImgURL() {
-		var copyText = document.getElementById("copyImgURLElement");
-		copyText.select();
-		copyText.setSelectionRange(0, 99999);
-		document.execCommand("copy");
-
-		var tooltip = document.getElementById("myTooltip");
-		tooltip.innerHTML = "Copied: " + copyText.value;
-	}
-
-	function outFunc() {
-		var tooltip = document.getElementById("myTooltip");
-		tooltip.innerHTML = "Copy to clipboard";
-	}
-	function handleUpload(e) {
-		const storage = firebase.storage();
-		e.preventDefault();
-		const uploadTask = storage.ref(`/listings/${file.name}`).put(file);
-		uploadTask.on("state_changed", console.log, console.error, () => {
-			storage
-				.ref("listings")
-				.child(file.name)
-				.getDownloadURL()
-				.then((url) => {
-					setFile(null);
-					setURL(url);
-					setloadedImgURL(url);
-				});
-		});
-	}
-
-	function handleChange(e) {
-		setFile(e.target.files[0]);
-	}
-
-	function loadVideoJS() {
-		if (loadStage === "3") {
+	const loadVideoJS = useCallback(() => {
+		if (loadStage.current === 3) {
 			var playbackId = loadedPlaybackId;
 			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
 			var video = document.getElementById("myVideo");
@@ -265,15 +114,128 @@ function VideoManagerComponent() {
 				});
 			}
 		}
-		const Mux = require("@mux/mux-node");
-		const muxClient = new Mux(
-			process.env.REACT_APP_MUX_TOKEN_ID,
-			process.env.REACT_APP_MUX_TOKEN_SECRET
-		); // Success!
+	}, [loadedPlaybackId]);
+
+	useEffect(() => {
+		if (loadStage.current === 0) {
+			loadStage.current = 1;
+		}
+
+		console.log("Updating, Stage: " + loadStage.current);
+		if (isInitialMount.current === true) {
+			console.log("Updating, Initial Mount: ");
+
+			if (loadStage.current === 1) {
+				firebase
+					.firestore()
+					.collection(categoryVar)
+					.get()
+					.then((snapshot) => {
+						snapshot.forEach((doc) => {
+							var key = doc.id;
+							var data = doc.data();
+							data["key"] = key;
+							dbData[key] = data;
+							dbDataArray.push(data);
+							dbDataKeyArray.push(data.key);
+						});
+						setloadedSnapshotData(dbData);
+						setloadedDescription(dbData[dbDataKeyArray[loadedEzID - 1]].Title);
+						setloadedPlaybackId(dbData[dbDataKeyArray[loadedEzID - 1]].playbackId);
+						setloadedVideoMeta(dbData[dbDataKeyArray[loadedEzID - 1]].meta);
+						setreadyVideoMeta(loadedVideoMeta);
+						setloadedTotalIDs(dbDataArray.length);
+						setreadyDescription(loadedDescription);
+						console.log(dbData);
+						loadStage.current = 2;
+					});
+			}
+			if (loadStage.current === 2) {
+				setstatusVar(
+					"Viewing " + categoryVar + " " + loadedEzID + " of: " + loadedTotalIDs
+				);
+				loadStage.current = 3;
+			}
+			if (loadStage.current === 3) {
+				// require("firebase/functions");
+				// firebase.functions().useEmulator("localhost", 5001);
+				// var addMessage = firebase.functions().httpsCallable("addMessage");
+				// addMessage({ text: "X" })
+				// 	.then((result) => {
+				// 		console.log("Mux API Query Results:");
+				// 		console.log(result);
+				// 		setloadedMuxData(result.data);
+
+				// 		console.log(loadedMuxData);
+				// 	})
+				// 	.catch((error) => {
+				// 		// Getting the Error details.
+				// 		var code = error.code;
+				// 		var message = error.message;
+				// 		var details = error.details;
+				// 		console.log(details, code, message);
+				// 		// ...
+				// 	});
+
+				loadVideoJS();
+				loadStage.current = 4;
+			}
+			if (loadStage.current === 4) {
+				console.log("Fully Loaded");
+			}
+		}
+	}, [
+		categoryVar,
+		dbData,
+		dbDataArray,
+		dbDataKeyArray,
+		isLoadedOnce,
+		loadStage,
+		loadVideoJS,
+		loadedDescription,
+		loadedEzID,
+		loadedMuxData,
+		loadedSnapshotData,
+		loadedTotalIDs,
+		loadedVideoMeta,
+	]);
+
+	function sendAssetsToDatabase() {
+		console.log(loadedMuxData);
+		loadedMuxData.forEach((element) => {
+			if (element.status !== "errored") {
+				firebase
+					.firestore()
+					.collection("VideoData")
+					.doc(element.id)
+					.set(
+						{
+							Title: "",
+							playbackId: String(element.playback_ids[0].id),
+						},
+						{ merge: true }
+					);
+			}
+			console.log(element);
+		});
+
+		// if (splitted != "") {
+		//   if (splitted.length < 120) {
+		//     splitted.forEach((element) => {
+		//       firebase
+		//         .firestore()
+		//         .collection("VideoData")
+		//         .doc(element)
+		//         .set({
+		//           Title: "",
+		//           playbackId: String(element),
+		//           meta: "",
+		//         });
+		//     });
+		//   }
+		// }
 	}
-	function componentWillUnmount() {
-		clearInterval(this.state.intervalId);
-	}
+
 	async function getData() {
 		require("firebase/functions");
 		var addMessage = firebase.functions().httpsCallable("addMessage");
@@ -285,11 +247,8 @@ function VideoManagerComponent() {
 				// Read result of the Cloud Function.
 				console.log("Mux API Query Results:");
 				console.log(result);
-				const tempVar = [];
-				result.data.forEach((element) => {
-					tempVar.push(element.playback_ids[0].id);
-				});
-				setloadedMuxData(tempVar);
+
+				setloadedMuxData(result.data);
 			})
 			.catch((error) => {
 				// Getting the Error details.
@@ -323,7 +282,7 @@ function VideoManagerComponent() {
 				playbackId: String(loadedPlaybackId),
 				meta: String(readyVideoMeta),
 			})
-			.then(setloadStage("1"));
+			.then((loadStage.current = 1));
 	}
 
 	function runDeleteData() {
@@ -399,9 +358,11 @@ function VideoManagerComponent() {
 				<h2>{statusVar}</h2>
 				<small>ID #:</small>
 				<input
-					onChange={(e) =>
-						setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
-					}
+					onChange={(e) => {
+						setloadedEzID(e.target.value);
+						loadStage.current = 1;
+						formResetter();
+					}}
 					value={loadedEzID}
 					name="loadedEzID"
 					style={{ width: "45px" }}
@@ -409,18 +370,20 @@ function VideoManagerComponent() {
 				&nbsp; &nbsp;
 				<Button
 					color="primary"
-					onClick={() =>
-						setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("1")
-					}
+					onClick={() => {
+						setloadedEzID(toInteger(loadedEzID) - 1);
+						loadStage.current = 1;
+					}}
 				>
 					←
 				</Button>{" "}
 				&nbsp;
 				<Button
 					color="primary"
-					onClick={() =>
-						setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("1")
-					}
+					onClick={() => {
+						setloadedEzID(toInteger(loadedEzID) + 1);
+						loadStage.current = 1;
+					}}
 				>
 					→
 				</Button>{" "}
@@ -431,12 +394,12 @@ function VideoManagerComponent() {
 				&nbsp;
 				<Button
 					color="secondary"
-					onClick={() =>
-						setloadedEzID(toInteger(loadedTotalIDs) + 1) &
-						setloadStage("2") &
-						seteditedDescription("") &
-						setloadedDescription("")
-					}
+					onClick={() => {
+						setloadedEzID(toInteger(loadedTotalIDs) + 1);
+						loadStage.current = 2;
+						seteditedDescription("");
+						setloadedDescription("");
+					}}
 				>
 					New
 				</Button>{" "}
@@ -458,14 +421,17 @@ function VideoManagerComponent() {
 					>
 						<CardHeader>Content View:</CardHeader>{" "}
 					</div>
-					<br /> Load this first:
+					{/* <br /> Load this first:
 					<Button onClick={() => getData() & setmuxAssetButtonText("Loading...")}>
 						{muxAssetButtonText}
 					</Button>
 					&nbsp;Then this:
 					<Button
-						disabled={loadedMuxData.length < 2}
-						onClick={() => sendAssetsToDatabase() & setloadStage("1")}
+						disabled={loadedMuxData === null}
+						onClick={() => {
+							sendAssetsToDatabase();
+							loadStage.current = 1;
+						}}
 					>
 						Send Assets To Database
 					</Button>
@@ -474,7 +440,7 @@ function VideoManagerComponent() {
 						placeholder="Data Will Propagate Here"
 						value={loadedMuxData}
 					></input>
-					<br />
+					<br /> */}
 					<video
 						style={{ width: "90%" }}
 						preload="false"

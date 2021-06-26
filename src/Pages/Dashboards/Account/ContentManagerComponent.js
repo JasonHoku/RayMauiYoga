@@ -3,6 +3,10 @@ import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { Query, ApolloProvider, Mutation } from "react-apollo";
 
+import { toast } from "react-toastify";
+
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+
 import {
 	Row,
 	Col,
@@ -69,7 +73,6 @@ function ContentManagerComponent() {
 	const [loadedPublic, setloadedPublic] = useState("");
 	const [loadedIDData, setloadedIDData] = useState("");
 	const [loadStage, setloadStage] = useState("1");
-	const [loadedTitleData, setloadedTitleData] = useState("");
 
 	const [hasReceivedImgURL, sethasReceivedImgURL] = useState(false);
 	const [readyCreator, setreadyCreator] = useState("");
@@ -132,6 +135,10 @@ function ContentManagerComponent() {
 				setloadedDescription(
 					String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].body)
 				);
+				setloadedTitle(
+					String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].title || "ZYX")
+				);
+
 				seteditedDescription(
 					String(loadedEvents[loadedEzID - 1][loadedEzID - 1][0].body)
 				);
@@ -149,7 +156,7 @@ function ContentManagerComponent() {
 			loadStageRef.current = 4;
 		}
 		if (loadStageRef.current === 4) {
-			loadStageRef.current = 0
+			loadStageRef.current = 0;
 			console.log("Finished Loading!");
 		}
 
@@ -208,12 +215,57 @@ function ContentManagerComponent() {
 	}
 
 	function runSendData() {
+		toast(
+			<div>
+				<div>
+					<h1>Saving...</h1>
+				</div>
+			</div>,
+			{ autoClose: 255 }
+		);
+
 		console.log(String(loadedEzID));
 		firebase
 			.firestore()
 			.collection(categoryVar)
 			.doc(String(loadedEzID - 1))
-			.set({ body: String(editedDescription) });
+			.set({ body: String(editedDescription), title: String(loadedTitle) })
+			.then((error) => {
+				if (!error) {
+					//
+					toast(
+						<div>
+							<div>
+								<h1>Saved!</h1>
+							</div>
+							<br />
+							<br />
+							<div>
+								<h1>Title: </h1>
+								{loadedTitle}
+							</div>
+							<div>
+								<h1>Data: </h1> {editedDescription}
+							</div>
+						</div>
+					);
+				} else {
+					//
+					toast(
+						<div>
+							<div>
+								<h1>ERROR!</h1>
+							</div>
+							<br />
+							<h1>Not Saved!</h1>
+							<br />
+							<br />
+							<h1>Please Verify Internet Connectivity</h1>
+							<br />
+						</div>
+					);
+				}
+			});
 	}
 
 	function runDeleteData() {
@@ -337,6 +389,34 @@ function ContentManagerComponent() {
 						Delete
 					</Button>
 					<br />
+					&nbsp;
+					<br />
+					<div
+						hidden={categoryVar !== "BlogPage"}
+						style={{
+							width: "100%",
+							boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
+							textAlign: "center",
+						}}
+					>
+						<CardHeader>Blog Post Title:</CardHeader>
+						<TextareaAutosize
+							type="textarea"
+							value={loadedTitle}
+							onChange={(e) => {
+								setloadedTitle(e.target.value);
+							}}
+							rowsMin={2}
+							id={`ActionTaskInput`}
+							style={{
+								margin: "3px",
+								width: "70%",
+								textShadow: " 0 0 5px #DDDDDD",
+								position: "relative",
+								backgroundColor: "transparent",
+							}}
+						></TextareaAutosize>
+					</div>
 					<br />{" "}
 					<div
 						style={{
