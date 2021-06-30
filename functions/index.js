@@ -1,10 +1,11 @@
 let muxTID = null;
 let muxTS = null;
 const Mux = require("@mux/mux-node");
-const admin = require("firebase-admin");
+const admin = require("firebasadmin");
 const functions = require("firebase-functions");
 
 admin.initializeApp();
+let json = { x: undefined };
 
 exports.addMessage = functions.https.onCall(async () => {
 	return new Promise((resolve, reject) => {
@@ -21,7 +22,6 @@ exports.addMessage = functions.https.onCall(async () => {
 					colors[key] = color;
 				});
 
-				var colorsStr = JSON.stringify(colors, null, "\t");
 				// console.log("colors callback result : " + colorsStr);
 				muxTID = JSON.parse(JSON.stringify(colors["0"])).muxTID;
 				muxTS = JSON.parse(JSON.stringify(colors["0"])).muxTS;
@@ -29,6 +29,82 @@ exports.addMessage = functions.https.onCall(async () => {
 					const { Video } = new Mux(muxTID, muxTS);
 					Video.Assets.list().then((asset) => {
 						resolve(asset);
+					});
+				} catch (err) {
+					return resolve(err);
+				}
+			})
+			.catch((reason) => {
+				console.log('db.collection("colors").get gets err, reason: ' + reason);
+
+				reject(reason);
+			});
+	});
+});
+
+exports.processPayment = functions.https.onCall(async () => {
+	return new Promise((resolve, reject) => {
+		var dbData = {};
+		var db = admin.firestore();
+		db
+			.collection("Secrets")
+			.get()
+			.then((snapshot) => {
+				snapshot.forEach((doc) => {
+					var key = doc.id;
+					var data = doc.data();
+					data["key"] = key;
+					dbData[key] = data;
+				});
+
+				try {
+					var paypal = require("paypal-rest-sdk");
+
+					paypal.configure({
+						mode: "live", //sandbox or live
+						client_id: dbData.PayPal.ID,
+						client_secret: dbData.PayPal.Secret,
+					});
+
+					var create_payment_json = {
+						intent: "sale",
+						payer: {
+							payment_method: "paypal",
+						},
+						redirect_urls: {
+							return_url: "https://raymauiyoga.com/",
+							cancel_url: "https://raymauiyoga.com/",
+						},
+						transactions: [
+							{
+								item_list: {
+									items: [
+										{
+											name: "Test",
+											sku: "0000",
+											price: "1.00",
+											currency: "USD",
+											quantity: 1,
+										},
+									],
+								},
+								amount: {
+									currency: "USD",
+									total: "1.00",
+								},
+								description: "This is the payment description.",
+							},
+						],
+					};
+
+					paypal.payment.create(create_payment_json, function (error, payment) {
+						if (error) {
+							throw error;
+						} else {
+							console.log("Create Payment Response");
+							console.log(payment);
+							resolve(payment);
+						}
 					});
 				} catch (err) {
 					return resolve(err);

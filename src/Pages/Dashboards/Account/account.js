@@ -50,25 +50,16 @@ function AccountElements() {
 	const [formName, setformName] = useState("");
 	const [formCategory, setformCategory] = useState("");
 	const [formLoc, setformLoc] = useState("");
-	const [finListButtonDisable, setfinListButtonDisable] = useState(true);
-	const [formScoreReason, setformScoreReason] = useState("");
-	const [loadedImgURL, setloadedImgURL] = useState("");
-	const [loadedLocationData, setloadedLocationData] = useState("");
-	const [loadedDescription, setloadedDescription] = useState("");
 	const [editedDescription, seteditedDescription] = useState("");
 	const [gotDownloadURL, setgotDownloadURL] = useState("");
 	const [formGMapCoords, setformGMapCoords] = useState("");
-	const [loadedEzID, setloadedEzID] = useState("");
 	const [hasLoaded, sethasLoaded] = useState("1");
-	const [imgUpped, setimgUpped] = useState("");
 	const [readyPaymentCost, setreadyPaymentCost] = useState("2");
-	const [readyPaymentItems, setreadyPaymentItems] = useState(
-		"Tier 1: $2 / Month"
-	);
+	const [readyPaymentItems, setreadyPaymentItems] =
+		useState("Tier 1: $2 / Month");
 	const [formPublicType, setformPublicType] = useState("");
-	const [sendCommentButtonText, setsendCommentButtonText] = useState(
-		"Send Message"
-	);
+	const [sendCommentButtonText, setsendCommentButtonText] =
+		useState("Send Message");
 
 	const [formDesc, setformDesc] = useState("");
 	const [intervalId, setintervalId] = useState("");
@@ -77,8 +68,12 @@ function AccountElements() {
 		"Form Not Filled Entirely"
 	);
 
+	const [payPalResponse, setPayPalResponse] = useState(null);
+
 	const [seconds, setSeconds] = useState(0);
 	const isInitialMount = useRef(true);
+
+	const auth = firebase.auth();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -102,16 +97,6 @@ function AccountElements() {
 		console.log("TRigg");
 		if (hasLoaded === "1") {
 			console.log("TRigg2");
-			const auth = firebase.auth();
-			firebase
-				.firestore()
-				.collection("users")
-				.doc(auth.currentUser.uid)
-				.update({
-					user: `${auth.currentUser.displayName}`,
-					uuid: `${auth.currentUser.uid}`,
-					email: `${auth.currentUser.email}`,
-				});
 		}
 	}
 	function onEditorChange(evt) {
@@ -329,7 +314,7 @@ function AccountElements() {
 				>
 					<Button
 						size="sm"
-						fill={true}
+						fill="true"
 						color="alternate"
 						className={
 							"btn-pill btn-wide " + classnames({ active: activeTab === "1" })
@@ -343,7 +328,7 @@ function AccountElements() {
 					&nbsp;
 					<Button
 						size="sm"
-						fill={true}
+						fill="true"
 						color="alternate"
 						className={
 							"btn-pill btn-wide " + classnames({ active: activeTab === "3" })
@@ -418,18 +403,48 @@ function AccountElements() {
 								<h5>
 									{" "}
 									<div style={{ textAlign: "left" }}>
-										<b>Username:</b> {localStorage.getItem("username")} <br />
-										<b> E-Mail:</b> {localStorage.getItem("userEmail")}
 										<br />
-										<b>Status:</b> Regular User
+										<b>Username:</b>
+										<br />
+										{auth.currentUser.displayName} <br />
+										<br />
+										<b> E-Mail:</b>
+										<br /> {auth.currentUser.email}
+										<br /> <br />
+										<b>Status:</b>
+										<br /> Regular User
 										<br />
 										<br />
 										<br />
-										<a href="#" onClick={(e) => e.preventDefault() & setactiveTab("4")}>
-											{" "}
-											Upgrade Account Status{" "}
-										</a>
+										<div style={{ textAlign: "center" }}>
+											<button id="UpgradeAccountButton"
+												onClick={() => {
+													require("firebase/functions");
+													document.getElementById("UpgradeAccountButton").innerHTML = "Loading"
+													document.getElementById("UpgradeAccountButton").disabled = true
+													var processPayment = firebase
+														.functions()
+														.httpsCallable("processPayment");
+													processPayment({
+														uid: auth.currentUser.uid,
+														name: auth.currentUser.displayName,
+													}).then((result) => {
+														console.log(result);
+														setPayPalResponse(result);
+													});
+												}}
+											>
+												Upgrade Account
+											</button>
+										</div>
+										ID:
 										<br />
+										{payPalResponse && payPalResponse.data.id} <br /> <br />
+										Pay Link:
+										<br />
+										{payPalResponse && payPalResponse.data.links[1].href} <br /> <br />
+										Status: <br />
+										{payPalResponse && payPalResponse.data.state}
 										<br />
 									</div>
 								</h5>
@@ -451,49 +466,15 @@ function AccountElements() {
 							<CardBody>
 								<h3> Upgrade Account:</h3>
 								<h5>
-									{" "}
 									<div style={{ textAlign: "left" }}>
-										<b>Username:</b> {localStorage.getItem("username")} <br />
+										<b>Username:</b> {auth.currentUser.displayName} <br />
 										<br />
-										<b> E-Mail:</b> {localStorage.getItem("userEmail")}
-										<br />
-										<br />
-										<a
-											href="#"
-											onClick={(e) =>
-												e.preventDefault() &
-												setreadyPaymentCost("2") &
-												setreadyPaymentItems("Tier 1: $2 / Month")
-											}
-										>
-											Tier 1
-										</a>{" "}
-										&nbsp;
-										<a
-											href="#"
-											onClick={(e) =>
-												e.preventDefault() &
-												setreadyPaymentCost("5") &
-												setreadyPaymentItems("Tier 2: $5 / Month")
-											}
-										>
-											Tier 2
-										</a>{" "}
-										&nbsp;
-										<a
-											href="#"
-											onClick={(e) =>
-												e.preventDefault() &
-												setreadyPaymentCost("25") &
-												setreadyPaymentItems("Tier 3: $25 / Month")
-											}
-										>
-											Tier 3
-										</a>
+										<b> E-Mail:</b> {auth.currentUser.email}
 										<br />
 										<br />
 										<br />
-										{loadPayPalButton()}
+										<br />
+										<br />
 										<br />
 									</div>
 								</h5>
