@@ -417,21 +417,77 @@ function AccountElements() {
 										<br />
 										<br />
 										<div style={{ textAlign: "center" }}>
-											<button id="UpgradeAccountButton"
+											<button
+												id="UpgradeAccountButton"
 												onClick={() => {
+													//Run EndAPI Call To Functions
+													console.log("Running");
 													require("firebase/functions");
-													document.getElementById("UpgradeAccountButton").innerHTML = "Loading"
-													document.getElementById("UpgradeAccountButton").disabled = true
-													var processPayment = firebase
-														.functions()
-														.httpsCallable("processPayment");
-													processPayment({
-														uid: auth.currentUser.uid,
-														name: auth.currentUser.displayName,
-													}).then((result) => {
-														console.log(result);
-														setPayPalResponse(result);
-													});
+													async function sendRequest(props) {
+														var useEmulator = true;
+														//Emulator local url for development:
+														let fetchURL = "";
+														const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/processPayment`;
+
+														//Live  url:
+														const urlLive =
+															"https://us-central1-hokubot.cloudfunctions.net/FireFunctionShutDown";
+
+														if (
+															useEmulator &&
+															window.location.hostname.includes("localhost")
+														) {
+															fetchURL = urlLocal;
+														} else {
+															fetchURL = urlLive;
+														}
+
+														//Send Details to Functions
+														const rawResponse = await fetch(fetchURL, {
+															method: "POST",
+															mode: "cors",
+															headers: new Headers({
+																"Content-Type": "application/json",
+																Accept: "application/json",
+																HeaderTokens: JSON.stringify({
+																	refreshToken: auth.currentUser.refreshToken,
+																	authDomain: auth.currentUser.authDomain,
+																	uid: auth.currentUser.uid,
+																	name: auth.currentUser.displayName,
+																	email: auth.currentUser.email,
+																	hostname: window.location.hostname,
+																}),
+															}),
+															body: JSON.stringify({
+																UUID: auth.currentUser.uuid,
+															}),
+														});
+														const content = await rawResponse.json();
+														console.log(content);
+														setPayPalResponse(content);
+													}
+
+													sendRequest();
+													require("firebase/functions");
+													document.getElementById("UpgradeAccountButton").innerHTML =
+														"Loading";
+													document.getElementById("UpgradeAccountButton").disabled = true;
+													document.getElementById("UpgradeAccountButton").disabled = false;
+													//
+													// //
+													// var processPayment = firebase
+													// 	.functions()
+													// 	.httpsCallable("processPayment");
+													// //
+													// processPayment({
+													// 	uid: auth.currentUser.uid,
+													// 	name: auth.currentUser.displayName,
+													// }).then((result) => {
+													// 	console.log(result);
+													// 	setPayPalResponse(result);
+													// });
+
+													//
 												}}
 											>
 												Upgrade Account
@@ -439,12 +495,12 @@ function AccountElements() {
 										</div>
 										ID:
 										<br />
-										{payPalResponse && payPalResponse.data.id} <br /> <br />
+										{payPalResponse && payPalResponse.id} <br /> <br />
 										Pay Link:
 										<br />
-										{payPalResponse && payPalResponse.data.links[1].href} <br /> <br />
+										{payPalResponse && payPalResponse.links[1].href} <br /> <br />
 										Status: <br />
-										{payPalResponse && payPalResponse.data.state}
+										{payPalResponse && payPalResponse.state}
 										<br />
 									</div>
 								</h5>
