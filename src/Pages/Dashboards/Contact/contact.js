@@ -194,7 +194,7 @@ export default class ContactElements extends Component {
 													value={this.state.formName}
 													onChange={this.handleInputChange}
 													id="formName"
-													placeholder="Who'se inquiring?"
+													placeholder="Who's inquiring?"
 												/>
 											</Col>
 										</FormGroup>

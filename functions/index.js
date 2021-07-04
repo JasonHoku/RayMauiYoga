@@ -43,6 +43,86 @@ exports.addMessage = functions.https.onCall(async () => {
 	});
 });
 
+exports.processPaid = functions.https.onRequest((req, res) => {
+	const htmlParams = req.query;
+	const paymentId = req.query.paymentId;
+	const userParam = req.query.user;
+	const token = req.query.token;
+	const PayerID = req.query.PayerID;
+	console.log("Params: ", htmlParams);
+
+	var dbData = {};
+	var db = admin.firestore();
+	db
+		.collection("Secrets")
+		.get()
+		.then((snapshot) => {
+			snapshot.forEach((doc) => {
+				var key = doc.id;
+				var data = doc.data();
+				data["key"] = key;
+				dbData[key] = data;
+			});
+
+			var paypal = require("paypal-rest-sdk");
+			paypal.configure({
+				mode: "live", //sandbox or live
+				client_id: dbData.PayPal.ID,
+				client_secret: dbData.PayPal.Secret,
+			});
+
+			var execute_payment_json = {
+				payer_id: PayerID,
+				transactions: [
+					{
+						amount: {
+							currency: "USD",
+							total: "1.00",
+						},
+					},
+				],
+			};
+
+			paypal.payment.execute(
+				paymentId,
+				execute_payment_json,
+				function (error, payment) {
+					if (error) {
+						throw error;
+					} else {
+						console.log("Approved");
+						console.log(JSON.stringify(payment));
+
+						db.collection("UserDocs").doc(userParam).set(
+							{
+								meta: 1,
+							},
+							{ merge: true }
+						);
+
+						//PaymentApproved
+						db
+							.collection("PaymentApproved")
+							.doc()
+							.set(
+								{
+									Time: admin.firestore.FieldValue.serverTimestamp(),
+									PayerID: PayerID,
+									paymentId: paymentId,
+									paymentData: payment,
+									UID: userParam,
+								},
+								{ merge: true }
+							)
+							.then(() => {
+								res.redirect("https://raymauiyoga.com/#/dashboards/account");
+							});
+					}
+				}
+			);
+		});
+});
+
 exports.processPayment = functions.https.onRequest((req, res) => {
 	res.status(200);
 	const cors = require("cors")({ origin: true });
@@ -79,13 +159,15 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 						});
 
 						var create_payment_json = {
-							intent: "sale",
+							intent: "order",
 							payer: {
 								payment_method: "paypal",
 							},
 							redirect_urls: {
-								return_url: "https://raymauiyoga.com/",
-								cancel_url: "https://raymauiyoga.com/",
+								return_url:
+									"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
+									String(userID),
+								cancel_url: "https://raymauiyoga.com/#/dashboards/account",
 							},
 							transactions: [
 								{
@@ -108,12 +190,109 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 								},
 							],
 						};
+
+						// var billingPlanAttributes = {
+						// 	description: "Create Plan for Regular",
+						// 	merchant_preferences: {
+						// 		auto_bill_amount: "yes",
+						// 		return_url: "https://raymauiyoga.com/account",
+						// 		cancel_url: "https://raymauiyoga.com/account",
+						// 		initial_fail_amount_action: "continue",
+						// 		max_fail_attempts: "1",
+						// 		setup_fee: {
+						// 			currency: "USD",
+						// 			value: "2",
+						// 		},
+						// 	},
+						// 	name: "Testing1-Regular1",
+						// 	payment_definitions: [
+						// 		{
+						// 			amount: {
+						// 				currency: "USD",
+						// 				value: "3",
+						// 			},
+						// 			charge_models: [
+						// 				{
+						// 					amount: {
+						// 						currency: "USD",
+						// 						value: "2.60",
+						// 					},
+						// 					type: "SHIPPING",
+						// 				},
+						// 				{
+						// 					amount: {
+						// 						currency: "USD",
+						// 						value: "1",
+						// 					},
+						// 					type: "TAX",
+						// 				},
+						// 			],
+						// 			cycles: "0",
+						// 			frequency: "MONTH",
+						// 			frequency_interval: "1",
+						// 			name: "Regular 1",
+						// 			type: "REGULAR",
+						// 		},
+						// 		{
+						// 			amount: {
+						// 				currency: "USD",
+						// 				value: "1",
+						// 			},
+						// 			charge_models: [
+						// 				{
+						// 					amount: {
+						// 						currency: "USD",
+						// 						value: "1.60",
+						// 					},
+						// 					type: "SHIPPING",
+						// 				},
+						// 				{
+						// 					amount: {
+						// 						currency: "USD",
+						// 						value: "1",
+						// 					},
+						// 					type: "TAX",
+						// 				},
+						// 			],
+						// 			cycles: "12",
+						// 			frequency: "MONTH",
+						// 			frequency_interval: "1",
+						// 			name: "Trial 1",
+						// 			type: "TRIAL",
+						// 		},
+						// 	],
+						// 	type: "INFINITE",
+						// };
+
 						paypal.payment.create(create_payment_json, function (error, payment) {
 							if (error) {
 								throw error;
 							} else {
 								console.log("Create Payment Response");
 								console.log(payment);
+
+								//
+								// Execute Upon Approval
+								// 						var execute_payment_json = {
+								// 							"payer_id": "FM3Y6GFJLAFWJ",
+								// 							"transactions": [{
+								// 											"amount": {
+								// 															"currency": "USD",
+								// 															"total": "1.00"
+								// 											}
+								// 							}]
+								// 			};
+								// 						paypal.payment.execute(el.Payment.id, execute_payment_json, function (error, payment) {
+								// 							if (error) {
+								// 								throw error;
+								// 							} else {
+								// 								console.log("Approved");
+								// 								console.log(JSON.stringify(payment));
+								// 							}
+								// 						});
+								// 					});
+								// 			};
+								//
 
 								db
 									.collection("PaymentProcessing")
@@ -154,7 +333,6 @@ exports.twoMinuteInterval = functions.pubsub
 	.schedule("every 2 minutes")
 	.onRun((context) => {
 		async function getData() {
-			require("firebase/functions");
 			var db = admin.firestore();
 
 			var dataSet = {};
@@ -185,9 +363,7 @@ exports.twoMinuteInterval = functions.pubsub
 									.doc(el.id)
 									.set(
 										{
-											Title: String(" "),
 											playbackId: String(el.playback_ids[0].id),
-											meta: String(" "),
 											LatestRun: admin.firestore.FieldValue.serverTimestamp(),
 										},
 										{ merge: true }
@@ -201,7 +377,69 @@ exports.twoMinuteInterval = functions.pubsub
 		getData();
 	});
 
-//
+// //
+
+// //
+// var db = admin.firestore();
+// var dataSet = {};
+// db
+// 	.collection("PaymentProcessing")
+// 	.get()
+// 	.then((snapshot) => {
+// 		snapshot.forEach((doc) => {
+// 			var key = doc.id;
+// 			var dataKeys = doc.data();
+// 			dataKeys["key"] = key;
+// 			dataSet[key] = dataKeys;
+// 		});
+// 		// if old or success
+// 		Object.values(dataSet).forEach((el) => {
+// 			console.log(el.Payment.id);
+
+// 			let captureOrder = async function (orderId) {
+// 				var paypal = require("paypal-rest-sdk");
+
+// 				let dbData = {};
+// 				var db = admin.firestore();
+// 				db
+// 					.collection("Secrets")
+// 					.get()
+// 					.then((snapshot) => {
+// 						snapshot.forEach((doc) => {
+// 							var key = doc.id;
+// 							var data = doc.data();
+// 							data["key"] = key;
+// 							dbData[key] = data;
+// 						});
+
+// 						paypal.configure({
+// 							mode: "live", //sandbox or live
+// 							client_id: dbData.PayPal.ID,
+// 							client_secret: dbData.PayPal.Secret,
+// 						});
+
+// 						var execute_payment_json = {
+// 							"payer_id": "FM3Y6GFJLAFWJ",
+// 							"transactions": [{
+// 											"amount": {
+// 															"currency": "USD",
+// 															"total": "1.00"
+// 											}
+// 							}]
+// 			};
+// 						paypal.payment.execute(el.Payment.id, execute_payment_json, function (error, payment) {
+// 							if (error) {
+// 								throw error;
+// 							} else {
+// 								console.log("Approved");
+// 								console.log(JSON.stringify(payment));
+// 							}
+// 						});
+// 					});
+// 			};
+// 			captureOrder();
+// 		});
+// 	});
 
 //
 exports.oneHourInterval = functions.pubsub
@@ -209,6 +447,25 @@ exports.oneHourInterval = functions.pubsub
 	.onRun((context) => {
 		var dbData = {};
 		var genDBData = {};
+
+		//
+		var db = admin.firestore();
+		var dataSet = {};
+		db
+			.collection("PaymentProcessing")
+			.get()
+			.then((snapshot) => {
+				snapshot.forEach((doc) => {
+					var key = doc.id;
+					var dataKeys = doc.data();
+					dataKeys["key"] = key;
+					dataSet[key] = dataKeys;
+				});
+				// if old or success
+				console.log(dataSet);
+				//
+			});
+		//
 
 		// Detect FireStoreData
 		function buildGeneratedData() {

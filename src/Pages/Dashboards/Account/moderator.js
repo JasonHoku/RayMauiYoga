@@ -557,7 +557,9 @@ function ModeratorElements() {
 								</span>
 							</Card>
 						</Row>{" "}
-						<br />
+						<br />{" "}
+					</Row>
+					<Row>
 						<TabPane
 							className="ponoTitle"
 							tabId="1"

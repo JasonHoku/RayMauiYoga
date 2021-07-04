@@ -1,4 +1,11 @@
-import React, { Component, Fragment, useState, useEffect, useRef } from "react";
+import React, {
+	Component,
+	Fragment,
+	useState,
+	useEffect,
+	useRef,
+	useCallback,
+} from "react";
 
 import PayPalButton from "./PayPalExpress";
 
@@ -42,6 +49,13 @@ import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
 
+import mux from "mux-embed";
+
+import "hls.js";
+import "hls.js/dist/hls.js";
+
+import Hls from "hls.js";
+
 var firebaseConfig = process.env.REACT_APP_FIREBASE;
 
 function AccountElements() {
@@ -58,8 +72,11 @@ function AccountElements() {
 	const [readyPaymentItems, setreadyPaymentItems] =
 		useState("Tier 1: $2 / Month");
 	const [formPublicType, setformPublicType] = useState("");
+	const [loadedVideoTitle, setloadedVideoTitle] = useState("");
 	const [sendCommentButtonText, setsendCommentButtonText] =
 		useState("Send Message");
+
+	const [loadedPlaybackId, setloadedPlaybackId] = useState(null);
 
 	const [formDesc, setformDesc] = useState("");
 	const [intervalId, setintervalId] = useState("");
@@ -69,39 +86,195 @@ function AccountElements() {
 	);
 
 	const [payPalResponse, setPayPalResponse] = useState(null);
+	const [loadedEzID, setloadedEzID] = useState(0);
+	const [userDataRes, setUserDataRes] = useState(null);
 
 	const [seconds, setSeconds] = useState(0);
 	const isInitialMount = useRef(true);
+	const hasPayPalLaunched = useRef(false);
 
 	const auth = firebase.auth();
 
+	const [loadState, setLoadState] = useState(0);
+	const loadStage = useRef(0);
+	const loadVideoStage = useRef(0);
+
+	const loadVideoJS = useCallback(() => {
+		if (loadVideoStage.current === 1) {
+			console.log("State Up " + loadStage.current);
+			var playbackId = loadedPlaybackId;
+			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
+			var video = document.getElementById("myVideo");
+
+			if (Hls.isSupported()) {
+				// HLS.js-specific setup code
+				let hls = new Hls();
+				hls.loadSource(url);
+				hls.attachMedia(video);
+			}
+			if (typeof mux !== "undefined") {
+				mux.monitor("#myVideo", {
+					data: {
+						env_key: process.env.REACT_APP_MUX_TOKEN_SECRET,
+						player_name: "Custom Player",
+						player_init_time: window.muxPlayerInitTime,
+					},
+				});
+
+				return (loadVideoStage.current = 3);
+			}
+		}
+	}, [loadedPlaybackId]);
+
 	useEffect(() => {
-		const interval = setInterval(() => {
-			console.log(interval);
-			if (isInitialMount.current) {
-			} else {
-				isInitialMount.current = false;
-				if (hasLoaded === "2") {
-					loadSubmitUserListing();
-					sethasLoaded("3");
-				}
-				if (hasLoaded === "3") {
-					sethasLoaded("4");
+		console.log("State Up " + loadStage.current);
+
+		if (loadVideoStage.current === 1) {
+			loadVideoJS();
+			loadVideoStage.current = 2;
+		}
+		if (loadVideoStage.current === 1) {
+			console.log("Finished Loading Patron Video");
+		}
+
+		if (hasPayPalLaunched.current === undefined) {
+			hasPayPalLaunched.current = false;
+		} else {
+			if (hasPayPalLaunched.current === false) {
+				if (payPalResponse !== null) {
+					window.open(payPalResponse.links[1].href, "_blank");
+					hasPayPalLaunched.current = true;
+					document.getElementById("UpgradeAccountButton").innerHTML =
+						"PayPal Opened In New Window";
 				}
 			}
-		}, 1000);
+		}
 
-		return () => clearInterval(interval);
-	});
-	function loadSubmitUserListing() {
-		console.log("TRigg");
-		if (hasLoaded === "1") {
-			console.log("TRigg2");
+		if (isInitialMount.current === false) {
+			console.log("Init State2 " + loadStage.current);
+		} else {
+			// Runs Once Upon Mount
+			console.log("Init State " + loadStage.current);
+			var dbData = {};
+			var db = firebase.firestore();
+			db
+				.collection("UserDocs")
+				.doc(auth.currentUser.uid)
+				.get()
+				.then((doc) => {
+					dbData = doc.data();
+					if (dbData === undefined) {
+						db.collection("UserDocs").doc(auth.currentUser.uid).set({
+							uid: auth.currentUser.uid,
+							displayName: auth.currentUser.displayName,
+							meta: 0,
+						});
+					}
+
+					console.log(dbData);
+					setUserDataRes(dbData);
+				});
+		}
+		isInitialMount.current = false;
+	}, [
+		auth.currentUser.displayName,
+		auth.currentUser.uid,
+		loadVideoJS,
+		payPalResponse,
+	]);
+
+	function RenderPatronDisplay() {
+		let dbData = {};
+		firebase
+			.firestore()
+			.collection("VideoData")
+			.get()
+			.then((snapshot) => {
+				snapshot.forEach((doc) => {
+					var key = doc.id;
+					var data = doc.data();
+					data["key"] = key;
+					dbData[key] = data;
+				});
+
+				if (Object.values(dbData)[loadedEzID].meta) {
+					if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1) {
+						//
+						loadVideoStage.current = 1;
+						setloadedPlaybackId(String(Object.values(dbData)[loadedEzID].playbackId));
+						setloadedVideoTitle(String(Object.values(dbData)[loadedEzID].Title));
+						loadVideoStage.current = 1;
+					} else {
+						setloadedEzID(toInteger(loadedEzID) + 1);
+						loadVideoStage.current = 0;
+					}
+				} else {
+					setloadedEzID(0);
+					loadVideoStage.current = 0;
+				}
+			});
+	}
+
+	function determineUserStatus() {
+		try {
+			if (isInitialMount.current === false)
+				if (userDataRes !== null)
+					if (userDataRes.meta !== null) {
+						return userDataRes !== null &&
+							userDataRes.meta !== null &&
+							userDataRes.meta === 0 ? (
+							"Regular User"
+						) : userDataRes.meta === 1 ? (
+							<div>
+								<div style={{ textAlign: "center" }}>Paid Patron Videos</div> <br />
+								<div style={{ textAlign: "center" }}>
+									{" "}
+									&nbsp; &nbsp;
+									<Button
+										color="primary"
+										onClick={() => {
+											setloadedEzID(toInteger(loadedEzID) - 1);
+											setLoadState("2");
+										}}
+									>
+										←
+									</Button>{" "}
+									&nbsp;
+									<Button
+										color="primary"
+										onClick={() => {
+											setloadedEzID(toInteger(loadedEzID) + 1);
+											setLoadState("2");
+										}}
+									>
+										→
+									</Button>{" "}
+									&nbsp; <br /> <br />
+									<div>{loadedVideoTitle}</div> <br /> <br />
+								</div>
+								<video
+									style={{ width: "100%" }}
+									preload="false"
+									id="myVideo"
+									src={loadedPlaybackId}
+									controls
+								></video>
+								{RenderPatronDisplay()}
+							</div>
+						) : userDataRes.meta === 2 ? (
+							"Admin"
+						) : (
+							"error" || "error"
+						);
+					}
+		} catch (error) {
+			setTimeout(() => {
+				window.location.reload();
+				alert("Account Created!");
+			}, 500);
 		}
 	}
-	function onEditorChange(evt) {
-		seteditedDescription(evt.editor.getData());
-	}
+
 	function toggle(tab) {
 		if (activeTab !== tab) {
 			setactiveTab(tab);
@@ -124,8 +297,6 @@ function AccountElements() {
 					<button
 						style={{ borderRadius: "25px", textAlign: "center" }}
 						onClick={() => {
-							formResetter();
-
 							localStorage.setItem("gotDownloadURL", "Upload Image To Embed");
 						}}
 					>
@@ -135,160 +306,6 @@ function AccountElements() {
 			);
 		}
 	}
-	function loadPayPalButton() {
-		if (activeTab === "4") {
-			localStorage.setItem(
-				"ProductInfo",
-				readyPaymentItems + "X" + localStorage.getItem("username")
-			);
-			return (
-				<span>
-					<center> ${readyPaymentCost}</center>
-					<PayPalButton
-						valueCheck={valueCheck()}
-						cart={readyPaymentCost
-							.toString()
-							.split("\n")
-							.map((str) => (
-								<p key={str}>{str}</p>
-							))}
-						total={toInteger(readyPaymentCost)}
-						cartItems={readyPaymentItems
-							.toString()
-							.split("\n")
-							.map((str) => (
-								<p key={str}>{str}</p>
-							))}
-						removeProduct={handleRemoveProduct}
-						style={{ width: "15rem" }}
-					/>
-					{readyPaymentItems
-						.toString()
-						.split("\n")
-						.map((str) => (
-							<p key={str}>{str}</p>
-						))}
-				</span>
-			);
-		}
-	}
-	function formResetter() {
-		try {
-			document.forms[1].reset();
-			document.forms[2].reset();
-			document.forms[3].reset();
-			document.forms[4].reset();
-			document.forms[5].reset();
-			setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-		} catch (error) {}
-	}
-
-	// function postListingImage() {
-	// 	console.log("x");
-	// 	// setproStatusText("Awaiting Initialize");
-	// 	const formData = new FormData();
-	// 	if (images != null) {
-	// 		Array.from(images).forEach((image) => {
-	// 			formData.append("files", image);
-	// 		});
-	// 		formData.Image = images[0];
-	// 		axios
-	// 			.post(`https://api.ponomap.com/upload`, formData, {
-	// 				headers: {
-	// 					"content-type": "multipart/form-data",
-	// 				},
-	// 			})
-	// 			.then((res) => {
-	// 				if (res.err == null) {
-	// 					document.getElementById("imageUpped").hidden = false;
-	// 					console.log(res);
-	// 					setactiveProURL("http://api.ponomap.com" + res.data[0].url);
-	// 				}
-	// 			})
-	// 			.catch((err) => {
-	// 				console.log(err);
-	// 			});
-	// 	}
-	// }
-
-	function valueCheck() {
-		if (!localStorage.getItem("localData3")) {
-			localStorage.setItem("localData3", 0);
-		}
-	}
-	function handleRemoveProduct(id, e) {
-		let cart = this.state.cart;
-		let index = cart.findIndex((x) => x.id === id);
-		cart.splice(index, 1);
-
-		this.sumTotalItems(this.state.cart);
-		this.sumTotalAmount(this.state.cart);
-		e.preventDefault();
-	}
-
-	//Reset Quantity
-	function updateQuantity(qty) {
-		console.log("quantity added...");
-		this.setState({
-			quantity: qty,
-		});
-	}
-	function checkFormStates() {
-		setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-		handleImageUploadState();
-		setformGMapCoords(localStorage.getItem("LocationDataCoords"));
-		try {
-			if (String(formTitle).length > 1) {
-				console.log("ZZZ");
-				if (String(localStorage.getItem(`username`)).length > 3) {
-					if (String(formLoc.length) > 3) {
-						if (String(editedDescription.length) > 2) {
-							if (String(formCategory).length > 1) {
-								if (String(formPublicType) !== "") {
-									if (String(formGMapCoords).length > 3) {
-										document.getElementById("finListButton").disabled = false;
-										document.getElementById("finListButton").style.backgroundColor =
-											"blue";
-
-										// setfinListButton("Send Listing"),
-										// 	setfinListButtonStatus("Ready To Publish"),
-										// 	setfinListButtonDisable(false);
-									}
-								}
-							}
-						}
-					}
-				}
-			} else {
-				document.getElementById("finListButton").disabled = true;
-			}
-		} catch (e) {}
-	}
-
-	function handleInputChange(event) {
-		setformName(event.target.value);
-	}
-	function handleInputChange(event) {
-		setformName(event.target.value);
-	}
-	function handleInputChange2(event) {
-		setformDesc(event.target.value);
-	}
-
-	function toggle(tab) {
-		if (activeTab !== tab) {
-			setactiveTab(tab);
-		}
-	}
-	// function submitContact() {
-	// 	let { formName, formEmail, formMessage } = state;
-
-	// 	if (formName.length !== null && formName.length < 1) {
-	// 		alert("You must fill this form entirely.");
-	// 	} else {
-	// 		console.log("success");
-	// 	}
-	// }
 	return (
 		<Fragment>
 			<TabContent
@@ -308,7 +325,6 @@ function AccountElements() {
 						justifyContent: "center",
 						alignSelf: "center",
 						width: "100%",
-
 						opacity: 100,
 					}}
 				>
@@ -340,13 +356,12 @@ function AccountElements() {
 						Your Account
 					</Button>
 				</CardHeader>
-				<TabPane tabId="1">
+				<TabPane tabId="3">
 					<Card
 						style={{
 							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
 						}}
 					>
-						{loadSubmitUserListing()}
 						<CardBody
 							style={{
 								backgroundColor: "transparent",
@@ -360,34 +375,10 @@ function AccountElements() {
 								<li>Notifications</li>
 							</div>
 							<br />
-							<h3>Send a message:</h3>
-							<Form
-								style={{
-									justifyContent: "center",
-									textAlign: "center",
-								}}
-							>
-								<div style={{ textAlign: "left" }}> Contact Information:</div>
-								<Input
-									style={{ width: "250px" }}
-									onChange={handleInputChange}
-									name="formName"
-									type="text"
-									value={formName}
-								></Input>
-								<div style={{ textAlign: "left" }}>Message:</div>
-								<Input
-									style={{ width: "250px" }}
-									onChange={handleInputChange2}
-									name="formDesc"
-									type="textarea"
-									value={formDesc}
-								></Input>
-							</Form>
 						</CardBody>
 					</Card>
 				</TabPane>
-				<TabPane tabId="3">
+				<TabPane tabId="1">
 					<Row>
 						<Card
 							style={{
@@ -399,9 +390,8 @@ function AccountElements() {
 							}}
 						>
 							<CardBody>
-								<h3> Account Information:</h3>
+								<h3> Welcome!</h3>
 								<h5>
-									{" "}
 									<div style={{ textAlign: "left" }}>
 										<br />
 										<b>Username:</b>
@@ -412,12 +402,17 @@ function AccountElements() {
 										<br /> {auth.currentUser.email}
 										<br /> <br />
 										<b>Status:</b>
-										<br /> Regular User
 										<br />
+										{determineUserStatus()}
 										<br />
 										<br />
 										<div style={{ textAlign: "center" }}>
 											<button
+												hidden={
+													userDataRes !== null &&
+													userDataRes.meta !== null &&
+													userDataRes.meta !== 0
+												}
 												id="UpgradeAccountButton"
 												onClick={() => {
 													//Run EndAPI Call To Functions
@@ -468,24 +463,9 @@ function AccountElements() {
 													}
 
 													sendRequest();
-													require("firebase/functions");
 													document.getElementById("UpgradeAccountButton").innerHTML =
 														"Loading";
 													document.getElementById("UpgradeAccountButton").disabled = true;
-													document.getElementById("UpgradeAccountButton").disabled = false;
-													//
-													// //
-													// var processPayment = firebase
-													// 	.functions()
-													// 	.httpsCallable("processPayment");
-													// //
-													// processPayment({
-													// 	uid: auth.currentUser.uid,
-													// 	name: auth.currentUser.displayName,
-													// }).then((result) => {
-													// 	console.log(result);
-													// 	setPayPalResponse(result);
-													// });
 
 													//
 												}}
@@ -493,45 +473,18 @@ function AccountElements() {
 												Upgrade Account
 											</button>
 										</div>
-										ID:
-										<br />
-										{payPalResponse && payPalResponse.id} <br /> <br />
-										Pay Link:
-										<br />
-										{payPalResponse && payPalResponse.links[1].href} <br /> <br />
-										Status: <br />
-										{payPalResponse && payPalResponse.state}
-										<br />
-									</div>
-								</h5>
-							</CardBody>
-						</Card>
-					</Row>
-				</TabPane>
-				<TabPane tabId="4">
-					<Row>
-						<Card
-							style={{
-								width: "95%",
-								maxWidth: "750px",
-								backgroundColor: "#CCCCCCC",
-								borderRadius: "25px",
-								boxShadow: "0px 0px 0px 3px rgba(50,50,50, .8)",
-							}}
-						>
-							<CardBody>
-								<h3> Upgrade Account:</h3>
-								<h5>
-									<div style={{ textAlign: "left" }}>
-										<b>Username:</b> {auth.currentUser.displayName} <br />
-										<br />
-										<b> E-Mail:</b> {auth.currentUser.email}
-										<br />
-										<br />
-										<br />
-										<br />
-										<br />
-										<br />
+										<span hidden>
+											{" "}
+											ID:
+											<br />
+											{payPalResponse && payPalResponse.id} <br /> <br />
+											Pay Link:
+											<br />
+											{payPalResponse && payPalResponse.links[1].href} <br /> <br />
+											Status: <br />
+											{payPalResponse && payPalResponse.state}
+											<br />
+										</span>
 									</div>
 								</h5>
 							</CardBody>

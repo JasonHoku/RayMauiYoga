@@ -21,6 +21,8 @@ import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
 
+import { toast } from "react-toastify";
+
 var firebaseConfig = {
 	apiKey: process.env.REACT_APP_FIREBASE,
 	authDomain: "raymauiyoga-d75b1.firebaseapp.com",
@@ -70,6 +72,7 @@ function VideoManagerComponent() {
 	const [loadedEzID, setloadedEzID] = useState("1");
 	const [loadedTotalIDs, setloadedTotalIDs] = useState("1");
 	const [loadedPlaybackId, setloadedPlaybackId] = useState("1");
+	const [loadedVideoID, setloadedVideoID] = useState("1");
 	const [streamKey, setstreamKey] = useState("");
 	const [readyVideoMeta, setreadyVideoMeta] = useState("");
 	const [isLoadedOnce, setisLoadedOnce] = useState("1");
@@ -128,7 +131,7 @@ function VideoManagerComponent() {
 			if (loadStage.current === 1) {
 				firebase
 					.firestore()
-					.collection(categoryVar)
+					.collection("VideoData")
 					.get()
 					.then((snapshot) => {
 						snapshot.forEach((doc) => {
@@ -141,6 +144,7 @@ function VideoManagerComponent() {
 						});
 						setloadedSnapshotData(dbData);
 						setloadedDescription(dbData[dbDataKeyArray[loadedEzID - 1]].Title);
+						setloadedVideoID(dbData[dbDataKeyArray[loadedEzID - 1]].key);
 						setloadedPlaybackId(dbData[dbDataKeyArray[loadedEzID - 1]].playbackId);
 						setloadedVideoMeta(dbData[dbDataKeyArray[loadedEzID - 1]].meta);
 						setreadyVideoMeta(loadedVideoMeta);
@@ -236,53 +240,96 @@ function VideoManagerComponent() {
 		// }
 	}
 
-	async function getData() {
-		require("firebase/functions");
-		var addMessage = firebase.functions().httpsCallable("addMessage");
-		addMessage({ text: "X" })
-			.then((result) => {
-				console.log(result);
+	// async function getData() {
+	// 	require("firebase/functions");
+	// 	var addMessage = firebase.functions().httpsCallable("addMessage");
+	// 	addMessage({ text: "X" })
+	// 		.then((result) => {
+	// 			console.log(result);
 
-				setmuxAssetButtonText("Success");
-				// Read result of the Cloud Function.
-				console.log("Mux API Query Results:");
-				console.log(result);
+	// 			setmuxAssetButtonText("Success");
+	// 			// Read result of the Cloud Function.
+	// 			console.log("Mux API Query Results:");
+	// 			console.log(result);
 
-				setloadedMuxData(result.data);
-			})
-			.catch((error) => {
-				// Getting the Error details.
-				var code = error.code;
-				var message = error.message;
-				var details = error.details;
-				console.log(details, code, message);
-				// ...
-			});
-	}
+	// 			setloadedMuxData(result.data);
+	// 		})
+	// 		.catch((error) => {
+	// 			// Getting the Error details.
+	// 			var code = error.code;
+	// 			var message = error.message;
+	// 			var details = error.details;
+	// 			console.log(details, code, message);
+	// 			// ...
+	// 		});
 
-	function handleInputChange(event) {
-		this.setState({
-			noteVar: event.target.value,
-		});
-	}
-	function handleInputChange2(event) {
-		this.setState({
-			deleteIDVar: event.target.value,
-		});
-	}
+	// 	console.log(String(loadedEzID));
+	// 	firebase
+	// 		.firestore()
+	// 		.collection(categoryVar)
+	// 		.doc(String(parseInt(loadedEzID - 1)))
+	// 		.set({
+	// 			Title: String(readyDescription),
+	// 			playbackId: String(loadedPlaybackId),
+	// 			meta: String(readyVideoMeta),
+	// 		})
+	// 		.then((loadStage.current = 1));
+	// }
 
 	function runSendData() {
+		toast(
+			<div>
+				<div>
+					<h1>Saving...</h1>
+				</div>
+			</div>,
+			{ autoClose: 255 }
+		);
 		console.log(String(loadedEzID));
 		firebase
 			.firestore()
 			.collection(categoryVar)
-			.doc(String(parseInt(loadedEzID - 1)))
+			.doc(String(loadedVideoID))
 			.set({
 				Title: String(readyDescription),
 				playbackId: String(loadedPlaybackId),
 				meta: String(readyVideoMeta),
 			})
-			.then((loadStage.current = 1));
+			.then((error) => {
+				if (!error) {
+					toast(
+						<div>
+							<div>
+								<h1>Success!</h1>
+								<h2>
+									{
+										(String(readyDescription),
+										String(loadedPlaybackId),
+										String(readyVideoMeta))
+									}
+								</h2>
+							</div>
+						</div>,
+						{ autoClose: 2000 }
+					);
+					setloadedEzID(loadedEzID);
+					loadStage.current = 1;
+					formResetter();
+				} else {
+					toast(
+						<div>
+							<div>
+								<h1>ERROR</h1>
+								<h2>
+									Please check your internet, or try reloading the web page for the
+									latest site version.
+								</h2>
+							</div>
+						</div>,
+						{ autoClose: 255 }
+					);
+				}
+			});
 	}
 
 	function runDeleteData() {
@@ -371,8 +418,13 @@ function VideoManagerComponent() {
 				<Button
 					color="primary"
 					onClick={() => {
-						setloadedEzID(toInteger(loadedEzID) - 1);
-						loadStage.current = 1;
+						if (loadedEzID >= Object.values(loadedSnapshotData).length) {
+							setloadedEzID(toInteger(loadedEzID) - 1);
+							loadStage.current = 1;
+						} else {
+							setloadedEzID(Object.values(loadedSnapshotData).length);
+							loadStage.current = 1;
+						}
 					}}
 				>
 					←
@@ -381,8 +433,13 @@ function VideoManagerComponent() {
 				<Button
 					color="primary"
 					onClick={() => {
-						setloadedEzID(toInteger(loadedEzID) + 1);
-						loadStage.current = 1;
+						if (loadedEzID < Object.values(loadedSnapshotData).length) {
+							setloadedEzID(toInteger(loadedEzID) + 1);
+							loadStage.current = 1;
+						} else {
+							setloadedEzID(1);
+							loadStage.current = 1;
+						}
 					}}
 				>
 					→
@@ -419,41 +476,27 @@ function VideoManagerComponent() {
 							textAlign: "center",
 						}}
 					>
-						<CardHeader>Content View:</CardHeader>{" "}
+						<CardHeader>Moderator Video Controls:</CardHeader>{" "}
 					</div>
-					{/* <br /> Load this first:
-					<Button onClick={() => getData() & setmuxAssetButtonText("Loading...")}>
-						{muxAssetButtonText}
-					</Button>
-					&nbsp;Then this:
-					<Button
-						disabled={loadedMuxData === null}
-						onClick={() => {
-							sendAssetsToDatabase();
-							loadStage.current = 1;
-						}}
-					>
-						Send Assets To Database
-					</Button>
-					<br />
-					<input
-						placeholder="Data Will Propagate Here"
-						value={loadedMuxData}
-					></input>
-					<br /> */}
-					<video
-						style={{ width: "90%" }}
-						preload="false"
-						src={loadedPlaybackId}
-						id="myVideo"
-						controls
-					></video>
-					<br />
 					<small>
 						<br />
-						VideoID: {loadedPlaybackId}
-						<br /> Meta:
+						VideoID: {loadedVideoID}
+						<br />
+						<label for="cars">Choose Where This Displays:</label>
+						<select
+							onChange={(event) => {
+								console.log(event);
+								setreadyVideoMeta(event.target.value);
+							}}
+							value={readyVideoMeta === " " ? 0 : parseInt(readyVideoMeta)}
+						>
+							<option value={1}>Patrons Only</option>
+							<option value={2}>Video Blog Page</option>
+							<option value={3}>VideoBlog And Patrons</option>
+							<option value={0}>Hidden</option>
+						</select>
 						<input
+							hidden
 							onChange={(event) => setreadyVideoMeta(event.target.value)}
 							value={readyVideoMeta}
 						></input>
@@ -464,6 +507,14 @@ function VideoManagerComponent() {
 							value={readyDescription}
 						></input>
 					</small>
+					<video
+						style={{ width: "90%" }}
+						preload="false"
+						src={loadedPlaybackId}
+						id="myVideo"
+						controls
+					></video>
+					<br />
 				</div>
 			</CardBody>
 		</Fragment>

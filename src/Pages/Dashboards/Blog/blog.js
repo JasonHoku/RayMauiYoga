@@ -62,6 +62,7 @@ export default class BlogElements extends Component {
 				this.setState({
 					gotFirestoreBlogs: tempDataArray,
 				});
+
 				document.getElementById("BlogBodyDiv").innerHTML =
 					tempDataArray[this.state.selectedBlog].body;
 			});
@@ -114,16 +115,22 @@ export default class BlogElements extends Component {
 								boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
 							}}
 						>
-							<CardHeader>
-								<h1>Blog Explorer</h1>
+							<CardHeader
+								style={{
+									textAlign: "center",
+								}}
+							>
+								<h1>Passages By Ray:</h1>
 							</CardHeader>
-							<CardHeader style={{ width: "100%", justifyContent: "center" }}>
+							<CardHeader
+								style={{ width: "100%", textAlign: "center", justifyContent: "center" }}
+							> <br />
 								{this.state.gotFirestoreBlogs.map((el, index) => {
 									return (
 										<span>
 											<Button
 												color="primary"
-												style={{ width: "50px", margin: "20px", fontSize: "20px" }}
+												style={{ width: "auto", margin: "20px", fontSize: "20px" }}
 												onClick={() => {
 													this.setState({ selectedBlog: index });
 													this.getFirestoreBlogData();
@@ -131,7 +138,7 @@ export default class BlogElements extends Component {
 												}}
 											>
 												<span style={{ position: "relative", top: "-3px" }}>
-													{index + 1}
+													{this.state.gotFirestoreBlogs[index].title}
 												</span>
 											</Button>
 										</span>
@@ -141,7 +148,7 @@ export default class BlogElements extends Component {
 							<TabContent>
 								<TabPane id="1">
 									<br />
-									<Card style={{ maxWidth: "100%"}}>
+									<Card style={{ maxWidth: "100%" }}>
 										<pre
 											style={{
 												width: "100%",
@@ -152,6 +159,7 @@ export default class BlogElements extends Component {
 												fontFamily: "Montserrat",
 												fontSize: "22px",
 												fontWeight: "600",
+												textAlign: "left",
 											}}
 											id="BlogBodyDiv"
 										></pre>

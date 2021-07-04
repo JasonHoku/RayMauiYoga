@@ -34,6 +34,8 @@ import "../Account/chat.css";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
@@ -126,7 +128,7 @@ function EventManagerComponent() {
 	function getDocID() {
 		try {
 			if (window.location.hash.includes("calendar")) {
-				console.log(messages2[0].body);
+				// console.log(messages2[0].body);
 				document.getElementById("WeeklyScheduleSpan").hidden = false;
 				return (document.getElementById("WeeklyScheduleSpan").innerHTML =
 					messages2[0].body);
@@ -170,7 +172,7 @@ function EventManagerComponent() {
 						dbData[key] = data;
 					});
 					dbDataRef.current = Object.values(dbData);
-					console.log(dbDataRef.current);
+					// console.log(dbDataRef.current);
 					loadStageRef.current = 1;
 					setGotEventsData(dbDataRef.current);
 				});
@@ -181,7 +183,7 @@ function EventManagerComponent() {
 			console.log("Stage 1 Confirm");
 			if (dbDataRef.current.length > 0) {
 				for (var i = 0; i < dbDataRef.current.length; i++) {
-					console.log(dbDataRef.current[i].EventDate);
+					// console.log(dbDataRef.current[i].EventDate);
 					let gotDate = new Date(dbDataRef.current[i].EventDate.toDate());
 					// console.log(setDate);
 					// console.log(gotDate);
@@ -193,16 +195,17 @@ function EventManagerComponent() {
 						//						console.log(" True ");
 						eventsWithinDate.current.push(dbDataRef.current[i]);
 						setSelectedDateEvents(eventsWithinDate.current);
-						console.log(selectedDateEvents);
+						// console.log(selectedDateEvents);
 						loadStageRef.current = 3;
 						document.querySelector("#EventsWithinDateSpan").hidden = false;
 					} else {
 						setSelectedDateEvents([
 							{
 								EventTitle:
-									"\r\n No Additonal Special Events Found At Date. \r \n\r \n You may also use the form below to request an event or meeting.",
+									"\r\n No Additonal Reserved Or Special Events Found At Date. \r \n\r \n You may also use the form below to request an event or meeting.",
 							},
 						]);
+
 						loadStageRef.current = 3;
 					}
 				}
@@ -297,6 +300,7 @@ function EventManagerComponent() {
 							boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
 							width: "auto",
 							fontSize: "16px",
+							backgroundColor: "#fdffff",
 						}}
 					>
 						<h3>
@@ -314,6 +318,48 @@ function EventManagerComponent() {
 								{getDocID()}
 							</span>
 						</Col>
+						<Row>
+							<Col>
+								<h3>
+									{" "}
+									<b>Ray is also available for private sessions.</b>
+								</h3>
+								<br />
+								<h5>
+									{" "}
+									<b>To get more info about Rays private sessions: </b>{" "}
+									<button
+										onClick={() => {
+											window.scrollTo({
+												top: 2000,
+												left: 100,
+												behavior: "smooth",
+											});
+											setTimeout(() => {
+												document.getElementById(
+													"RequestMeetingInput"
+												).style.backgroundColor = "#ddffff";
+
+												setTimeout(() => {
+													document.getElementById(
+														"RequestMeetingInput"
+													).style.backgroundColor = "#ffffff";
+												}, 250);
+
+												setFormValue(
+													"Hello, Ray. \n My name is _ and I'm interested in speaking about your private sessions, please email or call me at _ "
+												);
+											}, 250);
+										}}
+										style={{ borderRadius: "5px" }}
+									>
+										{" "}
+										Click Here{" "}
+									</button>
+								</h5>{" "}
+							</Col>
+						</Row>{" "}
+						<br />
 						<h3>
 							<b>Special Events and Schedule:</b>
 						</h3>
@@ -386,25 +432,41 @@ function EventManagerComponent() {
 									<b>Easily Initiate a Meeting with Ray:</b>
 								</h3>
 								<br />
-								<form className="formchat" onSubmit={sendMessage}>
+								<form
+									style={{
+										backgroundColor: "#dfffff",
+										borderRadius: "10px",
+									}}
+									onSubmit={sendMessage}
+								>
 									&nbsp;
-									<Input
+									<TextareaAutosize
+										type="textarea"
+										rowsMin={5}
+										id="RequestMeetingInput"
 										style={{
 											textAlign: "center",
 											borderRadius: "25px",
-											whiteSpace: "normal",
+											whiteSpace: "wrap",
 											fontSize: "22px",
+											width: "70%",
+											position: "relative",
+											top: "25px",
 										}}
-										className="inputchat"
 										value={formValue}
-										type="textarea"
 										onChange={(e) => setFormValue(e.target.value)}
 										placeholder="Be Sure To Include Contact Information"
 									/>
 									&nbsp;
 									<Button
 										color="primary"
-										style={{ height: "100%", minWidth: "75px" }}
+										style={{
+											height: "100%",
+											minWidth: "75px",
+											position: "relative",
+											top: "-75px",
+											left: "5px",
+										}}
 										className="buttonchat"
 										type="submit"
 										disabled={!formValue}
