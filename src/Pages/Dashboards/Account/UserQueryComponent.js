@@ -271,6 +271,15 @@ function UserQueryComponent() {
 									name="loadedEmail"
 									style={{ position: "relative", width: "90%" }}
 								/>
+								<br /> Patron Status:
+								<input
+									onChange={(event) => {
+										//
+									}}
+									value={"Coming Soon"}
+									name="loadedEmail"
+									style={{ position: "relative", width: "90%" }}
+								/>
 								<br />
 							</small>
 						</div>

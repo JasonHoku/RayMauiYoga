@@ -43,6 +43,63 @@ exports.addMessage = functions.https.onCall(async () => {
 	});
 });
 
+exports.clipVideoRequest = functions.https.onRequest((req, res) => {
+	res.status(200);
+	const cors = require("cors")({ origin: true });
+	res.set("Access-Control-Allow-Origin", "*");
+	res.set("Access-Control-Allow-Headers", "Content-Type");
+	//Declare CORs Rules
+	cors(req, res, () => {
+		res.status(200);
+		res.set("Access-Control-Allow-Origin", "*");
+		res.set("Access-Control-Allow-Headers", "Content-Type");
+		const userID = JSON.parse(req.headers["headertokens"]).uid;
+		const gotHeaders = req.headers["headertokens"];
+		var colors = {};
+		var db = admin.firestore();
+		db
+			.collection("apis")
+			.get()
+			.then((snapshot) => {
+				snapshot.forEach((doc) => {
+					var key = doc.id;
+					var color = doc.data();
+					color["key"] = key;
+					colors[key] = color;
+				});
+
+				// console.log("colors callback result : " + colorsStr);
+
+				muxTID = JSON.parse(JSON.stringify(colors["0"])).muxTID;
+				muxTS = JSON.parse(JSON.stringify(colors["0"])).muxTS;
+
+				//
+
+				//
+				try {
+					const { Video } = new Mux(muxTID, muxTS);
+
+					Video.Uploads.create({
+						new_asset_settings: {
+							playback_policy: "public",
+							input: [
+								{
+									url: "mux://assets/01itgOBvgjAbES7Inwvu4kEBtsQ44HFL6",
+									start_time: "",
+									end_time: "",
+								},
+							],
+						},
+					});
+
+					Video.Assets.list().then((asset) => {});
+				} catch (err) {
+					res.send(err);
+				}
+			});
+	});
+});
+
 exports.processPaid = functions.https.onRequest((req, res) => {
 	const htmlParams = req.query;
 	const paymentId = req.query.paymentId;

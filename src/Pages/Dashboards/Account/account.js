@@ -79,6 +79,9 @@ function AccountElements() {
 	const [loadedPlaybackId, setloadedPlaybackId] = useState(null);
 
 	const [formDesc, setformDesc] = useState("");
+
+	const [videoNavString, setVideoNavString] = useState("Loading...");
+
 	const [intervalId, setintervalId] = useState("");
 	const [finListButton, setfinListButton] = useState("Fill Form Entirely");
 	const [finListButtonStatus, setfinListButtonStatus] = useState(
@@ -90,8 +93,15 @@ function AccountElements() {
 	const [userDataRes, setUserDataRes] = useState(null);
 
 	const [seconds, setSeconds] = useState(0);
+
+	const [patronVideoCount, setPatronVideoCount] = useState(0);
+
+	const [loadedPatronEzId, setLoadedPatronEzId] = useState(1);
+
 	const isInitialMount = useRef(true);
 	const hasPayPalLaunched = useRef(false);
+
+	const isNavForward = useRef(true);
 
 	const auth = firebase.auth();
 
@@ -154,6 +164,10 @@ function AccountElements() {
 			console.log("Init State2 " + loadStage.current);
 		} else {
 			// Runs Once Upon Mount
+
+			isNavForward.current = true;
+
+			//
 			console.log("Init State " + loadStage.current);
 			var dbData = {};
 			var db = firebase.firestore();
@@ -197,21 +211,95 @@ function AccountElements() {
 					dbData[key] = data;
 				});
 
-				if (Object.values(dbData)[loadedEzID].meta) {
-					if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1) {
-						//
-						loadVideoStage.current = 1;
-						setloadedPlaybackId(String(Object.values(dbData)[loadedEzID].playbackId));
-						setloadedVideoTitle(String(Object.values(dbData)[loadedEzID].Title));
-						loadVideoStage.current = 1;
+				if (Object.values(dbData)[loadedEzID]) {
+					if (Object.values(dbData)[loadedEzID].meta) {
+						if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1) {
+							console.log(Object.values(dbData));
+
+							let tempVar = 0;
+							Object.values(dbData).forEach((el) => {
+								if (parseInt(el.meta) === 1) {
+									tempVar += 1;
+								}
+							});
+
+							setPatronVideoCount(tempVar);
+							setVideoNavString("Viewing " + loadedPatronEzId + " Of " + tempVar);
+							console.log(patronVideoCount);
+							//
+
+							loadVideoStage.current = 1;
+							setloadedPlaybackId(
+								String(Object.values(dbData)[loadedEzID].playbackId)
+							);
+							setloadedVideoTitle(String(Object.values(dbData)[loadedEzID].Title));
+							loadVideoStage.current = 1;
+						} else {
+							console.log(isNavForward.current);
+							// Not On Visible, Adjust
+							if (isNavForward.current) {
+								setloadedEzID(toInteger(loadedEzID) + 1);
+								loadVideoStage.current = 0;
+							} else {
+								if (loadedPatronEzId <= 0) {
+									setloadedEzID(Object.values(dbData).length);
+									setLoadedPatronEzId(patronVideoCount);
+								} else {
+									setloadedEzID(toInteger(loadedEzID) - 1);
+								}
+							}
+						}
 					} else {
-						setloadedEzID(toInteger(loadedEzID) + 1);
+						console.log(isNavForward.current);
+						if (isNavForward.current) {
+							if (loadedPatronEzId > patronVideoCount) {
+								setloadedEzID(0);
+								setLoadedPatronEzId(1);
+							} else {
+								setloadedEzID(toInteger(loadedEzID) + 1);
+								setLoadedPatronEzId(loadedPatronEzId + 1);
+							}
+						} else {
+							if (loadedPatronEzId <= 0) {
+								setloadedEzID(Object.values(dbData).length);
+								setLoadedPatronEzId(patronVideoCount);
+							} else {
+								if (loadedPatronEzId <= 0) {
+									setloadedEzID(Object.values(dbData).length);
+									setLoadedPatronEzId(patronVideoCount);
+								} else {
+									setloadedEzID(toInteger(loadedEzID) - 1);
+									setLoadedPatronEzId(loadedPatronEzId - 1);
+								}
+							}
+						}
 						loadVideoStage.current = 0;
 					}
 				} else {
-					setloadedEzID(0);
+					console.log(isNavForward.current);
+					if (isNavForward.current) {
+						if (loadedPatronEzId > patronVideoCount) {
+							setloadedEzID(0);
+							setLoadedPatronEzId(1);
+							loadVideoStage.current = 0;
+						} else {
+							setloadedEzID(toInteger(loadedEzID) + 1);
+							setLoadedPatronEzId(loadedPatronEzId + 1);
+						}
+					} else {
+						console.log(isNavForward.current);
+						if (loadedPatronEzId <= 0) {
+							setloadedEzID(Object.values(dbData).length);
+							setLoadedPatronEzId(patronVideoCount);
+						} else {
+							setloadedEzID(toInteger(loadedEzID) - 1);
+							setLoadedPatronEzId(loadedPatronEzId - 1);
+						}
+					}
 					loadVideoStage.current = 0;
 				}
+
+				console.log(isNavForward.current);
 			});
 	}
 
@@ -226,14 +314,42 @@ function AccountElements() {
 							"Regular User"
 						) : userDataRes.meta === 1 ? (
 							<div>
-								<div style={{ textAlign: "center" }}>Paid Patron Videos</div> <br />
+								<br />
+								<div style={{ textAlign: "center" }}>
+									Ray Is Currently <b>Not Live</b> <br />
+									<small
+										onMouseEnter={() => {
+											document.getElementById("LiveTextSpan").style.color = "#222222";
+										}}
+										onMouseLeave={() => {
+											document.getElementById("LiveTextSpan").style.color = "blue";
+										}}
+										id="LiveTextSpan"
+										style={{ color: "blue" }}
+									>
+										{" "}
+										If he were you could join by clicking here{" "}
+									</small>
+								</div>{" "}
+								<br />
+								<div style={{ textAlign: "center" }}>
+									<b>Paid Patron Videos</b>
+								</div>{" "}
+								<br />
+								<div style={{ textAlign: "center" }}>{videoNavString}</div> <br />
 								<div style={{ textAlign: "center" }}>
 									{" "}
 									&nbsp; &nbsp;
 									<Button
 										color="primary"
 										onClick={() => {
+											isNavForward.current = false;
 											setloadedEzID(toInteger(loadedEzID) - 1);
+											if (loadedPatronEzId <= 0) {
+												setLoadedPatronEzId(patronVideoCount);
+											} else {
+												setLoadedPatronEzId(loadedPatronEzId - 1);
+											}
 											setLoadState("2");
 										}}
 									>
@@ -243,7 +359,9 @@ function AccountElements() {
 									<Button
 										color="primary"
 										onClick={() => {
+											isNavForward.current = true;
 											setloadedEzID(toInteger(loadedEzID) + 1);
+											setLoadedPatronEzId(toInteger(loadedPatronEzId) + 1);
 											setLoadState("2");
 										}}
 									>
@@ -253,7 +371,7 @@ function AccountElements() {
 									<div>{loadedVideoTitle}</div> <br /> <br />
 								</div>
 								<video
-									style={{ width: "100%" }}
+									style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}
 									preload="false"
 									id="myVideo"
 									src={loadedPlaybackId}
@@ -360,11 +478,13 @@ function AccountElements() {
 					<Card
 						style={{
 							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+							width: "90vw",
 						}}
 					>
 						<CardBody
 							style={{
 								backgroundColor: "transparent",
+								width: "90vw",
 							}}
 						>
 							<h3>Tools and events coming soon.</h3>
@@ -382,7 +502,7 @@ function AccountElements() {
 					<Row>
 						<Card
 							style={{
-								width: "95%",
+								width: "90vw",
 								maxWidth: "750px",
 								backgroundColor: "#CCCCCCC",
 								borderRadius: "25px",
