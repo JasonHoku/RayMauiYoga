@@ -92,7 +92,7 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 						},
 					});
 
-					Video.Assets.list().then((asset) => {});
+					Video.Assets.list().then((asset) => { });
 				} catch (err) {
 					res.send(err);
 				}
@@ -387,7 +387,7 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 });
 
 exports.twoMinuteInterval = functions.pubsub
-	.schedule("every 2 minutes")
+	.schedule("every 1 minutes")
 	.onRun((context) => {
 		async function getData() {
 			var db = admin.firestore();
@@ -422,6 +422,7 @@ exports.twoMinuteInterval = functions.pubsub
 										{
 											playbackId: String(el.playback_ids[0].id),
 											LatestRun: admin.firestore.FieldValue.serverTimestamp(),
+											Created: String(el.created_at),
 										},
 										{ merge: true }
 									);
@@ -429,7 +430,7 @@ exports.twoMinuteInterval = functions.pubsub
 						});
 					});
 				})
-				.catch((reason) => {});
+				.catch((reason) => { });
 		}
 		getData();
 	});
@@ -621,9 +622,8 @@ exports.oneHourInterval = functions.pubsub
 														.set(
 															{
 																LatestRun: admin.firestore.FieldValue.serverTimestamp(),
-																RawText: ` ${
-																	Date(genDBData.GeneratedData.LatestRun).split("(")[0]
-																} -@!%!%!@-  ${String(parseInt(genDBData.RunCounter.count) + 1)}
+																RawText: ` ${Date(genDBData.GeneratedData.LatestRun).split("(")[0]
+																	} -@!%!%!@-  ${String(parseInt(genDBData.RunCounter.count) + 1)}
           -@!%!%!@-  ${String(listArray).replace(/,/g, " ")}`,
 															},
 															{ merge: true }

@@ -73,6 +73,7 @@ function VideoManagerComponent() {
 	const [loadedTotalIDs, setloadedTotalIDs] = useState("1");
 	const [loadedPlaybackId, setloadedPlaybackId] = useState("1");
 	const [loadedVideoID, setloadedVideoID] = useState("1");
+	const [loadedVideoCreatedDate, setloadedVideoCreatedDate] = useState(null);
 	const [streamKey, setstreamKey] = useState("");
 	const [readyVideoMeta, setreadyVideoMeta] = useState("");
 	const [isLoadedOnce, setisLoadedOnce] = useState("1");
@@ -119,6 +120,26 @@ function VideoManagerComponent() {
 		}
 	}, [loadedPlaybackId]);
 
+
+	const sort_by = (field, reverse, primer) => {
+		const key = primer
+			? function (x) {
+				return primer(x[field]);
+			}
+			: function (x) {
+				return x[field];
+			};
+
+		reverse = !reverse ? 1 : -1;
+
+		return function (a, b) {
+			// eslint-disable-next-line no-sequences
+			return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
+		};
+	};
+
+
+
 	useEffect(() => {
 		if (loadStage.current === 0) {
 			loadStage.current = 1;
@@ -131,7 +152,7 @@ function VideoManagerComponent() {
 			if (loadStage.current === 1) {
 				firebase
 					.firestore()
-					.collection("VideoData")
+					.collection("VideoData").orderBy("Created")
 					.get()
 					.then((snapshot) => {
 						snapshot.forEach((doc) => {
@@ -142,11 +163,13 @@ function VideoManagerComponent() {
 							dbDataArray.push(data);
 							dbDataKeyArray.push(data.key);
 						});
+
 						setloadedSnapshotData(dbData);
 						setloadedDescription(dbData[dbDataKeyArray[loadedEzID - 1]].Title);
 						setloadedVideoID(dbData[dbDataKeyArray[loadedEzID - 1]].key);
 						setloadedPlaybackId(dbData[dbDataKeyArray[loadedEzID - 1]].playbackId);
 						setloadedVideoMeta(dbData[dbDataKeyArray[loadedEzID - 1]].meta);
+						setloadedVideoCreatedDate(dbData[dbDataKeyArray[loadedEzID - 1]].Created);
 						setreadyVideoMeta(loadedVideoMeta);
 						setloadedTotalIDs(dbDataArray.length);
 						setreadyDescription(loadedDescription);
@@ -304,8 +327,8 @@ function VideoManagerComponent() {
 								<h2>
 									{
 										(String(readyDescription),
-										String(loadedPlaybackId),
-										String(readyVideoMeta))
+											String(loadedPlaybackId),
+											String(readyVideoMeta))
 									}
 								</h2>
 							</div>
@@ -375,7 +398,7 @@ function VideoManagerComponent() {
 		try {
 			setloadedTitle("");
 			setloadedVideoMeta("");
-		} catch (error) {}
+		} catch (error) { }
 	}
 
 	function handleImageUploadState() {
@@ -480,9 +503,11 @@ function VideoManagerComponent() {
 					</div>
 					<small>
 						<br />
-						VideoID: {loadedVideoID}
+						<b>Created Date: </b> {loadedVideoCreatedDate && String(new Date(parseInt(loadedVideoCreatedDate) * 1000)).split("(")[0]}
 						<br />
-						<label for="cars">Choose Where This Displays:</label>
+						<b>VideoID:</b> {loadedVideoID}
+						<br />
+						<label><b>Choose Where This Displays:&nbsp; </b></label>
 						<select
 							onChange={(event) => {
 								console.log(event);
