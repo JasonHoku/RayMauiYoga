@@ -70,9 +70,7 @@ class UserBox extends React.Component {
                       <div className="dropdown-menu-header-inner bg-info">
                         <div
                           className="menu-header-image opacity-2"
-                          style={{
-                            backgroundImage: "url(" + city3 + ")",
-                          }}
+
                         />
                         <div className="menu-header-content text-left">
                           <div className="widget-content p-0">

@@ -133,7 +133,7 @@ function EventManagerComponent() {
 				return (document.getElementById("WeeklyScheduleSpan").innerHTML =
 					messages2[0].body);
 			}
-		} catch (error) {}
+		} catch (error) { }
 	}
 	function handleInputChange(e) {
 		seteventsFormDescription(e.target.value);
@@ -284,116 +284,112 @@ function EventManagerComponent() {
 		<Fragment>
 			<CSSTransitionGroup
 				component="div"
-				transitionName="MainAnimation"
+				transitionName="MainAnimation3"
 				transitionAppear={true}
 				transitionAppearTimeout={1000}
 				transitionEnterTimeout={1000}
 				transitionEnter={true}
 				transitionLeave={false}
 			>
-				<Card style={{ width: "100%" }}>
-					<CardHeader style={{ textAlign: "center" }}>
-						<h3 style={{ textAlign: "center" }}>RayMauiYoga Calendar</h3>
-					</CardHeader>
-					<CardBody
-						style={{
-							boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
-							width: "auto",
-							fontSize: "16px",
-							backgroundColor: "#fdffff",
-						}}
-					>
-						<h3>
-							<b>Weekly Dates To Remember</b> <br />
-							<br />
-						</h3>
-						<Col style={{ height: "auto", width: "100%" }}>
-							<span
-								hidden
-								id="WeeklyScheduleSpan"
-								style={{
-									width: "100%",
-								}}
-							>
-								{getDocID()}
-							</span>
-						</Col>
-						<Row>
-							<Col>
-								<h3>
-									{" "}
-									<b>Ray is also available for private sessions.</b>
-								</h3>
+				<Row  >
+					<Card style={{
+						width: "95%", position: "relative", left: "3px",
+						boxShadow: "0px 0px 10px 25px rgba(50,50,50, .3)",
+					}}>
+						<CardHeader style={{ textAlign: "center" }}>
+							<h3 style={{ textAlign: "center" }}>RayMauiYoga Calendar</h3>
+						</CardHeader>
+						<CardBody
+							style={{
+								boxShadow: "0px 0px 0px 2px rgba(50,50,50, .8)",
+								width: "auto",
+								fontSize: "16px",
+								backgroundColor: "#eeffff",
+							}}
+						>
+							<h3>
+								<b>Weekly Dates To Remember</b> <br />
 								<br />
-								<h5>
-									{" "}
-									<b>To get more info about Rays private sessions: </b>{" "}
-									<button
-										onClick={() => {
-											window.scrollTo({
-												top: 2000,
-												left: 100,
-												behavior: "smooth",
-											});
-											setTimeout(() => {
-												document.getElementById(
-													"RequestMeetingInput"
-												).style.backgroundColor = "#ddffff";
-
+							</h3>
+							<Col style={{ height: "auto", width: "100%" }}>
+								<span
+									hidden
+									id="WeeklyScheduleSpan"
+									style={{
+										width: "100%",
+									}}
+								>
+									{getDocID()}
+								</span>
+							</Col>
+							<Row>
+								<Col>
+									<h3>
+										{" "}
+										<b>Ray is also available for private sessions.</b>
+									</h3>
+									<br />
+									<h5>
+										{" "}
+										<b>To get more info about Rays private sessions: </b>{" "}
+										<button
+											onClick={() => {
+												window.scrollTo({
+													top: 2000,
+													left: 100,
+													behavior: "smooth",
+												});
 												setTimeout(() => {
 													document.getElementById(
 														"RequestMeetingInput"
-													).style.backgroundColor = "#ffffff";
-												}, 250);
+													).style.backgroundColor = "#ddffff";
 
-												setFormValue(
-													"Hello, Ray. \n My name is _ and I'm interested in speaking about your private sessions, please email or call me at _ "
-												);
-											}, 250);
-										}}
-										style={{ borderRadius: "5px" }}
-									>
-										{" "}
-										Click Here{" "}
-									</button>
-								</h5>{" "}
-							</Col>
-						</Row>{" "}
-						<br />
-						<h3>
-							<b>Special Events and Schedule:</b>
-						</h3>
-						<br />
-						<Row>
-							<Col id="EventCalendarSpan">
-								<center>
-									<b>Hawaiian Time Zone</b>
-									<Calendar
-										className="calendarVar"
-										onChange={(e) =>
-											setsetDate(
-												new Date(e).toLocaleTimeString([], {
-													year: "numeric",
-													month: "numeric",
-													day: "numeric",
-													hour: "2-digit",
-													minute: "2-digit",
-												})
-											) & setloadStage("2")
-										}
-									/>
-								</center>{" "}
-							</Col>
-							<Col id="EventsWithinDateSpan" style={{ height: "auto" }}>
-								<CSSTransitionGroup
-									component="div"
-									transitionName="MainAnimation5"
-									transitionAppear={true}
-									transitionAppearTimeout={1000}
-									transitionEnterTimeout={1000}
-									transitionEnter={true}
-									transitionLeave={false}
-								>
+													setTimeout(() => {
+														document.getElementById(
+															"RequestMeetingInput"
+														).style.backgroundColor = "#ffffff";
+													}, 250);
+
+													setFormValue(
+														"Hello, Ray. \n My name is _ and I'm interested in speaking about your private sessions, please email or call me at _ "
+													);
+												}, 250);
+											}}
+											style={{ borderRadius: "5px" }}
+										>
+											{" "}
+											Click Here{" "}
+										</button>
+									</h5>{" "}
+								</Col>
+							</Row>{" "}
+							<br />
+							<h3>
+								<b>Special Events and Schedule:</b>
+							</h3>
+							<br />
+							<Row>
+								<Col id="EventCalendarSpan">
+									<center>
+										<b>Hawaiian Time Zone</b>
+										<Calendar
+											className="calendarVar"
+											onChange={(e) =>
+												setsetDate(
+													new Date(e).toLocaleTimeString([], {
+														year: "numeric",
+														month: "numeric",
+														day: "numeric",
+														hour: "2-digit",
+														minute: "2-digit",
+													})
+												) & setloadStage("2")
+											}
+										/>
+									</center>{" "}
+								</Col>
+								<Col id="EventsWithinDateSpan" style={{ height: "auto" }}>
+
 									<br />
 									{selectedDateEvents.map((el) => {
 										return (
@@ -411,74 +407,77 @@ function EventManagerComponent() {
 											</span>
 										);
 									})}
-								</CSSTransitionGroup>
-							</Col>
-						</Row>
-						<div style={{ textAlign: "left" }}>
-							<div>
-								<b>Selected Date:</b>
-							</div>{" "}
-							<input
-								style={{ width: "50%", maxWidth: "165px" }}
-								id="eventsFormDate"
-								onChange={(e) => setsetDate(e.target.value)}
-								value={setDate}
-							></input>{" "}
-							<br />
-							<br />
-							<br />
-							<div>
-								<h3>
-									<b>Easily Initiate a Meeting with Ray:</b>
-								</h3>
-								<br />
-								<form
+								</Col>
+							</Row>
+							<div style={{ textAlign: "left" }}>
+								<div>
+									<b>Selected Date:</b>
+								</div>{" "}
+								<input
 									style={{
-										backgroundColor: "#dfffff",
-										borderRadius: "10px",
+										width: "50%", maxWidth: "165px",
+										backgroundColor: "#f5ffff",
 									}}
-									onSubmit={sendMessage}
-								>
-									&nbsp;
-									<TextareaAutosize
-										type="textarea"
-										rowsMin={5}
-										id="RequestMeetingInput"
+									id="eventsFormDate"
+									onChange={(e) => setsetDate(e.target.value)}
+									value={setDate}
+								></input>{" "}
+								<br />
+								<br />
+								<br />
+								<div>
+									<h3>
+										<b>Easily Initiate a Meeting with Ray:</b>
+									</h3>
+									<br />
+									<form
 										style={{
-											textAlign: "center",
-											borderRadius: "25px",
-											whiteSpace: "wrap",
-											fontSize: "22px",
-											width: "70%",
-											position: "relative",
-											top: "25px",
+											backgroundColor: "#eeffff",
+											borderRadius: "10px",
 										}}
-										value={formValue}
-										onChange={(e) => setFormValue(e.target.value)}
-										placeholder="Be Sure To Include Contact Information"
-									/>
-									&nbsp;
-									<Button
-										color="primary"
-										style={{
-											height: "100%",
-											minWidth: "75px",
-											position: "relative",
-											top: "-75px",
-											left: "5px",
-										}}
-										className="buttonchat"
-										type="submit"
-										disabled={!formValue}
+										onSubmit={sendMessage}
 									>
-										Send
-									</Button>
-								</form>
+										&nbsp;
+										<TextareaAutosize
+											type="textarea"
+											rowsMin={5}
+											id="RequestMeetingInput"
+											style={{
+												textAlign: "center",
+												borderRadius: "25px",
+												whiteSpace: "wrap",
+												backgroundColor: "#f5ffff",
+												fontSize: "22px",
+												width: "70%",
+												position: "relative",
+												top: "25px",
+											}}
+											value={formValue}
+											onChange={(e) => setFormValue(e.target.value)}
+											placeholder="Be Sure To Include Contact Information"
+										/>
+										&nbsp;
+										<Button
+											color="primary"
+											style={{
+												height: "100%",
+												minWidth: "75px",
+												position: "relative",
+												top: "-75px",
+												left: "5px",
+											}}
+											className="buttonchat"
+											type="submit"
+											disabled={!formValue}
+										>
+											Send
+										</Button>
+									</form>
+								</div>
+								&nbsp;
 							</div>
-							&nbsp;
-						</div>
-					</CardBody>
-				</Card>
+						</CardBody>
+					</Card></Row>
 			</CSSTransitionGroup>
 		</Fragment>
 	);

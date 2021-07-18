@@ -80,30 +80,41 @@ export default class CRMDashboard2 extends Component {
 							style={{
 								width: "75%",
 								maxWidth: "750px",
-								boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+								backgroundColor: "#eeffff",
+								boxShadow: "0px 0px 10px 25px rgba(50,50,50, .3)",
+								borderRadius: "100px",
+								borderBottomLeftRadius: "10px",
 							}}
 						>
-							<CardHeader className="card-header-tab" color="light">
-								<h1>Welcome</h1>
-							</CardHeader>
-							<CardBody>
-								<h3>
-									<a href="/#/dashboards/account">
-										Study and connect with Ray through live, written, &amp; video events.
+							<CardBody style={{
+								textAlign: "center",
+								left: "50%",
+								borderRadius: "100px",
+								borderBottomLeftRadius: "10px",
+							}}><div style={{ height: "50px" }}></div>
+								<div style={{ fontSize: "28px" }}>	Welcome To RayMauiYoga.com</div>
+								<div style={{ height: "50px" }}></div>
+								<h4>
+									<a href="/#/dashboards/about">
+										<b>A community resource of wellness education in the forms of live, written, &amp; video events.</b>
 									</a>
-								</h3>
+								</h4>
 							</CardBody>
 							<CardBody
 								style={{
-									maxWidth: "500px",
-									textAlign: "center  ",
+									textAlign: "center",
 									alignSelf: "center",
+									backgroundColor: "transparent",
+									overflow: "hidden",
+									maxWidth: "100%",
 								}}
 							>
-								<CarouselBSExample />
+								<div style={{ minWidth: "100%", minHeight: "100%" }}>
+									<CarouselBSExample />
+								</div>
 							</CardBody>
 						</Card>
-					</Row>
+					</Row><div style={{ height: "25px" }}></div>
 				</CSSTransitionGroup>
 				<CSSTransitionGroup
 					component="div"
@@ -114,15 +125,24 @@ export default class CRMDashboard2 extends Component {
 					transitionEnter={true}
 					transitionLeave={false}
 				>
-					<Card
+
+					<Row style={{ textAlign: "center" }}><Card
 						className="main-card mb-3"
 						style={{
-							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
+							backgroundColor: "#eeffff",
+							maxWidth: "1000px",
+							borderTopLeftRadius: "25px",
+							borderTopRightRadius: "25px",
 						}}
 					>
-						<CardHeader className="card-header-tab">
-							<h3>Getting Started</h3>
-						</CardHeader>
+						<div style={{
+							backgroundColor: "#eeffff",
+							borderRadius: "0px",
+							borderTopLeftRadius: "25px",
+							borderTopRightRadius: "25px",
+						}}>
+							<h2 style={{ padding: "10px" }}>Getting Started <small>By Ray</small></h2>
+						</div>
 						<CardBody
 							onClick={() =>
 								this.setState({ hover: "visibleText" }) &
@@ -176,31 +196,90 @@ export default class CRMDashboard2 extends Component {
 								</span>
 							</span>
 						</CardBody>
-					</Card>
-					<Row>
-						<Card
-							className="main-card mb-3"
-							style={{
-								boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-								width: "95%",
-							}}
-						>
-							<CardLink href="/#/dashboards/calendar">
-								<CardHeader className="card-header-tab">
-									<h3>Join An Upcoming Event</h3>
-								</CardHeader>
-								<CardBody>
-									<li>Find new and coming activities</li>
-									<li>Check availabilities and reserve a spot</li>
-									<li>Request a home or private session</li>
-									<br />
-									All at the events section; By clicking here.
-								</CardBody>
-							</CardLink>
-						</Card>
-					</Row>
+					</Card></Row>
+					<Row style={{ textAlign: "center", }}><Card
+						className="main-card mb-3"
+						style={{
+							position: "relative",
+							backgroundColor: "#eeffff",
+							top: "-16px",
+							maxWidth: "1000px",
+							borderBottomRightRadius: "25px",
+							borderBottomLeftRadius: "25px",
+						}}
+					>
+						<div style={{
+							backgroundColor: "#eeffff",
+							borderRadius: "15px",
+						}}>
+							<h2 style={{
+								padding: "10px",
+								backgroundColor: "#eeffff",
+								borderRadius: "15px",
+							}}>
+								Yoga Deep Dive <br />
+								"Restore the Balance"<br />
+								Workshop with Ray</h2>
+						</div>
+						<CardBody style={{
+							backgroundColor: "#eeffff",
+							borderRadius: "15px",
+						}}>
+
+							Join Ray Mohrman for Yoga Deep Dive: Restore the Balance. In this workshop students will reflect on their
+							practice over the past year amidst the challenges of the global pandemic. Through pose sequences, meditation,
+							breath work and small journal reflections, students will participate in a practice to restore balance and rejuvenate..
+							The workshop is open to all levels. An open mind and willingness to explore your practice are the only
+							prerequisites.<br />
+							<br />
+							Friday, July 30: 4:30pm-7pm Island Spirit Yoga, Lahaina *Happy Hour to follow!
+							<br /><br />
+							Contact Ray Mohrman - raymauiyoga@gmail.com - 808-214-8877
+							<br /><br />
+							15 Student maximum. Sign up early. Virtual option available upon req
+							<br /><br />
+							$45: Reserve with Venmo: @Ray-Mohrman
+							<br /><br />
+							*Yoga Deep Dive is a series of yoga workshops designed to deepen and
+							fine tune your yoga practice. Each two and a half hour session
+							will be guided by a yoga theme integrated into poses, breath work,
+							meditation, and journaling to support life on and off the mat.
+							<br />
+						</CardBody>
+					</Card></Row>
+					<Row style={{ textAlign: "center" }}>	<Card
+						className="main-card mb-3"
+						style={{
+							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .2)",
+							borderRadius: "25px",
+							backgroundColor: "#eeffff",
+							maxWidth: "1000px",
+							minWidth: "50%",
+						}}
+					>
+						<CardLink href="/#/dashboards/calendar">
+							<div style={{
+								backgroundColor: "#eeffff",
+								borderRadius: "25px",
+							}}>
+								<h2 style={{
+									padding: "10px",
+									backgroundColor: "#eeffff",
+									borderRadius: "15px",
+									textAlign: "center"
+								}}>Discover More Upcoming Events</h2>
+							</div>
+							<CardBody>
+								<li>Find new and coming activities</li>
+								<li>Check availabilities and reserve a spot</li>
+								<li>Request a home or private session</li>
+								<br />
+								All at the events section; By clicking here.
+							</CardBody>
+						</CardLink>
+					</Card></Row>
 				</CSSTransitionGroup>
-			</Fragment>
+			</Fragment >
 		);
 	}
 }

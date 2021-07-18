@@ -107,7 +107,7 @@ export default class ContactElements extends Component {
 			.then((response) => {
 				CLIIP = response;
 			})
-			.then(function (parsedData) {})
+			.then(function (parsedData) { })
 			.catch((error) => this.setState({ error, isLoading: false }));
 	}
 
@@ -189,7 +189,10 @@ export default class ContactElements extends Component {
 											<Col sm={8}>
 												<Input
 													type="input"
-													style={{ width: "270px" }}
+													style={{
+														width: "270px",
+														backgroundColor: "#f0ffff",
+													}}
 													name="formName"
 													value={this.state.formName}
 													onChange={this.handleInputChange}
@@ -205,7 +208,8 @@ export default class ContactElements extends Component {
 											</Label>
 											<Col sm={8}>
 												<Input
-													style={{ width: "270px" }}
+													style={{ width: "270px" ,
+													backgroundColor: "#f0ffff",}}
 													type="formEmail"
 													name="formEmail"
 													value={this.state.formEmail}
@@ -227,7 +231,8 @@ export default class ContactElements extends Component {
 													value={this.state.formMessage}
 													onChange={this.handleInputChange}
 													id="formMessage"
-													style={{ width: "270px", height: "170px" }}
+													style={{ width: "270px", height: "170px",
+													backgroundColor: "#f0ffff", }}
 												/>
 											</Col>
 										</FormGroup>

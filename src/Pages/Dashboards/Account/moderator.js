@@ -230,7 +230,7 @@ function ModeratorElements() {
 				className="ModeratorBackground"
 				fluid
 				style={{
-					backgroundColor: "#FFFFFFDD",
+					backgroundColor: "#eeffff",
 					borderRadius: "55px",
 				}}
 			>

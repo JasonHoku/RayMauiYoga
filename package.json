@@ -1,6 +1,6 @@
 {
     "name": "raymauiyoga-site",
-    "version": "1.73.0",
+    "version": "1.77.0",
     "homepage": "https://raymauiyoga-d75b1.web.app",
     "private": true,
     "dependencies": {
@@ -67,7 +67,7 @@
         "pe7-icon": "^1.0.4",
         "postcss-loader": "^2.1.5",
         "prettier": "^2.2.1",
-        "prismjs": "^1.15.0",
+        "prismjs": "^1.24.1",
         "prop-types": "^15.5.10",
         "ra-data-json-server": "^3.10.4",
         "ra-data-simple-rest": "^3.10.4",
@@ -105,6 +105,7 @@
         "react-loader-advanced": "^1.7.1",
         "react-loaders": "^3.0.1",
         "react-loading-overlay": "^1.0.1",
+        "react-material-ui-carousel": "^2.2.7",
         "react-meta-tags": "^1.0.0",
         "react-metismenu": "^1.4.0",
         "react-motion-drawer": "^3.1.0",

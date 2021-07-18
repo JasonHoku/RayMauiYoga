@@ -47,11 +47,6 @@ class AppMobileMenu extends React.Component {
 			this.handleClickOutside.bind(this),
 			false
 		);
-		document.removeEventListener(
-			"hashchange",
-			this.hashChangeEvent.bind(this),
-			false
-		);
 	}
 
 	toggleMobileSidebar = () => {
@@ -81,11 +76,15 @@ class AppMobileMenu extends React.Component {
 						style={{ position: "relative", top: "-8px", right: "15px" }}
 						onClick={this.toggleMobileSidebar}
 					>
-						<Slider
-							width={46}
-							lineHeight={3}
-							lineSpacing={6}
-							color="#6c757d"
+						<Slider id="SidebarButton"
+							aria-label="SidebarButton"
+							role="button"
+							aria-pressed="false"
+							style={{ position: "absolute", top: "15px", left: "10px" }}
+							width={35}
+							lineHeight={8}
+							lineSpacing={4}
+							color="#253030"
 							active={this.state.active}
 							onClick={() => this.setState({ active: !this.state.active })}
 						/>

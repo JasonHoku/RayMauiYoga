@@ -189,7 +189,7 @@ export default class ProjectElements extends Component {
 
           <Row>
             <Col xs="auto" sm="auto" md="auto" xl="auto">
-        
+
             <Card
             className="main-card mb-3"
             style={{
@@ -201,7 +201,7 @@ export default class ProjectElements extends Component {
                 <i className="header-icon pe-7s-news-paper mr-3 text-muted opacity-6">
                   {" "}
                 </i>
-                BIO
+                Ray's BIO
               </div>{" "}
               <div> </div>
             </CardHeader>
