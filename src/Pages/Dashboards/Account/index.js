@@ -69,7 +69,7 @@ function AccountPage() {
 					content="Authenticated section for chat, admin and tools."
 				/>
 				<meta name="theme-color" content="#008f68" />
-				<link rel="canonical" href="https://microhawaii.com/dashboards/account" />
+				<link rel="canonical" href="https://microhawaii.com/account" />
 			</Helmet>
 			<Card
 				className="AccountBackground"

@@ -28,7 +28,7 @@ class LandingPage extends React.Component {
         <CSSTransitionGroup>
           <span
             className="landingContent"
-            onClick={() => (window.location.hash = "/dashboards/home")}
+            onClick={() => (window.location.hash = "/")}
           >
             <h1 style={{ color: "black", fontFamily: "monospace" }}>
               RayMauiYoga.com
@@ -38,7 +38,7 @@ class LandingPage extends React.Component {
             <h4>
               <a
                 style={{ color: "white" }}
-                href="https://RayMauiYoga.com/#/dashboards/home"
+                href="https://RayMauiYoga.com/"
               >
                 Click Anywhere To Enter
               </a>

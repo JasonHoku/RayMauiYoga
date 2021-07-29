@@ -43,7 +43,7 @@ function Item(props) {
 	return (
 		<div ><h2>{props.item.name}</h2>
 			<p>{props.item.description}</p>
-			<div style={{ width: "250px", height: "150px", textAlign: "center" }}>
+			<div style={{ width: "250px", height: "150px", textAlign: "center", }}>
 				<img style={{
 					borderRadius: "50%",
 					maxWidth: "100%",

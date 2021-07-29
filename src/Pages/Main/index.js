@@ -27,7 +27,7 @@ class Main extends React.Component {
     document.removeEventListener("hashchange", this.toggle1.bind(this), false);
   }
   toggle1() {
-    if (String(window.location.hash).includes("#/dashboards/mediums")) {
+    if (String(window.location.hash).includes("/mediums")) {
     } else {
       window.scrollTo(0, 0);
     }

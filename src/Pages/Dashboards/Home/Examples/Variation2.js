@@ -81,7 +81,7 @@ export default class CRMDashboard2 extends Component {
 								width: "75%",
 								maxWidth: "750px",
 								backgroundColor: "#eeffff",
-								boxShadow: "0px 0px 10px 25px rgba(50,50,50, .3)",
+								boxShadow: "0px 0px 10px 25px rgba(50,50,90, .3)",
 								borderRadius: "100px",
 								borderBottomLeftRadius: "10px",
 							}}
@@ -95,7 +95,7 @@ export default class CRMDashboard2 extends Component {
 								<div style={{ fontSize: "28px" }}>	Welcome To RayMauiYoga.com</div>
 								<div style={{ height: "50px" }}></div>
 								<h4>
-									<a href="/#/dashboards/about">
+									<a href="/about">
 										<b>A community resource of wellness education in the forms of live, written, &amp; video events.</b>
 									</a>
 								</h4>
@@ -109,7 +109,11 @@ export default class CRMDashboard2 extends Component {
 									maxWidth: "100%",
 								}}
 							>
-								<div style={{ minWidth: "100%", minHeight: "100%" }}>
+								<div style={{
+									minWidth: "100%", minHeight: "100%",
+									borderRadius: "50%",
+									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
+								}}>
 									<CarouselBSExample />
 								</div>
 							</CardBody>
@@ -143,7 +147,7 @@ export default class CRMDashboard2 extends Component {
 						}}>
 							<h2 style={{ padding: "10px" }}>Getting Started <small>By Ray</small></h2>
 						</div>
-						<CardBody
+						<CardBody style={{ textAlign: "left" }}
 							onClick={() =>
 								this.setState({ hover: "visibleText" }) &
 								(document.getElementsByClassName("xd123")[0].hidden = true)
@@ -152,7 +156,7 @@ export default class CRMDashboard2 extends Component {
 						>
 							<p>
 								At times, getting started on a project, practice, conversation or health
-								kick can be the most challenging phase of aany meaningful endeavor.
+								kick can be the most challenging phase of any meaningful endeavor.
 								While our intent may be clear and meaningful, taking action may be
 								daunting. So why do we hold ourselves back when we have a plan?
 							</p>
@@ -174,7 +178,7 @@ export default class CRMDashboard2 extends Component {
 							</p>
 							<p>
 								Nonetheless, I hope my intent and passion shines through in some
-								meaningul way. I hope you find one moment of enjoyment with what I have
+								meaningful way. I hope you find one moment of enjoyment with what I have
 								to share. And most of all, I hope your practices are fun, meaningful and
 								all of you.
 							</p>
@@ -185,8 +189,7 @@ export default class CRMDashboard2 extends Component {
 							className="xd123"
 							style={{ justifyContent: "center", textAlign: "center" }}
 							onClick={() =>
-								this.setState({ hover: "visibleText" }) &
-								(document.getElementsByClassName("xd123")[0].hidden = true)
+								this.setState({ hover: "visibleText" })
 							}
 							id={this.state.hover}
 						>
@@ -221,18 +224,35 @@ export default class CRMDashboard2 extends Component {
 								"Restore the Balance"<br />
 								Workshop with Ray</h2>
 						</div>
-						<CardBody style={{
-							backgroundColor: "#eeffff",
-							borderRadius: "15px",
-						}}>
+						<CardBody
+							style={{
+								justifyContent: "center",
+								lineClamp: "4",
+								display: '-webkit-box',
+								WebkitBoxOrient: 'vertical',
+								WebkitLineClamp: 3,
+								overflow: 'hidden',
+								textAlign: "left",
+								textOverflow: 'ellipsis',
+							}}
+							onClick={() => {
+								document.getElementById("ReadMoreCard2").style.lineClamp = 0
+								document.getElementById("ReadMoreCard2").style.WebkitLineClamp = 10000
+								document.getElementById("ReadMoreCard2").style.overflow = "visible"
+								document.getElementById("ReadMoreCard2").style.textOverflow = "visible"
+								document.getElementsByClassName("xd123")[1].hidden = true
+							}
+							}
+							id="ReadMoreCard2"
+						>
+							Friday, July 30: 4:30pm-7pm Island Spirit Yoga, Lahaina *Happy Hour to follow!
+							<br />
 
 							Join Ray Mohrman for Yoga Deep Dive: Restore the Balance. In this workshop students will reflect on their
 							practice over the past year amidst the challenges of the global pandemic. Through pose sequences, meditation,
 							breath work and small journal reflections, students will participate in a practice to restore balance and rejuvenate..
 							The workshop is open to all levels. An open mind and willingness to explore your practice are the only
-							prerequisites.<br />
-							<br />
-							Friday, July 30: 4:30pm-7pm Island Spirit Yoga, Lahaina *Happy Hour to follow!
+							prerequisites.
 							<br /><br />
 							Contact Ray Mohrman - raymauiyoga@gmail.com - 808-214-8877
 							<br /><br />
@@ -245,6 +265,25 @@ export default class CRMDashboard2 extends Component {
 							will be guided by a yoga theme integrated into poses, breath work,
 							meditation, and journaling to support life on and off the mat.
 							<br />
+
+						</CardBody>
+						<CardBody
+							className="xd123"
+							style={{ justifyContent: "center", textAlign: "center" }}
+							onClick={() => {
+								document.getElementById("ReadMoreCard2").style.lineClamp = 0
+								document.getElementById("ReadMoreCard2").style.WebkitLineClamp = 10000
+								document.getElementById("ReadMoreCard2").style.overflow = "visible"
+								document.getElementById("ReadMoreCard2").style.textOverflow = "visible"
+								document.getElementsByClassName("xd123")[1].hidden = true
+							}
+							}
+						>
+							<span id="readMore">
+								<span id="readMore">
+									<Button>Click To Read More</Button>
+								</span>
+							</span>
 						</CardBody>
 					</Card></Row>
 					<Row style={{ textAlign: "center" }}>	<Card
@@ -257,7 +296,7 @@ export default class CRMDashboard2 extends Component {
 							minWidth: "50%",
 						}}
 					>
-						<CardLink href="/#/dashboards/calendar">
+						<CardLink href="/calendar">
 							<div style={{
 								backgroundColor: "#eeffff",
 								borderRadius: "25px",

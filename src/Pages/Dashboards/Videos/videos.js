@@ -136,7 +136,7 @@ export default class MusicElements extends Component {
 								<br></br>
 								<br></br>
 								For early access users, please sign in at the{" "}
-								<Link to="/dashboards/account"> Account Page</Link>
+								<Link to="/account"> Account Page</Link>
 								<br></br>
 							</CardBody>
 						</Card>

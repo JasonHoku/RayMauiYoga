@@ -121,11 +121,6 @@ class Header extends React.Component {
 						<div className="app-header-right">
 							<Router>
 								<Switch>
-									<Route
-										path="/#/dashboards/home/connect/google/redirect"
-										component={LoginRedirect}
-									/>
-									<Route exact path="/" component={Login} />
 									<Login />
 								</Switch>
 							</Router>

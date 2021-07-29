@@ -2,8 +2,8 @@
 User-agent: *
 Disallow: /3D/
 Disallow: /assets/
-Allow: /#/dashboards/home
-Allow: /#/dashboards/services
-Allow: /#/dashboards/shop
-Allow: /#/dashboards/gallery
+Allow: /home
+Allow: /services
+Allow: /shop
+Allow: /gallery
 Sitemap: https://www.RayMauiYoga.com/sitemap.xml

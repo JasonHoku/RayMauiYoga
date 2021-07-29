@@ -9,7 +9,7 @@ class AppFooter extends React.Component {
 				<div className="app-footer">
 					<div className="app-footer__inner">
 						<div className="app-footer-left">
-							<a style={{ position: "relative", top: "7px" }} href="./#/dashboards/contact/"> Contact Us</a>
+							<a style={{ position: "relative", top: "7px" }} href="./contact/"> Contact Us</a>
 						</div>
 						<div className="app-footer-center">
 						</div>

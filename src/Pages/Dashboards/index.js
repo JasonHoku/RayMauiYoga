@@ -1,5 +1,10 @@
-import React, { lazy, Fragment } from "react";
-import { Route } from "react-router-dom";
+import React, { lazy, Fragment } from "react"; import {
+	BrowserRouter as Router,
+	Route,
+	Link,
+	Switch,
+	Redirect
+} from "react-router-dom";
 
 import AppHeader from "../../Layout/AppHeader/";
 import AppSidebar from "../../Layout/AppSidebar/";
@@ -26,17 +31,20 @@ const Dashboards = ({ match }) => (
 			<AppSidebar />
 			<div className="app-main__outer">
 				<div className="app-main__inner">
-					<Route path={`${match.url}/home`} component={HomeDashboard} />
-					<Route path={`${match.url}/services`} component={Services} />
-					<Route path={`${match.url}/gallery`} component={GalleryPage} />
-					<Route path={`${match.url}/writing`} component={Writing} />
-					<Route path={`${match.url}/retreats`} component={Retreats} />
-					<Route path={`${match.url}/videos`} component={Videos} />
-					<Route path={`${match.url}/blog`} component={Blog} />
-					<Route path={`${match.url}/contact`} component={Contact} />
-					<Route path={`${match.url}/about`} component={Projects} />
-					<Route path={`${match.url}/calendar`} component={CalendarPage} />
-					<Route path={`${match.url}/account`} component={Account} />
+					<Switch>
+						<Route exact path={`/`} component={HomeDashboard} />
+						<Route path={`/services`} component={Services} />
+						<Route path={`/gallery`} component={GalleryPage} />
+						<Route path={`/writing`} component={Writing} />
+						<Route path={`/retreats`} component={Retreats} />
+						<Route path={`/videos`} component={Videos} />
+						<Route path={`/blog`} component={Blog} />
+						<Route path={`/contact`} component={Contact} />
+						<Route path={`/about`} component={Projects} />
+						<Route path={`/calendar`} component={CalendarPage} />
+						<Route path={`/account`} component={Account} />
+						<Redirect to='/' />
+					</Switch>
 				</div>
 				<AppFooter />
 			</div>

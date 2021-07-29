@@ -127,7 +127,7 @@ function EventManagerComponent() {
 	}
 	function getDocID() {
 		try {
-			if (window.location.hash.includes("calendar")) {
+			if (window.location.pathname.includes("calendar")) {
 				// console.log(messages2[0].body);
 				document.getElementById("WeeklyScheduleSpan").hidden = false;
 				return (document.getElementById("WeeklyScheduleSpan").innerHTML =
@@ -291,12 +291,25 @@ function EventManagerComponent() {
 				transitionEnter={true}
 				transitionLeave={false}
 			>
-				<Row  >
+				<Row style={{
+					borderRadius: "0px",
+					borderTopLeftRadius: "25px",
+					borderTopRightRadius: "25px",
+				}}  >
 					<Card style={{
 						width: "95%", position: "relative", left: "3px",
 						boxShadow: "0px 0px 10px 25px rgba(50,50,50, .3)",
+						backgroundColor: "#eeffff",
+						borderRadius: "0px",
+						borderTopLeftRadius: "25px",
+						borderTopRightRadius: "25px",
 					}}>
-						<CardHeader style={{ textAlign: "center" }}>
+						<CardHeader style={{
+							textAlign: "center",
+							borderRadius: "0px",
+							borderTopLeftRadius: "25px",
+							borderTopRightRadius: "25px",
+						}}>
 							<h3 style={{ textAlign: "center" }}>RayMauiYoga Calendar</h3>
 						</CardHeader>
 						<CardBody
@@ -311,7 +324,7 @@ function EventManagerComponent() {
 								<b>Weekly Dates To Remember</b> <br />
 								<br />
 							</h3>
-							<Col style={{ height: "auto", width: "100%" }}>
+							<Col style={{ height: "auto", minHeight: "200px", width: "100%" }}>
 								<span
 									hidden
 									id="WeeklyScheduleSpan"
@@ -325,13 +338,11 @@ function EventManagerComponent() {
 							<Row>
 								<Col>
 									<h3>
-										{" "}
 										<b>Ray is also available for private sessions.</b>
 									</h3>
 									<br />
 									<h5>
-										{" "}
-										<b>To get more info about Rays private sessions: </b>{" "}
+										<b>To get more info about Ray's private sessions: </b>
 										<button
 											onClick={() => {
 												window.scrollTo({
@@ -427,7 +438,7 @@ function EventManagerComponent() {
 								<br />
 								<div>
 									<h3>
-										<b>Easily Initiate a Meeting with Ray:</b>
+										<b>Initiate a Meeting with Ray:</b>
 									</h3>
 									<br />
 									<form
