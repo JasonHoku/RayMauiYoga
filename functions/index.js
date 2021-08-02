@@ -404,17 +404,33 @@ exports.twoMinuteInterval = functions.pubsub
 						dataSet[key] = dataKeys;
 					});
 
+
+					var dataSet2 = {};
+					db
+						.collection("VideoData")
+						.get()
+						.then((snapshot) => {
+							snapshot.forEach((doc) => {
+								var key = doc.id;
+								var dataKeys = doc.data();
+								dataKeys["key"] = key;
+								dataSet2[key] = dataKeys;
+							});
+
+						})
 					// console.log("colors callback result : " + colorsStr);
 					muxTID = JSON.parse(JSON.stringify(dataSet["0"])).muxTID;
 					muxTS = JSON.parse(JSON.stringify(dataSet["0"])).muxTS;
 					const { Video } = new Mux(muxTID, muxTS);
 					Video.Assets.list().then((asset) => {
-						console.log(asset);
+						// console.log(asset);
 						asset.forEach((el) => {
-							console.log(el.id);
-							console.log(el.playback_ids[0].id);
-
-							if (el.status !== "errored") {
+							// Got Mux Data, Check if exists
+							// console.log(el.id);
+							// console.log(el.playback_ids[0].id);
+							if (el.status !== "errored" &&
+								JSON.stringify(dataSet2).includes(el.playback_ids[0].id) === false) {
+								//
 								db
 									.collection("VideoData")
 									.doc(el.id)
@@ -422,6 +438,7 @@ exports.twoMinuteInterval = functions.pubsub
 										{
 											playbackId: String(el.playback_ids[0].id),
 											LatestRun: admin.firestore.FieldValue.serverTimestamp(),
+											Status: String(el.status),
 											Created: String(el.created_at),
 										},
 										{ merge: true }
@@ -701,250 +718,127 @@ exports.getRayMauiYogaData = functions.https.onRequest((req, res) => {
 
 
 exports.processSendEmail = functions.https.onRequest((req, res) => {
+
+	// const userID = JSON.parse(req.headers["headertokens"]).UUID;
+	const reqBody = req.body
+
+
 	res.status(200);
-	const cors = require("cors")({ origin: true });
-	res.set("Access-Control-Allow-Origin", "*");
-	res.set("Access-Control-Allow-Headers", "Content-Type");
-	//Declare CORs Rules
-	cors(req, res, () => {
+	try {
+		const cors = require("cors")({ origin: true });
 		res.status(200);
-		res.set("Access-Control-Allow-Origin", "*");
-		res.set("Access-Control-Allow-Headers", "Content-Type");
-		const userID = JSON.parse(req.headers["headertokens"]).uid;
-		const gotHeaders = req.headers["headertokens"];
+		cors(req, res, () => {
+			res.status(200);
 
-		//
-		async function getDBData() {
-			var db = admin.firestore();
+			async function getDBData() {
+				var db = admin.firestore();
 
-			var gotEmailAPIKey = "";
-			var gotDailyStats = {};
+				var gotEmailAPIKey = "";
+				var gotDailyStats = {};
 
-			var dbData = {};
-			var LiveMapDataDB = {};
-			var ListingsToApproveDB = {};
-			var EcoQuestionsDB = {};
-			var UsersDB = {};
-			var totalHitsDB = {};
-			var dbData2 = {};
-			var totalCategories = [];
+				var dbData = {};
+				var LiveMapDataDB = {};
+				var ListingsToApproveDB = {};
+				var EcoQuestionsDB = {};
+				var UsersDB = {};
+				var totalHitsDB = {};
+				var dbData2 = {};
+				var totalCategories = [];
 
-			db
-				.collection("Secrets")
-				.get()
-				.then((snapshot) => {
-					snapshot.forEach((doc) => {
-						var key = doc.id;
-						var data = doc.data();
-						data["key"] = key;
-						dbData[key] = data;
-					});
-					// Continue Then
-					// Get Another Doc
-					console.log(dbData.EmailJS.ServiceKey);
-					console.log(dbData.EmailJS.UserKey);
-					//
-					db
-						.collection("totalClicks")
-						.get()
-						.then((userData) => {
-							userData.forEach((doc) => {
-								var key2 = doc.id;
-								var data2 = doc.data();
-								data2["key"] = key2;
-								dbData2[key2] = data2;
-							});
-							db
-								.collection("totalHits")
-								.get()
-								.then((userData) => {
-									userData.forEach((doc) => {
-										var key2 = doc.id;
-										var data2 = doc.data();
-										data2["key"] = key2;
-										totalHitsDB[key2] = data2;
-									});
-									//
-									//
-									db
-										.collection("LiveMapData")
-										.get()
-										.then((userData) => {
-											userData.forEach((doc) => {
-												var key2 = doc.id;
-												var data2 = doc.data();
-												data2["key"] = key2;
-												LiveMapDataDB[key2] = data2;
-											});
-											//
-
-											//
-											var tempArray = Object.entries(LiveMapDataDB);
-											var tempValues = Object.values(LiveMapDataDB);
-											var separatedKeywords = [];
-
-											tempValues.forEach((el, index) => {
-												console.log(el.Category);
-												if (totalCategories.length === 0) {
-													if (el.Category.includes(",")) {
-														console.log(el.Category.split(",").length);
-
-														for (let i = 0; i < el.Category.split(",").length; i++) {
-															totalCategories.push(
-																el.Category.split(",")[i].toLowerCase().replace(" ", "")
-															);
-														}
-													} else {
-														totalCategories.push(el.Category.toLowerCase().replace(" ", ""));
-													}
-												} else {
-													if (
-														JSON.stringify(totalCategories)
-															.toLowerCase()
-															.includes(
-																JSON.stringify(el.Category.toLowerCase().replace(" ", ""))
-															)
-													) {
-														console.log("Omitting Existing");
-													} else {
-														if (el.Category.includes(",")) {
-															console.log(el.Category.split(",").length);
-															for (let i = 0; i < el.Category.split(",").length; i++) {
-																totalCategories.push(
-																	el.Category.split(",")[i].toLowerCase().replace(" ", "")
-																);
-															}
-														} else {
-															totalCategories.push(el.Category.toLowerCase().replace(" ", ""));
-														}
-													}
-													console.log(totalCategories);
-												}
-											});
-											//
-											db
-												.collection("ListingsToApprove")
-												.get()
-												.then((userData) => {
-													userData.forEach((doc) => {
-														var key2 = doc.id;
-														var data2 = doc.data();
-														data2["key"] = key2;
-														ListingsToApproveDB[key2] = data2;
-													});
-													//
-													db
-														.collection("EcoQuestions")
-														.get()
-														.then((userData) => {
-															userData.forEach((doc) => {
-																var key2 = doc.id;
-																var data2 = doc.data();
-																data2["key"] = key2;
-																EcoQuestionsDB[key2] = data2;
-															});
-															//
-															db
-																.collection("Users")
-																.get()
-																.then((userData) => {
-																	userData.forEach((doc) => {
-																		var key2 = doc.id;
-																		var data2 = doc.data();
-																		data2["key"] = key2;
-																		UsersDB[key2] = data2;
-																	});
-																	// Continue Then
-																	// Get Another Doc
-																	console.log(dbData2.value.population);
-
-																	//
-																	//  Send Emails
-																	//
-
-																	const nodemailer = require("nodemailer");
-
-																	//
-																	let mailTransporter = nodemailer.createTransport({
-																		service: "gmail",
-																		auth: {
-																			user: dbData.EmailJS.UserKey,
-																			pass: dbData.EmailJS.ServiceKey,
-																		},
-																	});
-
-																	Object.entries(dbData.ModEmails.EmailList).forEach(
-																		(el, index) => {
-																			//
-																			let mailDetails = {
-																				from: "donotreply@microhawaii.com",
-																				to: el,
-																				subject: `DoNotReply Daily PonoMap Stats ${new Date(
-																					Date.now()
-																				).toString()}`,
-																				html: `<b>PonoMap Daily Statistics Report: ${new Date(
-																					Date.now()
-																				).toString()}</b>
-									<br />
-									<br /> <b>Clicks</b>
-									<br />  Total: ${dbData2.value.population}
-									<br />  24Hr:
-									<br />
-									<br /> <b>Page Views</b>
-									<br />  Total: ${totalHitsDB.value.population}
-									<br />  PageViews Change 24Hr:
-									<br />
-									<br /> <b>Sign Ups</b>
-									<br />  Total: ${Object.entries(UsersDB).length}
-									<br />  24Hr:
-									<br />
-									<br /> <b>Live Map Listings</b>
-									<br />  Total:  ${Object.entries(LiveMapDataDB).length}
-									<br />  24Hr:
-									<br />
-									<br /> <b>Categories Keywords</b>
-									<br />  Total:  ${totalCategories.length}
-									<br /> ${JSON.stringify(totalCategories)}
-									<br />
-									<br /> <b>PonoPoints</b>
-									<br />  Total: (Coming Soon)
-									<br />
-									<br /> <b>Questionnaire Questions </b>
-									<br />  Total:  ${Object.entries(EcoQuestionsDB).length}
-									<br />
-									<br /> <b>Questionnaire Answers </b>
-									<br />  Total: (Coming Soon)
-									<br />
-									<br /> <b>Listings Needing Approval</b>
-									<br />  Total:  ${Object.entries(ListingsToApproveDB).length}
-									<br />
-									`,
-																			};
-
-																			mailTransporter.sendMail(mailDetails, function (err, data) {
-																				if (err) {
-																					console.log("Error Occurs");
-																				} else {
-																					console.log("Email sent successfully");
-
-																					return null;
-																				}
-																			});
-																		}
-																	);
-																});
-														});
-												});
-										});
+				db
+					.collection("Secrets")
+					.get()
+					.then((snapshot) => {
+						snapshot.forEach((doc) => {
+							var key = doc.id;
+							var data = doc.data();
+							data["key"] = key;
+							dbData[key] = data;
+						});
+						// Continue Then
+						// Get Another Doc
+						//
+						db
+							.collection("totalClicks")
+							.get()
+							.then((userData) => {
+								userData.forEach((doc) => {
+									var key2 = doc.id;
+									var data2 = doc.data();
+									data2["key"] = key2;
+									dbData2[key2] = data2;
 								});
 
-							return null;
-						});
-				});
-		}
-		getDBData();
+								/////////////////////////////////////
 
-		//  End Daily Crontab
-		return null;
-	});
+								/////////////////////////////////////
+
+								const nodemailer = require("nodemailer");
+
+								//
+								let mailTransporter = nodemailer.createTransport({
+									service: "gmail",
+									auth: {
+										user: dbData.Emailer.EmailID,
+										pass: dbData.Emailer.EmailKey,
+									},
+								});
+
+								Object.entries(dbData.ModEmails.EmailList).forEach(
+									(el, index) => {
+										//
+										let mailDetails = {
+											from: "donotreply@microhawaii.com",
+											to: el,
+											subject: `DoNotReply RayMauiYoga Notification ${new Date(
+												Date.now()
+											).toString()}`,
+											html: `<b>Date: ${new Date(
+												Date.now()
+											).toString()}</b>
+<br />
+<br />  Name: ${reqBody.name}
+<br />
+<br />  Contact: ${reqBody.contact}
+<br />
+<br />  Message: ${reqBody.message}
+<br />
+<br />
+<br />
+`,
+										};
+
+										mailTransporter.sendMail(mailDetails, function (err, data) {
+											if (err) {
+												console.log("Error Occurs");
+												res.send(JSON.stringify({ res: "error" }));
+												res.status(200).send();
+											} else {
+												console.log("Email sent successfully");
+												res.send(JSON.stringify({ res: "success" }));
+												res.status(200).send();
+												return false
+											}
+										})
+									})
+								/////////////////////////////////////
+								return false;
+							});
+					});
+			}
+			getDBData();
+
+			//  End Daily Crontab
+			return null;
+		});
+	} catch (error) {
+		console.log(error);
+	}
 });
+
+
+
+
+
+
+

@@ -98,8 +98,12 @@ function VideoManagerComponent() {
 			var playbackId = loadedPlaybackId;
 			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
 			var video = document.getElementById("myVideo");
-
-			if (Hls.isSupported()) {
+			if (video.canPlayType('application/vnd.apple.mpegurl')) {
+				video.src = url;
+				//
+				// If no native HLS support, check if HLS.js is supported
+				//
+			} else if (Hls.isSupported()) {
 				// HLS.js-specific setup code
 				let hls = new Hls();
 				hls.loadSource(url);

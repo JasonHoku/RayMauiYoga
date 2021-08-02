@@ -409,12 +409,12 @@ function ModeratorElements() {
 													}),
 												100
 											);
-											toggle("Video");
+											toggle("Events");
 										}}
 									>
 										<span style={{ position: "relative", top: "-4px" }}>
 											{" "}
-											Video Manager{" "}
+											Event Manager{" "}
 										</span>
 									</button>
 									&nbsp;
@@ -444,6 +444,34 @@ function ModeratorElements() {
 											User Management{" "}
 										</span>
 									</button>
+									&nbsp;
+									<button
+										style={{
+											backgroundColor: "#003366",
+											borderRadius: "16px",
+											height: "35px",
+											fontSize: "120%",
+											marginTop: "5px",
+										}}
+										onClick={async () => {
+											setTimeout(
+												() =>
+													document.getElementById("id002").scrollIntoView({
+														behavior: "smooth",
+														block: "start",
+														inline: "center",
+													}),
+												100
+											);
+											toggle("Video");
+										}}
+									>
+										<span style={{ position: "relative", top: "-4px" }}>
+											{" "}
+											Video Manager{" "}
+										</span>
+									</button>
+									&nbsp;
 									{/* //Comment Manager Button
                       &nbsp;
                       <button

@@ -270,6 +270,7 @@ export default class ProjectElements extends Component {
 										Ray is the proud father of his son Taj, dog Nala and four
 										chickens.
 									</p>
+									<img style={{ maxWidth: "60%" }} alt=" Ray Himself" src="./images/Pictures/RayBio.JPG" />
 									<br></br>
 									<br></br>
 									<br></br>

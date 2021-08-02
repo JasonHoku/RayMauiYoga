@@ -115,8 +115,12 @@ function AccountElements() {
 			var playbackId = loadedPlaybackId;
 			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
 			var video = document.getElementById("myVideo");
-
-			if (Hls.isSupported()) {
+			if (video.canPlayType('application/vnd.apple.mpegurl')) {
+				video.src = url;
+				//
+				// If no native HLS support, check if HLS.js is supported
+				//
+			} else if (Hls.isSupported()) {
 				// HLS.js-specific setup code
 				let hls = new Hls();
 				hls.loadSource(url);
@@ -213,12 +217,12 @@ function AccountElements() {
 
 				if (Object.values(dbData)[loadedEzID]) {
 					if (Object.values(dbData)[loadedEzID].meta) {
-						if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1) {
+						if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1 || parseInt(Object.values(dbData)[loadedEzID].meta) === 3) {
 							console.log(Object.values(dbData));
 
 							let tempVar = 0;
 							Object.values(dbData).forEach((el) => {
-								if (parseInt(el.meta) === 1) {
+								if (parseInt(el.meta) === 1 || parseInt(el.meta) === 3) {
 									tempVar += 1;
 								}
 							});
@@ -367,8 +371,8 @@ function AccountElements() {
 									>
 										→
 									</Button>{" "}
-									&nbsp; <br /> <br />
-									<div>{loadedVideoTitle}</div> <br /> <br />
+									&nbsp; <br /> <br /><br /> <br />
+									<div>{loadedVideoTitle}</div>
 								</div>
 								<video
 									style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}

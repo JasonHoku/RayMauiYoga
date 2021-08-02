@@ -43,8 +43,11 @@ import "firebase/firestore";
 
 function EventManagerComponent() {
 	const [loadStage, setloadStage] = useState("1");
+
 	const [loadElements, setloadElements] = useState(null);
+
 	const [loadedEvents, setloadedEvents] = useState([]);
+
 	const [loadedEventIDs, setloadedEventIDs] = useState([]);
 	const [categorizedMenuArray, setCategorizedMenuArray] = useState([]);
 	const [gotEventsData, setGotEventsData] = useState([]);
@@ -76,17 +79,91 @@ function EventManagerComponent() {
 	const ContactSubmissionsRef = firestore.collection("ContactSubmissions");
 	const [messages2] = useCollectionData(messagesRef2);
 
-	const sendMessage = async (e) => {
-		e.preventDefault();
-		const { uid } = auth.currentUser;
-		await ContactSubmissionsRef.add({
-			EventTitle: formValue,
-			EventDate: setDate,
-			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-		});
-		setFormValue("");
-		alert("Event Request Sent!");
-	};
+
+	function submitContact() {
+
+
+
+
+		if (
+			(formValue.length !== null && formValue.length < 1)
+		) {
+			alert("You must fill this form entirely.");
+		} else {
+			sendRequest()
+			document.getElementById("SendButton").innerHTML = "Sending";
+			document.getElementById("SendButton").disabled = true;
+			async function sendRequest(props) {
+
+				try {
+
+
+					var useEmulator = true;
+					//Emulator local url for development:
+					let fetchURL = "";
+					const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/processSendEmail`;
+
+					//Live  url:
+					const urlLive =
+						"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processSendEmail";
+
+					if (
+						useEmulator &&
+						window.location.hostname.includes("localhost")
+					) {
+						fetchURL = urlLocal;
+					} else {
+						fetchURL = urlLive;
+					}
+
+					//Send Details to Functions
+					const rawResponse = await fetch(fetchURL, {
+						method: "POST",
+						mode: "cors",
+						headers: new Headers({
+							"Content-Type": "application/json",
+							Accept: "application/json",
+							HeaderTokens: JSON.stringify({
+								//
+								// //
+								// refreshToken: auth.currentUser.refreshToken,
+								// authDomain: auth.currentUser.authDomain,
+								// uid: auth.currentUser.uid,
+								// name: auth.currentUser.displayName,
+								// email: auth.currentUser.email,
+								hostname: window.location.hostname,
+							}),
+						}),
+						body: JSON.stringify({
+							name: "EventRequestPage",
+							contact: "EventRequestPage",
+							message: formValue,
+							// UUID: auth.currentUser.uuid,
+						}),
+					});
+					const content = await rawResponse.json();
+					console.log(content.res)
+
+					if (content.res === "success") {
+						alert("Your message has sent successfully!");
+						document.getElementById("SendButton").innerHTML = "Success!";
+					} else {
+
+						document.getElementById("SendButton").innerHTML = "Try Again?";
+
+						alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify
+						)
+					}
+				} catch (error) {
+
+					alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify(error)); document.getElementById("SendButton").innerHTML = "Try Again?";
+				}
+			}
+
+
+
+		}
+	}
 
 	function EventDataSelectedDate(props) {
 		const auth = firebase.auth();
@@ -438,52 +515,45 @@ function EventManagerComponent() {
 								<br />
 								<div>
 									<h3>
-										<b>Initiate a Meeting with Ray:</b>
+										<b>Initiate a meeting with Ray:</b>
 									</h3>
 									<br />
-									<form
+									&nbsp;
+									<TextareaAutosize
+										type="textarea"
+										rowsMin={5}
+										id="RequestMeetingInput"
 										style={{
-											backgroundColor: "#eeffff",
-											borderRadius: "10px",
+											textAlign: "center",
+											borderRadius: "25px",
+											whiteSpace: "wrap",
+											backgroundColor: "#f5ffff",
+											fontSize: "22px",
+											width: "70%",
+											position: "relative",
+											top: "25px",
 										}}
-										onSubmit={sendMessage}
+										value={formValue}
+										onChange={(e) => setFormValue(e.target.value)}
+										placeholder="Be Sure To Include Contact Information"
+									/>
+									&nbsp;
+									<Button id="SendButton"
+										color="primary"
+										style={{
+											height: "100%",
+											minWidth: "75px",
+											position: "relative",
+											top: "-75px",
+											left: "5px",
+										}}
+										className="buttonchat"
+										type="submit"
+										disabled={!formValue}
+										onClick={() => { submitContact() }}
 									>
-										&nbsp;
-										<TextareaAutosize
-											type="textarea"
-											rowsMin={5}
-											id="RequestMeetingInput"
-											style={{
-												textAlign: "center",
-												borderRadius: "25px",
-												whiteSpace: "wrap",
-												backgroundColor: "#f5ffff",
-												fontSize: "22px",
-												width: "70%",
-												position: "relative",
-												top: "25px",
-											}}
-											value={formValue}
-											onChange={(e) => setFormValue(e.target.value)}
-											placeholder="Be Sure To Include Contact Information"
-										/>
-										&nbsp;
-										<Button
-											color="primary"
-											style={{
-												height: "100%",
-												minWidth: "75px",
-												position: "relative",
-												top: "-75px",
-												left: "5px",
-											}}
-											className="buttonchat"
-											type="submit"
-											disabled={!formValue}
-										>
-											Send
-										</Button>
-									</form>
+										Send
+									</Button>
 								</div>
 								&nbsp;
 							</div>

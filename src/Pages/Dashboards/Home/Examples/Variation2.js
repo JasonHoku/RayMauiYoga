@@ -92,7 +92,7 @@ export default class CRMDashboard2 extends Component {
 								borderRadius: "100px",
 								borderBottomLeftRadius: "10px",
 							}}><div style={{ height: "50px" }}></div>
-								<div style={{ fontSize: "28px" }}>	Welcome To RayMauiYoga.com</div>
+								<div style={{ fontSize: window.innerWidth > 415 ? "28px" : "24px" }}>	Welcome To RayMauiYoga.com</div>
 								<div style={{ height: "50px" }}></div>
 								<h4>
 									<a href="/about">

@@ -16,7 +16,7 @@ const GalleryPage = lazy(() => import("./Gallery/"));
 const Contact = lazy(() => import("./Contact/"));
 const Account = lazy(() => import("./Account/"));
 const Writing = lazy(() => import("./Writing/"));
-const CalendarPage = lazy(() => import("./Calendar/"));
+const CalendarPage = lazy(() => import("./Calendar/calendarPage"));
 const Services = lazy(() => import("./Services/"));
 const Projects = lazy(() => import("./Projects/"));
 const Retreats = lazy(() => import("./Retreats/"));
