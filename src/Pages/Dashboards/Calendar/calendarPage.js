@@ -261,7 +261,7 @@ function EventManagerComponent() {
 			if (dbDataRef.current.length > 0) {
 				for (var i = 0; i < dbDataRef.current.length; i++) {
 					// console.log(dbDataRef.current[i].EventDate);
-					let gotDate = new Date(dbDataRef.current[i].EventDate.toDate());
+					let gotDate = new Date(String(dbDataRef.current[i].EventDate));
 					// console.log(setDate);
 					// console.log(gotDate);
 					let are24hFrom0 = new Date(new Date(setDate));
@@ -462,22 +462,25 @@ function EventManagerComponent() {
 										<b>Hawaiian Time Zone</b>
 										<Calendar
 											className="calendarVar"
-											onChange={(e) =>
+											onChange={(e) => {
+
 												setsetDate(
-													new Date(e).toLocaleTimeString([], {
+													new Date(new Date(e).setHours(12)).toLocaleTimeString([], {
 														year: "numeric",
 														month: "numeric",
 														day: "numeric",
 														hour: "2-digit",
 														minute: "2-digit",
 													})
-												) & setloadStage("2")
+												);
+												setloadStage("2")
+											}
+
 											}
 										/>
 									</center>{" "}
 								</Col>
 								<Col id="EventsWithinDateSpan" style={{ height: "auto" }}>
-
 									<br />
 									{selectedDateEvents.map((el) => {
 										return (
@@ -489,8 +492,13 @@ function EventManagerComponent() {
 														whiteSpace: "pre-wrap",
 													}}
 												>
-													{" "}
-													{el.EventTitle}{" "}
+													<br />
+													{el.EventDate}
+													<br />
+													{el.EventTitle}
+													<br />
+													{el.EventDescription}
+													<br />
 												</pre>{" "}
 											</span>
 										);

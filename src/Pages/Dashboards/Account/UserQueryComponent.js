@@ -33,6 +33,12 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
+
+import { toast } from "react-toastify";
+
+
+
+
 function UserQueryComponent() {
 	const btnRef = React.useRef(null);
 
@@ -56,10 +62,13 @@ function UserQueryComponent() {
 		"Upload An Image To Embed"
 	);
 	const [categoryVar, setcategoryVar] = useState("User");
+
 	const [isLoadedOnce, setisLoadedOnce] = useState("1");
+
 	const [file, setFile] = useState(null);
 
 	useEffect(() => {
+
 		let concData = [];
 		let concData2 = [];
 		let concData3 = [];
@@ -69,7 +78,7 @@ function UserQueryComponent() {
 			if (loadStage === "1") {
 				if (isLoadedOnce === "1") {
 					const loadsnapshot = async () => {
-						const snapshot = await firebase.firestore().collection("users").get();
+						const snapshot = await firebase.firestore().collection("UserDocs").get();
 						snapshot.forEach((doc) => {
 							concData = concData.concat(doc.data());
 							concData2 = concData2.concat(doc.id);
@@ -87,15 +96,22 @@ function UserQueryComponent() {
 		}
 		if (loadStage === "2") {
 			try {
+
 				setisLoadedOnce("1");
 				console.log(loadedSnapshotData);
 				setloadedTotalIDs(loadedSnapshotData.length);
 
+				//
 				setloadedUsername(
-					String(JSON.parse(JSON.stringify(loadedSnapshotData[loadedEzID - 1])).user)
+					String(JSON.parse(JSON.stringify(loadedSnapshotData[loadedEzID - 1])).displayName)
 				);
+				//
 				setloadedEmail(
-					String(JSON.parse(JSON.stringify(loadedSnapshotData[loadedEzID - 1])).uuid)
+					String(JSON.parse(JSON.stringify(loadedSnapshotData[loadedEzID - 1])).email)
+				);
+				//
+				setloadedUserMeta(
+					String(JSON.parse(JSON.stringify(loadedSnapshotData[loadedEzID - 1])).meta)
 				);
 			} catch (error) {
 				console.log(error);
@@ -180,7 +196,7 @@ function UserQueryComponent() {
 			document.forms[4].reset();
 			document.forms[5].reset();
 			setgotDownloadURL(localStorage.getItem("gotDownloadURL"));
-		} catch (error) {}
+		} catch (error) { }
 	}
 
 	function handleImageUploadState() {
@@ -262,8 +278,10 @@ function UserQueryComponent() {
 									style={{ position: "relative", width: "90%" }}
 								/>
 								<br />
+								<br />
 								UID:
-								<input
+
+								<br />		<input
 									onChange={(event) =>
 										setloadedEmail(event.target.value) & setloadStage("3")
 									}
@@ -271,16 +289,66 @@ function UserQueryComponent() {
 									name="loadedEmail"
 									style={{ position: "relative", width: "90%" }}
 								/>
-								<br /> Patron Status:
-								<input
-									onChange={(event) => {
-										//
-									}}
-									value={"Coming Soon"}
-									name="loadedEmail"
-									style={{ position: "relative", width: "90%" }}
-								/>
 								<br />
+								<br />
+								<label><b>Patron Status: &nbsp; </b></label>
+								<select
+									onChange={(event) => {
+										console.log(event.target.value);
+										event.persist()
+										async function toggleRepeatable() {
+											var db = firebase.firestore();
+											await db
+												.collection("UserDocs")
+												.doc(loadedSnapshotDataIDs[loadedEzID - 1])
+												.set(
+													{
+														meta: parseInt(event.target.value)
+													},
+													{ merge: true }
+												)
+												.then((error) => {
+													if (!error) {
+														setloadedUserMeta(parseInt(event.target.value));
+														toast(
+															<div>
+																<div>
+																	<h1>Success!</h1>
+																	<h2>
+
+																	</h2>
+																</div>
+															</div>,
+															{ autoClose: 2000 }
+														);
+													} else {
+														toast(
+															<div>
+																<div>
+																	<h1>ERROR</h1>
+																	<h2>
+																		Please check your internet, or try reloading the web page for the
+																		latest site version.
+																	</h2>
+																</div>
+															</div>,
+															{ autoClose: 255 }
+														);
+													}
+												});
+
+										}
+										toggleRepeatable();
+										setloadedUserMeta(parseInt(event.target.value));
+
+									}}
+									value={loadedUserMeta}
+								>
+									<option value={1}>Patron / Paid</option>
+									<option value={2}>Patron Level 2</option>
+									<option value={3}>Patron Level 3</option>
+									<option value={0}>Regular User</option>
+								</select>
 							</small>
 						</div>
 					</div>

@@ -336,6 +336,15 @@ function ContentManagerComponent() {
 						>
 							EventsPage
 						</Button>
+						&nbsp;
+						<Button
+							color="primary"
+							onClick={() =>
+								setcategoryVar("BioPage") & setloadStage("1") & setloadedEzID("1")
+							}
+						>
+							BioPage
+						</Button>
 					</span>
 					<h2>{statusVar}</h2>
 					<small>ID #:</small>

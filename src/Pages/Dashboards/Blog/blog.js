@@ -10,6 +10,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	CardTitle,
 	CardLink,
 	CardImg,
 	NavLink,
@@ -123,14 +124,14 @@ export default class BlogElements extends Component {
 								borderTopRightRadius: "25px",
 							}}
 						>
-							<CardHeader
+							<h1
 								style={{
 									textAlign: "center",
 								}}
 							>
 								<h1>"On and Off the Mat"</h1>
-							</CardHeader>
-							<CardHeader
+							</h1>
+							<CardTitle
 								style={{ width: "100%", textAlign: "center", justifyContent: "center" }}
 							> <br />
 								{this.state.gotFirestoreBlogs.map((el, index) => {
@@ -159,7 +160,7 @@ export default class BlogElements extends Component {
 										</span>
 									);
 								})}
-							</CardHeader>
+							</CardTitle>
 							<TabContent>
 								<TabPane id="1">
 									<br />
@@ -172,6 +173,7 @@ export default class BlogElements extends Component {
 												paddingLeft: "25px",
 												paddingRight: "25px",
 												fontFamily: "Montserrat",
+												lineHeight: "25px",
 												fontSize: "22px",
 												fontWeight: "600",
 												textAlign: "left",

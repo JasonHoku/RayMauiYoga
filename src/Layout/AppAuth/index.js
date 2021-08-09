@@ -277,15 +277,12 @@ function AppAuth() {
 								}}
 							>
 								<br />
-								<li>Subscribe to Updates</li>
+								<li>Subscribe To Updates</li>
 								<br />
-								<li>Schedule a Meeting</li>
+								<li>Tune In To Live Streams</li>
 								<br />
-								<li>Chat Amongst the Community</li>
+								<li>Access Videos Early</li>
 								<br />
-								<li>Access Moderator Tools</li>
-								<br />
-								<li>And more!</li>
 							</h4>
 						</div>
 						<br />

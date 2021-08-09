@@ -10,6 +10,9 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /UserDocs/{userId} {
       allow read, create: if request.auth.uid == userId;
+   allow read, write: if request.auth != null && request.auth.uid == "8gZKzIAI7le5B03GbynBUKCpyl02";
+      allow read, write: if request.auth != null && request.auth.uid == "zj0jKGLWbUPb7FapAUoCS9zyaoo1";
+
     }
 }
 
@@ -104,6 +107,13 @@ service cloud.firestore {
   }
   match /databases/{database}/documents {
     match /AboutPage/{document=**} {
+      allow read: if true;
+      allow read, write: if request.auth != null && request.auth.uid == "8gZKzIAI7le5B03GbynBUKCpyl02";
+      allow read, write: if request.auth != null && request.auth.uid == "zj0jKGLWbUPb7FapAUoCS9zyaoo1";
+    }
+  }
+  match /databases/{database}/documents {
+    match /BioPage/{document=**} {
       allow read: if true;
       allow read, write: if request.auth != null && request.auth.uid == "8gZKzIAI7le5B03GbynBUKCpyl02";
       allow read, write: if request.auth != null && request.auth.uid == "zj0jKGLWbUPb7FapAUoCS9zyaoo1";

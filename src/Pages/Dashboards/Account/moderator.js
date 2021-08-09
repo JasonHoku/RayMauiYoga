@@ -79,7 +79,7 @@ function ModeratorElements() {
 			console.log("LoadStage: " + loadStage);
 			if (loadStage === "1") {
 				const loadsnapshot = async () => {
-					const snapshot = await firebase.firestore().collection("users").get();
+					const snapshot = await firebase.firestore().collection("UserDocs").get();
 					snapshot.forEach((doc) => {
 						concData = concData.concat({
 							[doc.id]: [doc.data()],
@@ -674,6 +674,7 @@ function ModeratorElements() {
 								{loadEventManagerComponent()}
 							</Card>
 						</Row>
+						<br />
 					</TabPane>
 					<TabPane tabId="Products">
 						<Row style={{ justifyContent: "center" }}>
@@ -690,7 +691,8 @@ function ModeratorElements() {
 							</Card>
 						</Row>
 					</TabPane>
-					<TabPane tabId="Content">{loadContentManagerComponent()}</TabPane>
+					<TabPane tabId="Content">{loadContentManagerComponent()}
+						<br /></TabPane>
 					<TabPane tabId="Notes">
 						<Row style={{ justifyContent: "center" }}>
 							{" "}
@@ -751,7 +753,8 @@ function ModeratorElements() {
 							</Card>
 						</Row>
 					</TabPane>
-					<TabPane tabId="Video">{loadVideoManagerComponent()}</TabPane>
+					<TabPane tabId="Video">{loadVideoManagerComponent()}
+						<br /></TabPane>
 					<TabPane tabId="Users">
 						<Row style={{ justifyContent: "center" }}>
 							{" "}
@@ -766,6 +769,7 @@ function ModeratorElements() {
 								{loadUserQueryComponent()}
 							</Card>
 						</Row>
+						<br />
 					</TabPane>
 					<TabPane tabId="Issue">
 						<Row style={{ justifyContent: "center" }}>

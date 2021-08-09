@@ -173,7 +173,7 @@ export default function MusicElements() {
 							});
 
 							setPatronVideoCount(tempVar);
-							setVideoNavString("Viewing " + loadedPatronEzId + " Of " + tempVar);
+							setVideoNavString("Viewing #" + loadedPatronEzId + " Of " + tempVar);
 							console.log(patronVideoCount);
 							//
 
@@ -273,7 +273,9 @@ export default function MusicElements() {
 						</CardHeader>
 						<CardBody>
 							<br />
-							<div style={{ textAlign: "center" }}>{videoNavString}</div> <br />
+							<div style={{ textAlign: "center" }}>Welcome to RayMauiYoga's public video library. <br /> To access live streams and early access videos login at the	<Link to="/account"> Account Page</Link></div> <br />
+
+							<div style={{ textAlign: "center" }}>{videoNavString}</div>
 							<div style={{ textAlign: "center" }}>
 								{" "}
 								&nbsp; &nbsp;
@@ -305,8 +307,8 @@ export default function MusicElements() {
 									→
 								</Button>{" "}
 								&nbsp; <br /> <br />
-								<div>{loadedVideoTitle}</div>
-							</div><br /> <br />
+								<div>"{loadedVideoTitle}"</div>
+							</div><br />
 							<video
 								style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}
 								preload="false"
@@ -315,9 +317,6 @@ export default function MusicElements() {
 								controls
 							></video>
 							{renderVideoDisplay()}
-							<br></br><br /> <br />
-							To support, tune in live and get videos early, visit the
-							<Link to="/account"> Account Page</Link>
 							<br></br>
 						</CardBody>
 					</Card>

@@ -641,3 +641,15 @@ div.card-body {
 input {
 	background-color: "#f5ffff";
 }
+
+#BioBodyDiv > p > img {
+	max-width: fit;
+	height: "60%";
+	width: "60%";
+	object-fit: cover;
+	text-align: center;
+	justify-self: center;
+	align-self: center;
+	display: center;
+	float: center;
+}

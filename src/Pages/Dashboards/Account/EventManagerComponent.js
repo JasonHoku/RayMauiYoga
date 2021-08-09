@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState, useEffect, useRef } from "react";
+import React, { Component, Fragment, useState, useEffect, useRef, useCallback } from "react";
 
 import {
 	Row,
@@ -38,12 +38,9 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 function EventManagerComponent() {
 	const [loadStage, setloadStage] = useState("1");
-	const [loadElements, setloadElements] = useState(null);
-	const [loadedEvents, setloadedEvents] = useState([]);
-	const [loadedEventIDs, setloadedEventIDs] = useState([]);
+	const [eventTitleState, setEventTitleState] = useState("");
 
-	const [textVar, settextVar] = useState("");
-	const [setDate, setsetDate] = useState(
+	const [eventDate, setEventDate] = useState(
 		String(
 			new Date().toLocaleTimeString([], {
 				year: "numeric",
@@ -54,26 +51,20 @@ function EventManagerComponent() {
 			})
 		)
 	);
-	const [eventsFormDescription, seteventsFormDescription] = useState("");
-	const [editedDescription, seteditedDescription] = useState("");
+
+
+	const [eventDescriptionState, setEventDescriptionState] = useState("");
 	const [loadedTotalIDs, setloadedTotalIDs] = useState("1");
-	const [file, setFile] = useState(null);
-	const [loadedDescription, setloadedDescription] = useState("");
 	const [loadedEzID, setloadedEzID] = useState("1");
+	const [statusVar, setStatusVar] = useState("Viewing EventsData ");
 
 	const auth = firebase.auth();
 	const firestore = firebase.firestore();
 
-	const dummy = useRef();
 	const messagesRef = firestore.collection("EventsData");
-
-	const query = messagesRef.orderBy("EventDate").limitToLast(5);
 	const query2 = messagesRef.orderBy("EventDate").limitToLast(100);
+	const [EventDataReference] = useCollectionData(query2);
 
-	const [messages] = useCollectionData(query, { idField: "id" });
-	const [messages2] = useCollectionData(query2, { idField: "id" });
-
-	const [formValue, setFormValue] = useState("");
 
 	const sendMessage = async (e) => {
 		e.preventDefault();
@@ -82,16 +73,16 @@ function EventManagerComponent() {
 		try {
 
 			await messagesRef.add({
-				EventTitle: textVar,
-				EventDescription: formValue,
-				EventDate: setDate,
+				EventTitle: eventTitleState,
+				eventDescriptionState: eventDescriptionState,
+				EventDate: eventDate,
 				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 				uid,
 			}).then((el, error) => {
 
 				console.log(el, error);
 
-				setFormValue("");;
+				setEventDescriptionState("");;
 
 			})
 
@@ -103,27 +94,6 @@ function EventManagerComponent() {
 		}
 	};
 
-	function EventDataLast5(props) {
-		const auth = firebase.auth();
-		const firestore = firebase.firestore();
-		const { EventDate, EventTitle, id } = props.message;
-		const dex = props.index;
-
-		const messageClass = "sent";
-
-		return (
-			<>
-				<div className={`message ${messageClass}`}>
-					&nbsp; ID: {parseInt(dex) + 1}
-					<p className="pchat">
-						{EventTitle}
-						<br />
-						<div style={{ textAlign: "right" }}>{EventDate}</div>
-					</p>
-				</div>
-			</>
-		);
-	}
 	function EventDataSelectedDate(props) {
 		const auth = firebase.auth();
 		const firestore = firebase.firestore();
@@ -132,24 +102,22 @@ function EventManagerComponent() {
 
 		const messageClass = "sent";
 
-		for (var i = 0; i < messages2.length; i++) {
+		for (var i = 0; i < EventDataReference.length; i++) {
 			let gotDate = new Date(EventDate);
-			let are24hFrom0 = new Date(new Date(setDate));
-			are24hFrom0.setDate(are24hFrom0.getDate(setDate) - 1);
-			var are24hFrom1 = new Date(setDate);
-			are24hFrom1.setDate(are24hFrom1.getDate(setDate) + 1);
+			let are24hFrom0 = new Date(new Date(eventDate));
+			are24hFrom0.setDate(are24hFrom0.getDate(eventDate) - 1);
+			var are24hFrom1 = new Date(eventDate);
+			are24hFrom1.setDate(are24hFrom1.getDate(eventDate) + 1);
 			if (gotDate >= are24hFrom0) {
 				if (gotDate <= are24hFrom1) {
 					return (
 						<>
-							<div className={`message ${messageClass}`}>
+							<div >
 								&nbsp; ID: {parseInt(dex) + 1}
 								<br />
-								<p className="pchat">
-									{EventTitle}
-									<br />
-									<div style={{ textAlign: "right" }}><b>{EventDate}</b></div>
-								</p>
+								{EventTitle}
+								<br />
+								<div style={{ textAlign: "right" }}><b>{EventDate}</b></div>
 							</div>
 						</>
 					);
@@ -162,68 +130,101 @@ function EventManagerComponent() {
 		}
 		return null;
 	}
-	function getDocID() {
+
+	const getDocDate = useCallback(() => {
 		try {
-			return messages2[parseInt(loadedEzID) - 1].id;
+			setEventDate(EventDataReference[parseInt(loadedEzID) - 1].EventDate);
 		} catch (error) { }
-	}
-	function getDocDate() {
+	}, [loadedEzID, EventDataReference])
+	//
+	const getDocTitle = useCallback(() => {
 		try {
-			setsetDate(messages2[parseInt(loadedEzID) - 1].EventDate);
+			setEventTitleState(EventDataReference[parseInt(loadedEzID) - 1].EventTitle);
 		} catch (error) { }
-	}
-	function getDocTitle() {
+	}, [loadedEzID, EventDataReference])
+	//
+
+	//
+	const getDocDescription = useCallback(() => {
 		try {
-			setFormValue(messages2[parseInt(loadedEzID) - 1].EventTitle);
+			setEventDescriptionState(EventDataReference[parseInt(loadedEzID) - 1].EventDescription);
 		} catch (error) { }
-	}
+	}, [loadedEzID, EventDataReference])
+	//
+
+
+
+
 	function runSendData() {
-		const { uid } = auth.currentUser;
-		console.log(String(loadedEzID));
-		firebase.firestore().collection("events").doc(getDocID()).set({
-			EventTitle: formValue,
-			EventDate: setDate,
-			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-			uid,
-		});
+		if (EventDataReference[parseInt(loadedEzID) - 1]) {
+			console.log(EventDataReference)
+
+		}
+		//
+		if (window.confirm(`
+		\n Save:
+		\n	${eventTitleState}
+		\n
+		`)) {
+			firebase.firestore().collection("EventsData").doc(eventTitleState).set({
+				EventTitle: eventTitleState,
+				EventDescription: eventDescriptionState,
+				EventDate: eventDate,
+				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+			}).then(() => {
+
+			});
+		} else {
+
+			// Cancel
+		}
 	}
 
 	function runDeleteData() {
 		var answer = window.confirm(
 			"Are you sure you want to delete " + loadedEzID
 		);
-		console.log(getDocID());
 		if (answer) {
 			console.log(String(loadedEzID));
 			firebase
 				.firestore()
-				.collection("events")
-				.doc(getDocID())
+				.collection("EventsData")
+				.doc(getDocTitle() || eventTitleState)
 				.delete()
 				.then(setloadStage("2") & setloadedTotalIDs(loadedTotalIDs - 1));
 		} else {
 		}
 	}
-	function handleInputChange(e) {
-		seteventsFormDescription(e.target.value);
-	}
 	const isInitialMount = useRef(true);
 
 	useEffect(() => {
+
+		console.log(eventTitleState)
+		console.log(eventDescriptionState)
+
+
+		if (EventDataReference) {
+
+			console.log(EventDataReference.length)
+			setStatusVar("Viewing " + loadedEzID + " Of " + EventDataReference.length)
+		}
+
+		console.log("XYZ")
 		if (isInitialMount.current === true) {
-			console.log("Updating, Stage: " + loadStage);
+			console.log("XYZ Updating, Stage: " + loadStage);
 			if (loadStage === "1") {
-				console.log(getDocID());
 				getDocDate();
 				getDocTitle();
-
-				setloadStage("2");
+				getDocDescription();
+				if (EventDataReference) {
+					setloadStage("2");
+				}
 			}
 			if (loadStage === "2") {
 				setloadStage("3");
 			}
 		}
-	});
+	}, [eventTitleState, eventDescriptionState, getDocDate, getDocTitle, loadStage, EventDataReference, loadedEzID, getDocDescription]);
 
 	return (
 		<Fragment>
@@ -246,20 +247,30 @@ function EventManagerComponent() {
 					<center>
 						<b>Hawaiian Time Zone</b>
 						<Calendar
-							className="calendarVar"
-							onChange={(e) =>
-								setsetDate(
-									new Date(e).toLocaleTimeString([], {
+							onChange={(e) => {
+
+
+
+
+
+								setEventDate(
+									new Date(new Date(e).setHours(12)).toLocaleTimeString([], {
 										year: "numeric",
 										month: "numeric",
 										day: "numeric",
 										hour: "2-digit",
 										minute: "2-digit",
 									})
-								) & setloadStage("2")
+								);
+								console.log(eventDate)
+
+								setloadStage("2")
+							}
 							}
 						/>
 					</center>{" "}
+					<br />
+					{statusVar}
 					<br />
 					ID #: &nbsp;
 					<input
@@ -271,10 +282,15 @@ function EventManagerComponent() {
 					&nbsp; &nbsp;
 					<Button
 						style={{ marginBottom: "5px" }}
-						style={{ marginBottom: "5px" }}
 						color="primary"
-						onClick={() =>
-							setloadedEzID(parseInt(loadedEzID) - 1) & setloadStage("1")
+						onClick={() => {
+
+							if (parseInt(loadedEzID) - 1 > 0)
+								setloadedEzID(parseInt(loadedEzID) - 1);
+
+
+							setloadStage("1")
+						}
 						}
 					>
 						←
@@ -283,8 +299,25 @@ function EventManagerComponent() {
 					<Button
 						style={{ marginBottom: "5px" }}
 						color="primary"
-						onClick={() =>
-							setloadedEzID(parseInt(loadedEzID) + 1) & setloadStage("1")
+						onClick={() => {
+
+							console.log(loadedTotalIDs)
+							console.log(loadedEzID)
+							if (parseInt(loadedEzID) + 1 < parseInt(EventDataReference.length + 1)) {
+								setloadedEzID(parseInt(loadedEzID) + 1);
+							} else {
+								if (window.confirm("Create New Event?")) {
+
+									setloadedEzID(parseInt(loadedTotalIDs) + 1);
+									setloadStage("2");
+									setEventTitleState("");
+									setEventDescriptionState("");
+
+
+								}
+							}
+							setloadStage("1")
+						}
 						}
 					>
 						→
@@ -293,7 +326,11 @@ function EventManagerComponent() {
 					<Button
 						style={{ marginBottom: "5px" }}
 						color="success"
-						onClick={() => runSendData() & setloadStage("1")}
+						onClick={() => {
+
+							runSendData();
+
+						}}
 					>
 						Save
 					</Button>{" "}
@@ -301,11 +338,13 @@ function EventManagerComponent() {
 					<Button
 						style={{ marginBottom: "5px" }}
 						color="secondary"
-						onClick={() =>
-							setloadedEzID(parseInt(loadedTotalIDs) + 1) &
-							setloadStage("2") &
-							seteditedDescription("") &
-							setloadedDescription("")
+						onClick={() => {
+							setloadedEzID(parseInt(loadedTotalIDs) + 1);
+							setloadStage("2");
+							setEventTitleState("");
+							setEventDescriptionState("");
+
+						}
 						}
 					>
 						New
@@ -327,8 +366,8 @@ function EventManagerComponent() {
 						<input
 							style={{ width: "50%" }}
 							id="eventsFormDate"
-							onChange={(e) => setsetDate(e.target.value)}
-							value={setDate}
+							onChange={(e) => setEventDate(e.target.value)}
+							value={eventDate}
 						></input>{" "}
 						<br />
 						<br />			<div>
@@ -338,18 +377,14 @@ function EventManagerComponent() {
 						<input
 							style={{ width: "50%" }}
 							id="eventsFormDate"
-							onChange={(e) => settextVar(e.target.value)}
-							value={textVar}
+							onChange={(e) => setEventTitleState(e.target.value)}
+							value={eventTitleState}
 						></input>{" "}
 						<br />
 						<br />
 						<div>
-							{" "}
 							<b>Event Description:</b>
-							&nbsp;{" "}
-							<form className="formchat" onSubmit={sendMessage}>
-								{" "}
-								&nbsp;
+							<form onSubmit={sendMessage}>
 								<TextareaAutosize
 									type="textarea"
 									rowsMin={5}
@@ -360,25 +395,12 @@ function EventManagerComponent() {
 										whiteSpace: "wrap",
 										backgroundColor: "#f5ffff",
 										fontSize: "22px",
-										width: "70%",
+										width: "100%",
 										position: "relative",
-										top: "25px",
 									}}
-									className="inputchat"
-									value={formValue}
-									onChange={(e) => setFormValue(e.target.value)}
-									placeholder="Add Event To Date"
+									value={eventDescriptionState}
+									onChange={(e) => setEventDescriptionState(e.target.value)}
 								/>
-								&nbsp;
-								<Button
-									color="primary"
-									style={{ height: "100%", minWidth: "75px" }}
-									className="buttonchat"
-									type="submit"
-									disabled={!formValue}
-								>
-									Send
-								</Button>
 							</form>
 						</div>
 						&nbsp;
@@ -388,8 +410,8 @@ function EventManagerComponent() {
 						<b>Events Within 24h of Selected Day:</b>
 					</h5>
 					<br />
-					{messages2 &&
-						messages2.map((msg, index) => (
+					{EventDataReference &&
+						EventDataReference.map((msg, index) => (
 							<EventDataSelectedDate index={index} key={msg.id} message={msg} />
 						))}
 					<br />
