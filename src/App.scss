@@ -642,10 +642,9 @@ input {
 	background-color: "#f5ffff";
 }
 
-#BioBodyDiv > p > img {
-	max-width: fit;
-	height: "60%";
-	width: "60%";
+img {
+	height: 60%;
+	width: 60%;
 	object-fit: cover;
 	text-align: center;
 	justify-self: center;
