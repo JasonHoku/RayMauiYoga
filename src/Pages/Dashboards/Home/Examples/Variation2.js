@@ -145,7 +145,7 @@ export default class CRMDashboard2 extends Component {
 							borderTopLeftRadius: "25px",
 							borderTopRightRadius: "25px",
 						}}>
-							<h2 style={{ padding: "10px" }}>Getting Started <small>By Ray</small></h2>
+							<h2 style={{ padding: "10px" }}>Getting Started</h2>
 						</div>
 						<CardBody style={{ textAlign: "left" }}
 							onClick={() =>

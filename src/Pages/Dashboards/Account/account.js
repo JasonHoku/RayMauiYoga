@@ -224,6 +224,23 @@ function AccountElements() {
 							Object.values(dbData).forEach((el) => {
 								if (parseInt(el.meta) === 1 || parseInt(el.meta) === 3) {
 									tempVar += 1;
+									console.log(new Date(el.Created * 1000))
+
+									console.log(Math.abs(new Date(Date.now())) - new Date((el.Created * 1000)))
+
+
+									if (Math.abs(new Date(Date.now())) - new Date((el.Created * 1000)) < 1000 * 60 * 60 * 12) {
+										alert("New/Live Video Detected From: \n" + new Date((el.Created * 1000)))
+										window.location.reload()
+									}
+
+
+									// if (new Date(Date.now()) <= new Date(el.Created * 1000)
+									// 	+ (1000 * 36000 * 60 * 1000000)
+
+									// ) {
+									// 	alert(el.Created)
+									// }
 								}
 							});
 
@@ -305,6 +322,12 @@ function AccountElements() {
 
 				console.log(isNavForward.current);
 			});
+
+		if (!window.patronVideoInterval) {
+			window.patronVideoInterval = setInterval(() => {
+				RenderPatronDisplay()
+			}, 15000)
+		}
 	}
 
 	function determineUserStatus() {
@@ -319,6 +342,11 @@ function AccountElements() {
 						) : userDataRes.meta === 1 ? (
 							<div>
 								<br />
+								{() => {
+									setInterval(() => {
+										console.log()
+									}, 1000);
+								}}
 								<div style={{ textAlign: "center" }}>
 									Ray Is Currently <b>Not Live</b> <br />
 									<small
@@ -381,6 +409,7 @@ function AccountElements() {
 									src={loadedPlaybackId}
 									controls
 								></video>
+
 								{RenderPatronDisplay()}
 							</div>
 						) : userDataRes.meta === 2 ? (
