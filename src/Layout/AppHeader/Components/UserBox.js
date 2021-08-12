@@ -25,7 +25,7 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import city3 from "../../../assets/utils/images/dropdown-header/city3.jpg";
+import city3 from "../../../assets/utils/images/dropdown-header/abstract4.jpg";
 import avatar1 from "../../../assets/utils/images/avatars/1.jpg";
 
 class UserBox extends React.Component {

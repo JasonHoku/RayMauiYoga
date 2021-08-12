@@ -560,6 +560,11 @@ function AccountElements() {
 										<br />
 										<br />
 										<div style={{ textAlign: "center" }}>
+											<br />
+											<b>	To access live streams and early access videos:</b>
+											<br />
+											<br />
+
 											<button
 												hidden={
 													userDataRes !== null &&
@@ -579,7 +584,7 @@ function AccountElements() {
 
 														//Live  url:
 														const urlLive =
-															"https://us-central1-hokubot.cloudfunctions.net/FireFunctionShutDown";
+															"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPayment";
 
 														if (
 															useEmulator &&
@@ -627,7 +632,6 @@ function AccountElements() {
 											</button>
 										</div>
 										<span hidden>
-											{" "}
 											ID:
 											<br />
 											{payPalResponse && payPalResponse.id} <br /> <br />
