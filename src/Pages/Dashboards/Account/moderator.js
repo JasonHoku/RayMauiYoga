@@ -10,6 +10,7 @@ import DocumentationPage from "./Documentation.js";
 import VideoManager from "./VideoManager.js";
 import IssueManager from "./IssueManager.js";
 
+
 import classnames from "classnames";
 
 import {
@@ -62,6 +63,7 @@ function ModeratorElements() {
 	const [formEmail, setformEmail] = useState([]);
 	const [activeTab, setactiveTab] = useState("1");
 	const [userMetric, setuserMetric] = useState("");
+	const [clickCountMetric, setClickCountMetric] = useState("");
 	const [issuesMetric, setissuesMetric] = useState("");
 	const [fruit, setFruit] = useState("banana");
 	const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
@@ -79,6 +81,7 @@ function ModeratorElements() {
 			console.log("LoadStage: " + loadStage);
 			if (loadStage === "1") {
 				const loadsnapshot = async () => {
+
 					const snapshot = await firebase.firestore().collection("UserDocs").get();
 					snapshot.forEach((doc) => {
 						concData = concData.concat({
@@ -86,6 +89,26 @@ function ModeratorElements() {
 						});
 						concData2 = concData2.concat(doc.id);
 					});
+
+					const doc = firebase.firestore().collection('WebsiteStatistics').doc('clicks');
+
+					const observer = doc.onSnapshot(docSnapshot => {
+						setClickCountMetric(docSnapshot.data().value)
+							console.log(`Received doc snapshot: ${docSnapshot.data().value}`);
+							// ...
+					}, err => {
+							console.log(`Encountered error: ${err}`);
+					});
+
+
+
+					// firebase.firestore()
+					// 	.collection("WebsiteStatistics").doc("clicks")
+					// 	.get()
+					// 	.then((doc) => {
+					// 		console.log(doc.data())
+					// 	})
+
 					setloadedSnapshotData(concData);
 				};
 				loadsnapshot().then(async () => {
@@ -103,6 +126,7 @@ function ModeratorElements() {
 			}
 		}
 	}, [loadStage, loadedSnapshotData]);
+
 
 	function loadProducts(props) {
 		if (activeTab === "Products") {
@@ -613,6 +637,7 @@ function ModeratorElements() {
 									Highlight Metrics: <br />
 									Users: {userMetric}
 									<br />
+									Clicks: {clickCountMetric}
 									<span id="id002"></span>
 								</h4>
 							</Card>

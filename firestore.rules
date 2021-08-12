@@ -6,6 +6,11 @@ service cloud.firestore {
     }
   }
 
+  match /databases/{database}/documents {
+    match /WebsiteStatistics/{document=**}  {
+      allow read;allow write: if true;
+    }
+  }
 
   match /databases/{database}/documents {
     match /UserDocs/{userId} {
@@ -54,6 +59,8 @@ service cloud.firestore {
       allow read;allow write: if true;
     }
   }
+
+
   match /databases/{database}/documents {
     match /totalHits/value  {
       allow read;allow write: if true;
