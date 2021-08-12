@@ -94,10 +94,10 @@ function ModeratorElements() {
 
 					const observer = doc.onSnapshot(docSnapshot => {
 						setClickCountMetric(docSnapshot.data().value)
-							console.log(`Received doc snapshot: ${docSnapshot.data().value}`);
-							// ...
+						console.log(`Received doc snapshot: ${docSnapshot.data().value}`);
+						// ...
 					}, err => {
-							console.log(`Encountered error: ${err}`);
+						console.log(`Encountered error: ${err}`);
 					});
 
 
@@ -638,6 +638,9 @@ function ModeratorElements() {
 									Users: {userMetric}
 									<br />
 									Clicks: {clickCountMetric}
+									<br />
+									Website Version: {
+										localStorage.getItem("appVersion")}
 									<span id="id002"></span>
 								</h4>
 							</Card>
