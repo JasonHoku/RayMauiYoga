@@ -529,7 +529,6 @@ pre {
 .sidebarLinks {
 	font-family: "Montserrat", sans-serif;
 	font-weight: 600;
-	margin-bottom: 25px;
 }
 
 #root
@@ -541,6 +540,14 @@ pre {
 	> a {
 	margin-bottom: 45px;
 	margin-top: 45px;
+}
+.app-sidebar__heading {
+	padding-left: 25px;
+}
+.gradientBtn {
+	padding-top: 15px;
+	padding-bottom: 35px;
+	padding-left: 47px;
 }
 .metismenu-item {
 	margin-bottom: 45px;

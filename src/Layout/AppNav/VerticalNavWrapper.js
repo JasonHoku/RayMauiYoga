@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import MetisMenu from "react-metismenu";
 import { setEnableMobileMenu } from "../../reducers/ThemeOptions";
-import { MainNav, AboutNav, AdminNav } from "./NavItems";
 
 import { IoIosInformationCircleOutline, IoIosCog, IoMdImages } from "react-icons/io";
 
@@ -36,7 +35,7 @@ class Nav extends Component {
 			<Fragment>
 				<h5 className="app-sidebar__heading">Index</h5>
 				<Link onClick={this.toggleMobileSidebar} to="/">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -57,7 +56,7 @@ class Nav extends Component {
 					</h4>
 				</Link>
 				<Link onClick={this.toggleMobileSidebar} to="/calendar">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/calendar" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -76,7 +75,7 @@ class Nav extends Component {
 					</h4>
 				</Link>
 				<Link onClick={this.toggleMobileSidebar} to="/blog">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/blog" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -95,7 +94,7 @@ class Nav extends Component {
 					</h4>
 				</Link>
 				<Link onClick={this.toggleMobileSidebar} to="/videos">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/videos" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -114,7 +113,7 @@ class Nav extends Component {
 					</h4>
 				</Link>
 				<Link onClick={this.toggleMobileSidebar} to="/gallery">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/gallery" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -134,7 +133,7 @@ class Nav extends Component {
 				</Link>
 				<h3 className="app-sidebar__heading">Info</h3>
 				<Link onClick={this.toggleMobileSidebar} to="/about">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/about" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -153,7 +152,7 @@ class Nav extends Component {
 					</h4>
 				</Link>
 				<Link onClick={this.toggleMobileSidebar} to="/contact">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/contact" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
@@ -173,7 +172,7 @@ class Nav extends Component {
 				</Link>{" "}
 				<h5 className="app-sidebar__heading">Account</h5>
 				<Link onClick={this.toggleMobileSidebar} to="/account">
-					<h4>
+					<h4 style={{ backgroundColor: window.location.pathname === "/account" ? "#00d2ff" : "transparent" }}>
 						<button className="gradientBtn" style={{ width: "100%" }}>
 							<span
 								className="metismenu-item"
