@@ -20,7 +20,7 @@ import configureStore from "./config/configureStore";
 import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 
-import "./Layout/backgroundeffect";
+import MainThreeJS from "./Layout/backgroundeffect";
 const store = configureStore();
 const rootElement = document.getElementById("root");
 
@@ -28,6 +28,7 @@ ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 			<Main />
+			<MainThreeJS />
 		</BrowserRouter>
 	</Provider>,
 	rootElement

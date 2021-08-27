@@ -81,7 +81,7 @@ export default class CRMDashboard2 extends Component {
 								width: "75%",
 								maxWidth: "750px",
 								backgroundColor: "#eeffff",
-								boxShadow: "0px 0px 10px 25px rgba(50,50,90, .3)",
+								boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
 								borderRadius: "100px",
 								borderBottomLeftRadius: "10px",
 							}}
@@ -114,7 +114,19 @@ export default class CRMDashboard2 extends Component {
 									borderRadius: "50%",
 									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
 								}}>
-									<CarouselBSExample />
+									<div style={{ width: "250px", height: "200px", textAlign: "center", }}>
+										<img style={{
+											borderRadius: "50%",
+											width: "250px",
+											height: "200px",
+											position: "relative",
+											left: "0",
+											top: "0",
+											zIndex: 3,
+											maxHeight: "100%",
+										}} src={"./assets/images/homeslides/1 (1).jpg"} alt="" />
+
+									</div>
 								</div>
 							</CardBody>
 						</Card>
@@ -136,6 +148,7 @@ export default class CRMDashboard2 extends Component {
 							backgroundColor: "#eeffff",
 							maxWidth: "1000px",
 							borderTopLeftRadius: "25px",
+							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
 							borderTopRightRadius: "25px",
 						}}
 					>
@@ -200,10 +213,10 @@ export default class CRMDashboard2 extends Component {
 							</span>
 						</CardBody>
 					</Card></Row>
-					<Row style={{ textAlign: "center" }}>	<Card
+					<Row style={{ textAlign: "center", paddingTop: "25px" }}><Card
 						className="main-card mb-3"
 						style={{
-							boxShadow: "0px 0px 0px 5px rgba(50,50,50, .2)",
+							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
 							borderRadius: "25px",
 							backgroundColor: "#eeffff",
 							maxWidth: "1000px",

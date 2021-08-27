@@ -11,14 +11,12 @@ for (let i = 1; i <= 10; i++) {
 
 
 	items.push(
-
 		{
 			id: i,
 			src:
-				" /images/Pictures/GallerySlides/1 (" + i +
+				"/images/Pictures/GallerySlides/1 (" + i +
 				").jpg",
-			altText: "GalleryImage" + i,
-
+			altText: "GalleryImage " + i,
 			interval: "30",
 		})
 

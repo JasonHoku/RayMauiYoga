@@ -422,8 +422,7 @@ function VideoManagerComponent() {
 				<button
 					onClick={() => {
 						setstreamKey(
-							" rtmp://global-live.mux.com:5222/app/041dcc7a-aef5-d808-4217-9daa0d39fdbd"
-						);
+						"");
 					}}
 				>
 					Show Private Key
