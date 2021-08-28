@@ -91,7 +91,7 @@ export default class CRMDashboard2 extends Component {
 								left: "50%",
 								borderRadius: "100px",
 								borderBottomLeftRadius: "10px",
-							}}><div style={{ height: "50px" }}></div>
+							}}><div style={{ height: "20px" }}></div>
 								<div style={{ fontSize: window.innerWidth > 415 ? "28px" : "24px" }}>	Welcome To RayMauiYoga.com</div>
 								<div style={{ height: "50px" }}></div>
 								<h4>
@@ -150,6 +150,8 @@ export default class CRMDashboard2 extends Component {
 							borderTopLeftRadius: "25px",
 							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
 							borderTopRightRadius: "25px",
+							marginLeft: "20px",
+							marginRight: "15px"
 						}}
 					>
 						<div style={{

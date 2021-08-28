@@ -86,7 +86,10 @@ void main() {
 		};
 
 		const color = new THREE.Color();
+
 		color.setHSL(0.41, 0.8, 0.08);
+
+
 		const darkMaterial = new THREE.MeshBasicMaterial({ color: color });
 		const materials = {};
 
@@ -210,16 +213,17 @@ void main() {
 			}
 		}
 
+		color.setHSL(0.41, 0.2, 0.1);
+		scene.background = color
+
 		function render() {
 
-			const color = new THREE.Color();
-			color.setHSL(0.41, 0.2, 0.1);
-			scene.background = color
-			scene.traverse((el) => {
+			scene.traverse((el, index) => {
 				if (el.type === "Mesh" && el.name !== "text") {
-					el.rotation.z += 0.00015
-					el.rotation.y += 0.00015
-					el.rotation.x += 0.00015
+					if (Math.random() * 2 >= 1.5) {
+						el.rotation.z += 0.0009
+					}
+					color.setHSL(0.41 + Math.random() * 0.03, 0.2, 0.1);
 				}
 			});
 
@@ -240,7 +244,6 @@ void main() {
 				scene.traverse(darkenNonBloomed);
 				bloomComposer.render();
 				scene.traverse(restoreMaterial);
-
 
 			}
 

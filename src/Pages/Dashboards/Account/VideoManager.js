@@ -417,16 +417,7 @@ function VideoManagerComponent() {
 		<Fragment>
 			<CardBody>
 				<h1>Video Manager</h1>
-				<b>Personal Stream Key: </b>
 				<br />
-				<button
-					onClick={() => {
-						setstreamKey(
-						"");
-					}}
-				>
-					Show Private Key
-				</button>
 				{streamKey}
 				<h2>{statusVar}</h2>
 				<small>ID #:</small>

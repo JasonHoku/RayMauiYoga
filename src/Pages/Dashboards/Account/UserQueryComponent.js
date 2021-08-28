@@ -49,7 +49,6 @@ function UserQueryComponent() {
 	const [editedDescription, seteditedDescription] = useState("");
 	const [loadedSnapshotData, setloadedSnapshotData] = useState([]);
 	const [loadedSnapshotDataIDs, setloadedSnapshotDataIDs] = useState("");
-	const [loadStage, setloadStage] = useState("1");
 
 	const [readyTitle, setreadyTitle] = useState("");
 	const [loadedEzID, setloadedEzID] = useState("1");
@@ -65,7 +64,14 @@ function UserQueryComponent() {
 
 	const [isLoadedOnce, setisLoadedOnce] = useState("1");
 
-	const [file, setFile] = useState(null);
+	const [file, setFile] = useState(null);;
+
+	const loadStage = useRef(1);
+
+
+	const [userSearchResults, setUserSearchResults] = useState(null);
+	const [loadedPatronPrice, setLoadedPatronPrice] = useState(null);
+
 
 	useEffect(() => {
 
@@ -74,10 +80,11 @@ function UserQueryComponent() {
 		let concData3 = [];
 
 		if (isInitialMount.current === true) {
-			console.log("Updating, Stage: " + loadStage);
-			if (loadStage === "1") {
+			console.log("Updating, Stage: " + loadStage.current);
+			if (loadStage.current === 1) {
 				if (isLoadedOnce === "1") {
 					const loadsnapshot = async () => {
+						loadStage.current = 2
 						const snapshot = await firebase.firestore().collection("UserDocs").get();
 						snapshot.forEach((doc) => {
 							concData = concData.concat(doc.data());
@@ -85,16 +92,34 @@ function UserQueryComponent() {
 						});
 						setloadedSnapshotData(concData);
 						setloadedSnapshotDataIDs(concData2);
-					};
-					console.log(
-						loadsnapshot().then(async () => {
-							setloadStage("2");
+
+						let tempResult = []
+
+						loadedSnapshotData.forEach((el) => {
+
+							tempResult.push(el)
+
 						})
-					);
+
+						setUserSearchResults(tempResult)
+
+						const snapshot2 = await firebase.firestore().collection("PaymentOffers").get();
+
+						setLoadedPatronPrice(snapshot2.docs[0].data().price);
+						console.log(snapshot2.docs[0].data().price)
+
+
+
+					};
+
+					loadsnapshot().then(async () => {
+						loadStage.current = 2;
+					})
+
 				}
 			}
 		}
-		if (loadStage === "2") {
+		if (loadStage.current === 2) {
 			try {
 
 				setisLoadedOnce("1");
@@ -119,12 +144,12 @@ function UserQueryComponent() {
 			setstatusVar(
 				"Viewing " + categoryVar + " " + loadedEzID + " of: " + loadedTotalIDs
 			);
-			setloadStage("3");
+			loadStage.current = 3;
 		}
-		if (loadStage === "3") {
-			setloadStage("4");
+		if (loadStage.current === 3) {
+			loadStage.current = 4;
 		}
-		if (loadStage === "4") {
+		if (loadStage.current === 4) {
 			console.log("Finished Loading!");
 		}
 	});
@@ -183,7 +208,7 @@ function UserQueryComponent() {
 				.collection(categoryVar)
 				.doc(String(loadedEzID - 1))
 				.delete()
-				.then(setloadStage("1") & setloadedTotalIDs(loadedTotalIDs - 1));
+				.then(loadStage.current = 1 & setloadedTotalIDs(loadedTotalIDs - 1));
 		} else {
 			//some code
 		}
@@ -222,20 +247,136 @@ function UserQueryComponent() {
 					<h4 style={{ width: "100%", textAlign: "left" }}>
 						<b>User&nbsp;Management</b>
 					</h4>
+					<br />
+
+
+					Patron Price: <input
+
+						defaultValue={loadedPatronPrice}
+
+						onChange={(event) => {
+
+							if (window.confirm('Are you sure you want to change the signup price?')) {
+
+								console.log(event.target.value);
+								event.persist()
+								async function toggleRepeatable() {
+									var db = firebase.firestore();
+									await db
+										.collection("PaymentOffers")
+										.doc("RegularSub")
+										.set(
+											{
+												price: parseInt(event.target.value)
+											},
+											{ merge: true }
+										)
+										.then((error) => {
+											if (!error) {
+												setloadedUserMeta(parseInt(event.target.value));
+												toast(
+													<div>
+														<div>
+															<h1>Success!</h1>
+															<h2>
+																Price Updated
+															</h2>
+														</div>
+													</div>,
+													{ autoClose: 2000 }
+												);
+											} else {
+												toast(
+													<div>
+														<div>
+															<h1>ERROR</h1>
+															<h2>
+																Please check your internet, or try reloading the web page for the
+																latest site version.
+															</h2>
+														</div>
+													</div>,
+													{ autoClose: 255 }
+												);
+											}
+										});
+								}
+								toggleRepeatable();
+							}
+
+						}} style={{ width: "100px" }}></input>
+
+
+					<br />
 					<small>ID #:</small>
 					<input
-						onChange={(e) =>
-							setloadedEzID(e.target.value) & setloadStage("1") & formResetter()
+						onChange={(e) => {
+							setloadedEzID(e.target.value); loadStage.current = 1; formResetter()
+						}
 						}
 						value={loadedEzID}
 						name="loadedEzID"
 						style={{ width: "45px" }}
 					></input>
-					&nbsp; &nbsp;
+					&nbsp; &nbsp;					<Button
+						color="primary"
+						onClick={() => {
+
+							document.getElementById("searchInputID").hidden = false
+
+						}
+						}
+					>
+						Search
+					</Button>{" "}
+					<div style={{ position: "absolute", backgroundColor: "#eeffff", zIndex: 3 }} id="searchInputID" hidden={true} ><input
+
+						onChange={(e) => {
+							console.log(loadedSnapshotData)
+							let tempResult = []
+
+							loadedSnapshotData.forEach((el) => {
+
+								if (el.displayName.includes(e.target.value)) {
+									tempResult.push(el)
+								}
+
+							})
+
+							setUserSearchResults(tempResult)
+
+							e.preventDefault()
+
+						}}
+
+						style={{ position: "absolute", top: 3, left: "25px", zIndex: 3 }}></input>
+						<br />
+						{userSearchResults && userSearchResults.map((el, index) => {
+							return <div
+								style={{ color: "blue" }}
+								onClick={() => {
+
+									loadedSnapshotData.forEach((el2, index) => {
+										if (el.displayName.includes(el2.displayName)) {
+											console.log(index)
+											setloadedEzID(index + 1)
+											loadStage.current = 1
+										}
+
+										document.getElementById("searchInputID").hidden = true
+									})
+								}}
+
+								id={"searchResults" + index}><button style={{ borderRadius: "5px", margin: "10px" }}>{el.displayName}</button></div>
+						})}
+						<br /></div>
+					&nbsp;
 					<Button
 						color="primary"
-						onClick={() =>
-							setloadedEzID(toInteger(loadedEzID) - 1) & setloadStage("1")
+						onClick={() => {
+							setloadedEzID(toInteger(loadedEzID) - 1)
+							loadStage.current = 1
+						}
 						}
 					>
 						←
@@ -243,8 +384,10 @@ function UserQueryComponent() {
 					&nbsp;
 					<Button
 						color="primary"
-						onClick={() =>
-							setloadedEzID(toInteger(loadedEzID) + 1) & setloadStage("1")
+						onClick={() => {
+							setloadedEzID(toInteger(loadedEzID) + 1);
+							loadStage.current = 1
+						}
 						}
 					>
 						→
@@ -270,8 +413,9 @@ function UserQueryComponent() {
 							<small>
 								Username:
 								<input
-									onChange={(event) =>
-										setloadedUsername(event.target.value) & setloadStage("3")
+									onChange={(event) => {
+										setloadedUsername(event.target.value); loadStage.current = 3
+									}
 									}
 									value={loadedUsername}
 									name="loadedUsername"
@@ -279,11 +423,12 @@ function UserQueryComponent() {
 								/>
 								<br />
 								<br />
-								UID:
+								Email:
 
 								<br />		<input
-									onChange={(event) =>
-										setloadedEmail(event.target.value) & setloadStage("3")
+									onChange={(event) => {
+										setloadedEmail(event.target.value); loadStage.current = 3
+									}
 									}
 									value={loadedEmail}
 									name="loadedEmail"
@@ -315,7 +460,7 @@ function UserQueryComponent() {
 																<div>
 																	<h1>Success!</h1>
 																	<h2>
-
+User Updated
 																	</h2>
 																</div>
 															</div>,
@@ -354,7 +499,7 @@ function UserQueryComponent() {
 					</div>
 				</CardBody>
 			</Card>
-		</Fragment>
+		</Fragment >
 	);
 }
 export default UserQueryComponent;

@@ -156,7 +156,7 @@ function AccountElements() {
 		} else {
 			if (hasPayPalLaunched.current === false) {
 				if (payPalResponse !== null) {
-					window.open(payPalResponse.links[1].href, "_blank");
+					window.open(payPalResponse, "_blank");
 					hasPayPalLaunched.current = true;
 					document.getElementById("UpgradeAccountButton").innerHTML =
 						"PayPal Opened In New Window";
@@ -637,7 +637,7 @@ function AccountElements() {
 											{payPalResponse && payPalResponse.id} <br /> <br />
 											Pay Link:
 											<br />
-											{payPalResponse && payPalResponse.links[1].href} <br /> <br />
+											{payPalResponse && payPalResponse} <br /> <br />
 											Status: <br />
 											{payPalResponse && payPalResponse.state}
 											<br />
