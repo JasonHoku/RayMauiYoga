@@ -50,6 +50,9 @@ function EventManagerComponent() {
 
 	const [loadedEventIDs, setloadedEventIDs] = useState([]);
 	const [categorizedMenuArray, setCategorizedMenuArray] = useState([]);
+
+	const [contactFormName, setContactFormName] = useState(" ");
+
 	const [gotEventsData, setGotEventsData] = useState([]);
 
 	const [selectedDateEvents, setSelectedDateEvents] = useState([]);
@@ -136,7 +139,7 @@ function EventManagerComponent() {
 						}),
 						body: JSON.stringify({
 							name: "EventRequestPage",
-							contact: "EventRequestPage",
+							contact: contactFormName,
 							message: formValue,
 							// UUID: auth.currentUser.uuid,
 						}),
@@ -221,6 +224,7 @@ function EventManagerComponent() {
 	const loadStageRef = useRef(0);
 
 	useEffect(() => {
+		// console.log(contactFormName.length)
 		console.log("State Refresh Stage " + loadStageRef.current);
 		//
 		if (loadStageRef.current === 3) {
@@ -525,7 +529,11 @@ function EventManagerComponent() {
 									<h3>
 										<b>Initiate a meeting with Ray:</b>
 									</h3>
-									<br />
+									<div hidden={formValue.length !== null && formValue.length < 1}> <span style={{ float: "right" }} >Contact Info:
+
+										<input style={{ height: "55px" }}
+											onChange={(e) => setContactFormName(e.target.value)}
+											id="ContactInfoInput" value={contactFormName} /></span></div>
 									&nbsp;
 									<TextareaAutosize
 										type="textarea"
@@ -557,8 +565,12 @@ function EventManagerComponent() {
 										}}
 										className="buttonchat"
 										type="submit"
-										disabled={!formValue}
-										onClick={() => { submitContact() }}
+										disabled={contactFormName && contactFormName.length < 3 || formValue.length < 3}
+										onClick={() => {
+
+											submitContact()
+
+										}}
 									>
 										Send
 									</Button>

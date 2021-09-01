@@ -55,50 +55,176 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 		res.set("Access-Control-Allow-Headers", "Content-Type");
 		const userID = JSON.parse(req.headers["headertokens"]).uid;
 		const gotHeaders = req.headers["headertokens"];
-		var colors = {};
+		var assetURL = JSON.parse(req.headers["headertokens"]).assetURL;
+		var startCrop = JSON.parse(req.headers["headertokens"]).startCrop;
+		var endCrop = JSON.parse(req.headers["headertokens"]).endCrop;
+
+		var dbData = {};
+		var dbData2 = {};
+
+		console.log(userID)
+
 		var db = admin.firestore();
 		db
-			.collection("apis")
+			.collection("Secrets")
 			.get()
 			.then((snapshot) => {
 				snapshot.forEach((doc) => {
 					var key = doc.id;
-					var color = doc.data();
-					color["key"] = key;
-					colors[key] = color;
+					var data = doc.data();
+					data["key"] = key;
+					dbData[key] = data;
 				});
 
-				// console.log("colors callback result : " + colorsStr);
 
-				muxTID = JSON.parse(JSON.stringify(colors["0"])).muxTID;
-				muxTS = JSON.parse(JSON.stringify(colors["0"])).muxTS;
 
-				//
+				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[0]) {
+					console.log("True")
 
-				//
-				try {
-					const { Video } = new Mux(muxTID, muxTS);
 
-					Video.Uploads.create({
-						new_asset_settings: {
-							playback_policy: "public",
-							input: [
-								{
-									url: "mux://assets/01itgOBvgjAbES7Inwvu4kEBtsQ44HFL6",
-									start_time: "",
-									end_time: "",
-								},
-							],
-						},
-					});
+					var db = admin.firestore();
+					db
+						.collection("apis")
+						.get()
+						.then((snapshot) => {
+							snapshot.forEach((doc) => {
+								var key = doc.id;
+								var color = doc.data();
+								color["key"] = key;
+								dbData2[key] = color;
+							});
 
-					Video.Assets.list().then((asset) => { });
-				} catch (err) {
-					res.send(err);
+							// console.log("colors callback result : " + colorsStr);
+
+							muxTID = JSON.parse(JSON.stringify(dbData2["0"])).muxTID;
+							muxTS = JSON.parse(JSON.stringify(dbData2["0"])).muxTS;
+
+							//
+
+							//
+							try {
+								const { Video } = new Mux(muxTID, muxTS);
+
+								CreateAsset()
+								async function CreateAsset() {
+
+									const asset = await Video.Assets.create({
+										playback_policy: "public",
+										input: [
+											{
+												url: "mux://assets/" + assetURL,
+												start_time: startCrop,
+												end_time: endCrop,
+											},
+										],
+									})
+									console.log(await asset)
+									const playbackId = await Video.Assets.createPlaybackId(asset.id, {
+										policy: 'public',
+									});
+									console.log(playbackId)
+									res.send({ res: { id: playbackId, asset: asset } });
+								}
+								// Video.Assets.list().then((asset) => { });
+							} catch (err) {
+								res.send(err);
+							}
+						});
+				} else {
+					console.log("false")
 				}
-			});
+
+			})
 	});
 });
+
+
+exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
+	res.status(200);
+	const cors = require("cors")({ origin: true });
+	res.set("Access-Control-Allow-Origin", "*");
+	res.set("Access-Control-Allow-Headers", "Content-Type");
+	//Declare CORs Rules
+	cors(req, res, () => {
+		res.status(200);
+		res.set("Access-Control-Allow-Origin", "*");
+		res.set("Access-Control-Allow-Headers", "Content-Type");
+		const userID = JSON.parse(req.headers["headertokens"]).uid;
+		const gotHeaders = req.headers["headertokens"];
+		var assetURL = JSON.parse(req.headers["headertokens"]).assetURL;
+		var startCrop = JSON.parse(req.headers["headertokens"]).startCrop;
+		var endCrop = JSON.parse(req.headers["headertokens"]).endCrop;
+
+		var dbData = {};
+		var dbData2 = {};
+
+		console.log(userID)
+
+		var db = admin.firestore();
+		db
+			.collection("Secrets")
+			.get()
+			.then((snapshot) => {
+				snapshot.forEach((doc) => {
+					var key = doc.id;
+					var data = doc.data();
+					data["key"] = key;
+					dbData[key] = data;
+				});
+
+
+
+				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[0]) {
+					console.log("True")
+
+
+					var db = admin.firestore();
+					db
+						.collection("apis")
+						.get()
+						.then((snapshot) => {
+							snapshot.forEach((doc) => {
+								var key = doc.id;
+								var color = doc.data();
+								color["key"] = key;
+								dbData2[key] = color;
+							});
+
+							// console.log("colors callback result : " + colorsStr);
+
+							muxTID = JSON.parse(JSON.stringify(dbData2["0"])).muxTID;
+							muxTS = JSON.parse(JSON.stringify(dbData2["0"])).muxTS;
+
+							//
+
+							//
+							try {
+								const { Video } = new Mux(muxTID, muxTS);
+
+								CreateAsset()
+								async function CreateAsset() {
+
+									const asset = await Video.Assets.del(assetURL)
+									console.log(await asset)
+									const playbackId = await Video.Assets.createPlaybackId(asset.id, {
+										policy: 'public',
+									});
+									console.log(playbackId)
+									res.send({ res: { id: playbackId, asset: asset } });
+								}
+								// Video.Assets.list().then((asset) => { });
+							} catch (err) {
+								res.send(err);
+							}
+						});
+				} else {
+					console.log("false")
+				}
+
+			})
+	});
+});
+
 
 exports.processPaid = functions.https.onRequest((req, res) => {
 	const htmlParams = req.query;
@@ -227,6 +353,8 @@ exports.processPaid = functions.https.onRequest((req, res) => {
 			// );
 		});
 });
+
+
 
 exports.processPayment = functions.https.onRequest((req, res) => {
 	res.status(200);
@@ -625,6 +753,7 @@ exports.twoMinuteInterval = functions.pubsub
 											LatestRun: admin.firestore.FieldValue.serverTimestamp(),
 											Status: String(el.status),
 											Created: String(el.created_at),
+											Duration: String(el.duration),
 										},
 										{ merge: true }
 									);
@@ -636,6 +765,11 @@ exports.twoMinuteInterval = functions.pubsub
 		}
 		getData();
 	});
+
+
+
+
+
 
 // //
 
@@ -801,7 +935,7 @@ exports.oneHourInterval = functions.pubsub
 								var db = admin.firestore();
 								db
 									.collection("Users")
-									.doc(String(dbData.Admins[0]))
+									.doc(String(dbData.AdminIDs[0]))
 									.get()
 									.then((doc) => {
 										todoList = JSON.parse(JSON.stringify(doc.data())).Todo;
