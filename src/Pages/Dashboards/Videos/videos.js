@@ -1,4 +1,11 @@
-import React, { Component, Fragment, useEffect, useRef, useState, useCallback } from "react";
+import React, {
+	Component,
+	Fragment,
+	useEffect,
+	useRef,
+	useState,
+	useCallback,
+} from "react";
 import scriptLoader from "react-async-script-loader";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import classnames from "classnames";
@@ -42,12 +49,7 @@ import "hls.js/dist/hls.js";
 
 import Hls from "hls.js";
 
-
-
-
 export default function MusicElements() {
-
-
 	const [loadedEzID, setloadedEzID] = useState(0);
 	const [payPalResponse, setPayPalResponse] = useState(null);
 	const [userDataRes, setUserDataRes] = useState(null);
@@ -61,6 +63,7 @@ export default function MusicElements() {
 	const [videoNavString, setVideoNavString] = useState("Loading...");
 
 	const [loadedPlaybackId, setloadedPlaybackId] = useState(null);
+	const [publicVideoArray, setPublicVideoArray] = useState(null);
 	const isNavForward = useRef(true);
 
 	const [loadedVideoTitle, setloadedVideoTitle] = useState("");
@@ -73,10 +76,10 @@ export default function MusicElements() {
 		if (loadVideoStage.current === 1) {
 			console.log("State Up " + loadStage.current);
 			var playbackId = loadedPlaybackId;
-			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
+			var url = "https://stream.mux.com/" + loadedPlaybackId + ".m3u8";
 			var video = document.getElementById("myVideo");
 
-			if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			if (video.canPlayType("application/vnd.apple.mpegurl")) {
 				video.src = url;
 				//
 				// If no native HLS support, check if HLS.js is supported
@@ -105,6 +108,40 @@ export default function MusicElements() {
 	useEffect(() => {
 		console.log("State Up " + loadStage.current);
 
+		if (loadStage.current === 0) {
+			let dbData = {};
+			firebase
+				.firestore()
+				.collection("VideoData")
+				.get()
+				.then((snapshot) => {
+					snapshot.forEach((doc) => {
+						var key = doc.id;
+						var data = doc.data();
+						data["key"] = key;
+						dbData[key] = data;
+					});
+
+					console.log(dbData);
+					var tempVar = [];
+
+					Object.values(dbData).forEach((el, index) => {
+						console.log(el);
+						if (parseInt(el.meta) === 3 || parseInt(el.meta) === 2) {
+							tempVar.push(el);
+						}
+						if (index === Object.values(dbData).length - 1) {
+							setPublicVideoArray(tempVar);
+							setloadedPlaybackId(tempVar[loadedEzID].playbackId);
+							loadVideoStage.current = 1;
+							setloadedVideoTitle(tempVar[loadedEzID].Title);
+							setVideoNavString(
+								"Viewing #" + (loadedEzID + 1) + " Of " + tempVar.length
+							);
+						}
+					});
+				});
+		}
 		if (loadVideoStage.current === 1) {
 			loadVideoJS();
 			loadVideoStage.current = 2;
@@ -135,121 +172,13 @@ export default function MusicElements() {
 
 			//
 			console.log("Init State " + loadStage.current);
-
 		}
 		isInitialMount.current = false;
-	}, [
-		loadVideoJS,
-		payPalResponse,
-	])
-
-
-
+	}, [loadVideoJS, loadedEzID, payPalResponse]);
 
 	function renderVideoDisplay() {
+		console.log("running Render");
 		let dbData = {};
-		firebase
-			.firestore()
-			.collection("VideoData")
-			.get()
-			.then((snapshot) => {
-				snapshot.forEach((doc) => {
-					var key = doc.id;
-					var data = doc.data();
-					data["key"] = key;
-					dbData[key] = data;
-				});
-
-				if (Object.values(dbData)[loadedEzID]) {
-					if (Object.values(dbData)[loadedEzID].meta) {
-						if (parseInt(Object.values(dbData)[loadedEzID].meta) === 2 || parseInt(Object.values(dbData)[loadedEzID].meta) === 3) {
-							console.log(Object.values(dbData));
-
-							let tempVar = 0;
-							Object.values(dbData).forEach((el) => {
-								if (parseInt(el.meta) === 2 || parseInt(el.meta) === 3) {
-									tempVar += 1;
-								}
-							});
-
-							setPatronVideoCount(tempVar);
-							setVideoNavString("Viewing #" + loadedPatronEzId + " Of " + tempVar);
-							console.log(patronVideoCount);
-							//
-
-							loadVideoStage.current = 1;
-							setloadedPlaybackId(
-								String(Object.values(dbData)[loadedEzID].playbackId)
-							);
-							setloadedVideoTitle(String(Object.values(dbData)[loadedEzID].Title));
-							loadVideoStage.current = 1;
-						} else {
-							console.log(isNavForward.current);
-							// Not On Visible, Adjust
-							if (isNavForward.current) {
-								setloadedEzID(parseInt(loadedEzID) + 1);
-								loadVideoStage.current = 0;
-							} else {
-								if (loadedPatronEzId <= 0) {
-									setloadedEzID(Object.values(dbData).length);
-									setLoadedPatronEzId(patronVideoCount);
-								} else {
-									setloadedEzID(parseInt(loadedEzID) - 1);
-								}
-							}
-						}
-					} else {
-						console.log(isNavForward.current);
-						if (isNavForward.current) {
-							if (loadedPatronEzId > patronVideoCount) {
-								setloadedEzID(0);
-								setLoadedPatronEzId(1);
-							} else {
-								setloadedEzID(parseInt(loadedEzID) + 1);
-								setLoadedPatronEzId(loadedPatronEzId + 1);
-							}
-						} else {
-							if (loadedPatronEzId <= 0) {
-								setloadedEzID(Object.values(dbData).length);
-								setLoadedPatronEzId(patronVideoCount);
-							} else {
-								if (loadedPatronEzId <= 0) {
-									setloadedEzID(Object.values(dbData).length);
-									setLoadedPatronEzId(patronVideoCount);
-								} else {
-									setloadedEzID(parseInt(loadedEzID) - 1);
-									setLoadedPatronEzId(loadedPatronEzId - 1);
-								}
-							}
-						}
-						loadVideoStage.current = 0;
-					}
-				} else {
-					console.log(isNavForward.current);
-					if (isNavForward.current) {
-						if (loadedPatronEzId > patronVideoCount) {
-							setloadedEzID(0);
-							setLoadedPatronEzId(1);
-							loadVideoStage.current = 0;
-						} else {
-							setloadedEzID(parseInt(loadedEzID) + 1);
-							setLoadedPatronEzId(loadedPatronEzId + 1);
-						}
-					} else {
-						console.log(isNavForward.current);
-						if (loadedPatronEzId <= 0) {
-							setloadedEzID(Object.values(dbData).length);
-							setLoadedPatronEzId(patronVideoCount);
-						} else {
-							setloadedEzID(parseInt(loadedEzID) - 1);
-							setLoadedPatronEzId(loadedPatronEzId - 1);
-						}
-					}
-					loadVideoStage.current = 0;
-				}
-
-				console.log(isNavForward.current);
-			});
 	}
 	return (
 		<Fragment>
@@ -273,8 +202,12 @@ export default function MusicElements() {
 						</CardHeader>
 						<CardBody>
 							<br />
-							<div style={{ textAlign: "center" }}>Welcome to RayMauiYoga's public video library. <br /> To access live streams and early access videos login at the	<Link to="/account"> Account Page</Link></div> <br />
-
+							<div style={{ textAlign: "center" }}>
+								Welcome to RayMauiYoga's public video library. <br /> To access live
+								streams and early access videos login at the{" "}
+								<Link to="/account"> Account Page</Link>
+							</div>{" "}
+							<br />
 							<div style={{ textAlign: "center" }}>{videoNavString}</div>
 							<div style={{ textAlign: "center" }}>
 								{" "}
@@ -282,14 +215,31 @@ export default function MusicElements() {
 								<Button
 									color="primary"
 									onClick={() => {
-										isNavForward.current = false;
-										setloadedEzID(parseInt(loadedEzID) - 1);
-										if (loadedPatronEzId <= 0) {
-											setLoadedPatronEzId(patronVideoCount);
+										if (loadedEzID > 1) {
+											setloadedPlaybackId(publicVideoArray[loadedEzID - 1].playbackId);
+											loadVideoStage.current = 1;
+											setloadedVideoTitle(publicVideoArray[loadedEzID - 1].Title);
+											setVideoNavString(
+												"Viewing #" + (loadedEzID - 1) + " Of " + publicVideoArray.length
+											);
+											setloadedEzID(loadedEzID - 1);
 										} else {
-											setLoadedPatronEzId(loadedPatronEzId - 1);
+											setloadedPlaybackId(
+												publicVideoArray[publicVideoArray.length - 1].playbackId
+											);
+											loadVideoStage.current = 1;
+											setloadedVideoTitle(
+												publicVideoArray[publicVideoArray.length - 1].Title
+											);
+											setVideoNavString(
+												"Viewing #" +
+													publicVideoArray.length +
+													" Of " +
+													publicVideoArray.length
+											);
+											setloadedEzID(publicVideoArray.length);
+											setLoadState("2");
 										}
-										setLoadState("2");
 									}}
 								>
 									←
@@ -298,17 +248,31 @@ export default function MusicElements() {
 								<Button
 									color="primary"
 									onClick={() => {
-										isNavForward.current = true;
-										setloadedEzID(parseInt(loadedEzID) + 1);
-										setLoadedPatronEzId(parseInt(loadedPatronEzId) + 1);
-										setLoadState("2");
+										if (loadedEzID < publicVideoArray.length - 1) {
+											setloadedPlaybackId(publicVideoArray[loadedEzID + 1].playbackId);
+											loadVideoStage.current = 1;
+											setloadedVideoTitle(publicVideoArray[loadedEzID + 1].Title);
+											setVideoNavString(
+												"Viewing #" + (loadedEzID + 2) + " Of " + publicVideoArray.length
+											);
+											setloadedEzID(loadedEzID + 1);
+										} else {
+											setloadedPlaybackId(publicVideoArray[0].playbackId);
+											loadVideoStage.current = 1;
+											setloadedVideoTitle(publicVideoArray[0].Title);
+											setVideoNavString(
+												"Viewing #" + 1 + " Of " + publicVideoArray.length
+											);
+											setloadedEzID(0);
+										}
 									}}
 								>
 									→
 								</Button>{" "}
 								&nbsp; <br /> <br />
 								<div>"{loadedVideoTitle}"</div>
-							</div><br />
+							</div>
+							<br />
 							<video
 								style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}
 								preload="false"
@@ -316,7 +280,6 @@ export default function MusicElements() {
 								src={loadedPlaybackId}
 								controls
 							></video>
-							{renderVideoDisplay()}
 							<br></br>
 						</CardBody>
 					</Card>
@@ -324,5 +287,4 @@ export default function MusicElements() {
 			</CSSTransitionGroup>
 		</Fragment>
 	);
-
 }

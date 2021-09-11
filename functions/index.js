@@ -62,7 +62,7 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 		var dbData = {};
 		var dbData2 = {};
 
-		console.log(userID)
+		console.log(userID);
 
 		var db = admin.firestore();
 		db
@@ -76,11 +76,8 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 					dbData[key] = data;
 				});
 
-
-
 				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[0]) {
-					console.log("True")
-
+					console.log("True");
 
 					var db = admin.firestore();
 					db
@@ -105,9 +102,8 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 							try {
 								const { Video } = new Mux(muxTID, muxTS);
 
-								CreateAsset()
+								CreateAsset();
 								async function CreateAsset() {
-
 									const asset = await Video.Assets.create({
 										playback_policy: "public",
 										input: [
@@ -117,12 +113,12 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 												end_time: endCrop,
 											},
 										],
-									})
-									console.log(await asset)
-									const playbackId = await Video.Assets.createPlaybackId(asset.id, {
-										policy: 'public',
 									});
-									console.log(playbackId)
+									console.log(await asset);
+									const playbackId = await Video.Assets.createPlaybackId(asset.id, {
+										policy: "public",
+									});
+									console.log(playbackId);
 									res.send({ res: { id: playbackId, asset: asset } });
 								}
 								// Video.Assets.list().then((asset) => { });
@@ -131,13 +127,11 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 							}
 						});
 				} else {
-					console.log("false")
+					console.log("false");
 				}
-
-			})
+			});
 	});
 });
-
 
 exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
 	res.status(200);
@@ -158,7 +152,7 @@ exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
 		var dbData = {};
 		var dbData2 = {};
 
-		console.log(userID)
+		console.log(userID);
 
 		var db = admin.firestore();
 		db
@@ -172,11 +166,8 @@ exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
 					dbData[key] = data;
 				});
 
-
-
-				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[0]) {
-					console.log("True")
-
+				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[1]) {
+					console.log("True");
 
 					var db = admin.firestore();
 					db
@@ -201,16 +192,11 @@ exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
 							try {
 								const { Video } = new Mux(muxTID, muxTS);
 
-								CreateAsset()
-								async function CreateAsset() {
-
-									const asset = await Video.Assets.del(assetURL)
-									console.log(await asset)
-									const playbackId = await Video.Assets.createPlaybackId(asset.id, {
-										policy: 'public',
-									});
-									console.log(playbackId)
-									res.send({ res: { id: playbackId, asset: asset } });
+								delAsset();
+								async function delAsset() {
+									const asset = await Video.Assets.del(assetURL);
+									console.log(await asset);
+									res.send({ res: { asset: asset } });
 								}
 								// Video.Assets.list().then((asset) => { });
 							} catch (err) {
@@ -218,13 +204,11 @@ exports.deleteVideoRequest = functions.https.onRequest((req, res) => {
 							}
 						});
 				} else {
-					console.log("false")
+					console.log("false");
 				}
-
-			})
+			});
 	});
 });
-
 
 exports.processPaid = functions.https.onRequest((req, res) => {
 	const htmlParams = req.query;
@@ -255,52 +239,45 @@ exports.processPaid = functions.https.onRequest((req, res) => {
 				client_secret: dbData.PayPal.Secret,
 			});
 
+			paypal.billingAgreement.execute(
+				token,
+				{},
+				function (error, billingAgreement) {
+					if (error) {
+						console.log(error);
+						throw error;
+					} else {
+						console.log("Approved");
+						console.log(JSON.stringify(token));
 
-
-
-
-
-			paypal.billingAgreement.execute(token, {}, function (error, billingAgreement) {
-				if (error) {
-					console.log(error);
-					throw error;
-				} else {
-					console.log("Approved");
-					console.log(JSON.stringify(token));
-
-					db.collection("UserDocs").doc(userParam).set(
-						{
-							meta: 1,
-						},
-						{ merge: true }
-					);
-
-					//PaymentApproved
-					db
-						.collection("PaymentApproved")
-						.doc()
-						.set(
+						db.collection("UserDocs").doc(userParam).set(
 							{
-								Time: admin.firestore.FieldValue.serverTimestamp(),
-								paymentId: ba_token,
-								paymentData: token,
-								UID: userParam,
+								meta: 1,
 							},
 							{ merge: true }
-						)
-						.then(() => {
-							res.redirect("https://raymauiyoga.com/account");
-						});
-					console.log("Billing Agreement Execute Response");
-					console.log(JSON.stringify(billingAgreement));
+						);
+
+						//PaymentApproved
+						db
+							.collection("PaymentApproved")
+							.doc()
+							.set(
+								{
+									Time: admin.firestore.FieldValue.serverTimestamp(),
+									paymentId: ba_token,
+									paymentData: token,
+									UID: userParam,
+								},
+								{ merge: true }
+							)
+							.then(() => {
+								res.redirect("https://raymauiyoga.com/account");
+							});
+						console.log("Billing Agreement Execute Response");
+						console.log(JSON.stringify(billingAgreement));
+					}
 				}
-			});
-
-
-
-
-
-
+			);
 
 			// var execute_payment_json = {
 			// 	payer_id: PayerID,
@@ -354,8 +331,6 @@ exports.processPaid = functions.https.onRequest((req, res) => {
 		});
 });
 
-
-
 exports.processPayment = functions.https.onRequest((req, res) => {
 	res.status(200);
 	const paymentParameter = req.query.payment;
@@ -404,127 +379,130 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 									client_secret: dbData.PayPal.Secret,
 								});
 
-
-
-
-
-
 								var isoDate = new Date(Date.now());
 								// eslint-disable-next-line no-unused-expressions
-								isoDate.toISOString().slice(0, 19) + 'Z';
+								isoDate.toISOString().slice(0, 19) + "Z";
 								isoDate.setSeconds(isoDate.getSeconds() + 15);
 
 								var billingPlanAttributes = {
-									"description": "RayMauiYoga Subscription Plan",
-									"merchant_preferences": {
-										"auto_bill_amount": "yes",
-										"cancel_url": "https://www.raymauiyoga.com/account", "initial_fail_amount_action": "continue",
-										"max_fail_attempts": "2",
-										"return_url":
+									description: "RayMauiYoga Subscription Plan",
+									merchant_preferences: {
+										auto_bill_amount: "yes",
+										cancel_url: "https://www.raymauiyoga.com/account",
+										initial_fail_amount_action: "continue",
+										max_fail_attempts: "2",
+										return_url:
 											"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
 											String(userID),
-										"setup_fee": {
-											"currency": "USD",
-											"value": "0"
-										}
+										setup_fee: {
+											currency: "USD",
+											value: "0",
+										},
 									},
-									"name": "RayMauiYoga-Membership",
-									"payment_definitions": [
+									name: "RayMauiYoga-Membership",
+									payment_definitions: [
 										{
-											"amount": {
-												"currency": "USD",
-												"value": String(dbData2.RegularSub.price)
+											amount: {
+												currency: "USD",
+												value: String(dbData2.RegularSub.price),
 											},
-											"cycles": "0",
-											"frequency": "MONTH",
-											"frequency_interval": "1",
-											"name": "Regular 1",
-											"type": "REGULAR"
+											cycles: "0",
+											frequency: "MONTH",
+											frequency_interval: "1",
+											name: "Regular 1",
+											type: "REGULAR",
 										},
 									],
-									"type": "INFINITE"
+									type: "INFINITE",
 								};
 
 								var billingPlanUpdateAttributes = [
 									{
-										"op": "replace",
-										"path": "/",
-										"value": {
-											"state": "ACTIVE"
-										}
-									}
+										op: "replace",
+										path: "/",
+										value: {
+											state: "ACTIVE",
+										},
+									},
 								];
 
 								var billingAgreementAttributes = {
-									"name": "RayMauiYoga Membership 1",
-									"description": "RayMauiYoga Subscription 1",
-									"start_date": isoDate,
-									"plan": {
-										"id": "RayMauiYoga-01"
+									name: "RayMauiYoga Membership 1",
+									description: "RayMauiYoga Subscription 1",
+									start_date: isoDate,
+									plan: {
+										id: "RayMauiYoga-01",
 									},
-									"payer": {
-										"payment_method": "paypal"
+									payer: {
+										payment_method: "paypal",
 									},
 								};
 
 								console.log("Creating Billing");
 								// Create the billing plan
-								paypal.billingPlan.create(billingPlanAttributes, function (error, billingPlan) {
-									if (error) {
-										console.log(error);
-										throw error;
-									} else {
-										console.log("Create Billing Plan Response");
-										console.log(billingPlan);
+								paypal.billingPlan.create(
+									billingPlanAttributes,
+									function (error, billingPlan) {
+										if (error) {
+											console.log(error);
+											throw error;
+										} else {
+											console.log("Create Billing Plan Response");
+											console.log(billingPlan);
 
-
-										// Activate the plan by changing status to Active
-										paypal.billingPlan.update(billingPlan.id, billingPlanUpdateAttributes, function (error, response) {
-											if (error) {
-												console.log(error);
-												throw error;
-											} else {
-												console.log(response)
-												console.log("Billing Plan state changed to " + billingPlan.state);
-												billingAgreementAttributes.plan.id = billingPlan.id;
-
-												// Use activated billing plan to create agreement
-												paypal.billingAgreement.create(billingAgreementAttributes, function (error, billingAgreement) {
+											// Activate the plan by changing status to Active
+											paypal.billingPlan.update(
+												billingPlan.id,
+												billingPlanUpdateAttributes,
+												function (error, response) {
 													if (error) {
 														console.log(error);
 														throw error;
 													} else {
-														console.log("Create Billing Agreement Response");
-														//console.log(billingAgreement);
-														for (var index = 0; index < billingAgreement.links.length; index++) {
-															if (billingAgreement.links[index].rel === 'approval_url') {
-																var approval_url = billingAgreement.links[index].href;
-																console.log("For approving subscription via Paypal, first redirect user to");
-																console.log(approval_url);
+														console.log(response);
+														console.log("Billing Plan state changed to " + billingPlan.state);
+														billingAgreementAttributes.plan.id = billingPlan.id;
 
-																console.log("Payment token is");
-																// See billing_agreements/execute.js to see example for executing agreement
-																// after you have payment token
+														// Use activated billing plan to create agreement
+														paypal.billingAgreement.create(
+															billingAgreementAttributes,
+															function (error, billingAgreement) {
+																if (error) {
+																	console.log(error);
+																	throw error;
+																} else {
+																	console.log("Create Billing Agreement Response");
+																	//console.log(billingAgreement);
+																	for (
+																		var index = 0;
+																		index < billingAgreement.links.length;
+																		index++
+																	) {
+																		if (billingAgreement.links[index].rel === "approval_url") {
+																			var approval_url = billingAgreement.links[index].href;
+																			console.log(
+																				"For approving subscription via Paypal, first redirect user to"
+																			);
+																			console.log(approval_url);
 
+																			console.log("Payment token is");
+																			// See billing_agreements/execute.js to see example for executing agreement
+																			// after you have payment token
 
-																res.send(JSON.stringify(approval_url));
-																res.status(200).send();
-																console.log(JSON.parse(gotHeaders).uid);
-
-
-
+																			res.send(JSON.stringify(approval_url));
+																			res.status(200).send();
+																			console.log(JSON.parse(gotHeaders).uid);
+																		}
+																	}
+																}
 															}
-														}
+														);
 													}
-												});
-											}
-										});
+												}
+											);
+										}
 									}
-								});
-
-
-
-
+								);
 
 								// var create_payment_json = {
 								// 	intent: "order",
@@ -694,9 +672,8 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 							reject(reason);
 						});
 				});
-		})
+		});
 	});
-
 });
 
 exports.twoMinuteInterval = functions.pubsub
@@ -717,7 +694,6 @@ exports.twoMinuteInterval = functions.pubsub
 						dataSet[key] = dataKeys;
 					});
 
-
 					var dataSet2 = {};
 					db
 						.collection("VideoData")
@@ -729,8 +705,7 @@ exports.twoMinuteInterval = functions.pubsub
 								dataKeys["key"] = key;
 								dataSet2[key] = dataKeys;
 							});
-
-						})
+						});
 					// console.log("colors callback result : " + colorsStr);
 					muxTID = JSON.parse(JSON.stringify(dataSet["0"])).muxTID;
 					muxTS = JSON.parse(JSON.stringify(dataSet["0"])).muxTS;
@@ -741,8 +716,10 @@ exports.twoMinuteInterval = functions.pubsub
 							// Got Mux Data, Check if exists
 							// console.log(el.id);
 							// console.log(el.playback_ids[0].id);
-							if (el.status !== "errored" &&
-								JSON.stringify(dataSet2).includes(el.playback_ids[0].id) === false) {
+							if (
+								el.status !== "errored" &&
+								JSON.stringify(dataSet2).includes(el.playback_ids[0].id) === false
+							) {
 								//
 								db
 									.collection("VideoData")
@@ -761,15 +738,10 @@ exports.twoMinuteInterval = functions.pubsub
 						});
 					});
 				})
-				.catch((reason) => { });
+				.catch((reason) => {});
 		}
 		getData();
 	});
-
-
-
-
-
 
 // //
 
@@ -958,8 +930,9 @@ exports.oneHourInterval = functions.pubsub
 														.set(
 															{
 																LatestRun: admin.firestore.FieldValue.serverTimestamp(),
-																RawText: ` ${Date(genDBData.GeneratedData.LatestRun).split("(")[0]
-																	} -@!%!%!@-  ${String(parseInt(genDBData.RunCounter.count) + 1)}
+																RawText: ` ${
+																	Date(genDBData.GeneratedData.LatestRun).split("(")[0]
+																} -@!%!%!@-  ${String(parseInt(genDBData.RunCounter.count) + 1)}
           -@!%!%!@-  ${String(listArray).replace(/,/g, " ")}`,
 															},
 															{ merge: true }
@@ -1034,13 +1007,9 @@ exports.getRayMauiYogaData = functions.https.onRequest((req, res) => {
 	}
 });
 
-
-
 exports.processSendEmail = functions.https.onRequest((req, res) => {
-
 	// const userID = JSON.parse(req.headers["headertokens"]).UUID;
-	const reqBody = req.body
-
+	const reqBody = req.body;
 
 	res.status(200);
 	try {
@@ -1103,18 +1072,15 @@ exports.processSendEmail = functions.https.onRequest((req, res) => {
 									},
 								});
 
-								Object.entries(dbData.ModEmails.EmailList).forEach(
-									(el, index) => {
-										//
-										let mailDetails = {
-											from: "donotreply@microhawaii.com",
-											to: el,
-											subject: `DoNotReply RayMauiYoga Notification ${new Date(
-												Date.now()
-											).toString()}`,
-											html: `<b>Date: ${new Date(
-												Date.now()
-											).toString()}</b>
+								Object.entries(dbData.ModEmails.EmailList).forEach((el, index) => {
+									//
+									let mailDetails = {
+										from: "donotreply@microhawaii.com",
+										to: el,
+										subject: `DoNotReply RayMauiYoga Notification ${new Date(
+											Date.now()
+										).toString()}`,
+										html: `<b>Date: ${new Date(Date.now()).toString()}</b>
 <br />
 <br />  Name: ${reqBody.name}
 <br />
@@ -1125,21 +1091,21 @@ exports.processSendEmail = functions.https.onRequest((req, res) => {
 <br />
 <br />
 `,
-										};
+									};
 
-										mailTransporter.sendMail(mailDetails, function (err, data) {
-											if (err) {
-												console.log("Error Occurs");
-												res.send(JSON.stringify({ res: "error" }));
-												res.status(200).send();
-											} else {
-												console.log("Email sent successfully");
-												res.send(JSON.stringify({ res: "success" }));
-												res.status(200).send();
-												return false
-											}
-										})
-									})
+									mailTransporter.sendMail(mailDetails, function (err, data) {
+										if (err) {
+											console.log("Error Occurs");
+											res.send(JSON.stringify({ res: "error" }));
+											res.status(200).send();
+										} else {
+											console.log("Email sent successfully");
+											res.send(JSON.stringify({ res: "success" }));
+											res.status(200).send();
+											return false;
+										}
+									});
+								});
 								/////////////////////////////////////
 								return false;
 							});
@@ -1154,10 +1120,3 @@ exports.processSendEmail = functions.https.onRequest((req, res) => {
 		console.log(error);
 	}
 });
-
-
-
-
-
-
-

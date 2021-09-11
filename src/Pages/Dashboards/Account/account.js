@@ -73,6 +73,7 @@ function AccountElements() {
 		useState("Tier 1: $2 / Month");
 	const [formPublicType, setformPublicType] = useState("");
 	const [loadedVideoTitle, setloadedVideoTitle] = useState("");
+	const [patronVideoArray, setPatronVideoArray] = useState([]);
 	const [sendCommentButtonText, setsendCommentButtonText] =
 		useState("Send Message");
 
@@ -109,43 +110,94 @@ function AccountElements() {
 	const loadStage = useRef(0);
 	const loadVideoStage = useRef(0);
 
-	const loadVideoJS = useCallback(() => {
-		if (loadVideoStage.current === 1) {
-			console.log("State Up " + loadStage.current);
-			var playbackId = loadedPlaybackId;
-			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
-			var video = document.getElementById("myVideo");
-			if (video.canPlayType('application/vnd.apple.mpegurl')) {
-				video.src = url;
-				//
-				// If no native HLS support, check if HLS.js is supported
-				//
-			} else if (Hls.isSupported()) {
-				// HLS.js-specific setup code
-				let hls = new Hls();
-				hls.loadSource(url);
-				hls.attachMedia(video);
-			}
-			if (typeof mux !== "undefined") {
-				mux.monitor("#myVideo", {
-					data: {
-						env_key: process.env.REACT_APP_MUX_TOKEN_SECRET,
-						player_name: "Custom Player",
-						player_init_time: window.muxPlayerInitTime,
-					},
-				});
+	const loadVideoJS = useCallback(
+		(prop) => {
+			if (loadVideoStage.current === 1) {
+				if (userDataRes !== null) {
+					console.log("Video State Up " + loadStage.current);
+					var playbackId = loadedPlaybackId;
+					var url = "https://stream.mux.com/" + loadedPlaybackId + ".m3u8";
+					var video = document.getElementById("myVideo");
 
-				return (loadVideoStage.current = 3);
+					if (video.canPlayType("application/vnd.apple.mpegurl")) {
+						video.src = url;
+						//
+						// If no native HLS support, check if HLS.js is supported
+						//
+					} else if (Hls.isSupported()) {
+						// HLS.js-specific setup code
+						let hls = new Hls();
+						hls.loadSource(url);
+						hls.attachMedia(video);
+					}
+
+					if (typeof mux !== "undefined") {
+						mux.monitor("#myVideo", {
+							data: {
+								env_key: process.env.REACT_APP_MUX_TOKEN_SECRET,
+								player_name: "Custom Player",
+								player_init_time: window.muxPlayerInitTime,
+							},
+						});
+
+						return (loadVideoStage.current = 3);
+					}
+				}
 			}
-		}
-	}, [loadedPlaybackId]);
+		},
+		[loadedPlaybackId, userDataRes]
+	);
 
 	useEffect(() => {
 		console.log("State Up " + loadStage.current);
+		if (loadStage.current === 0) {
+			let dbData = {};
+			firebase
+				.firestore()
+				.collection("VideoData")
+				.get()
+				.then((snapshot) => {
+					snapshot.forEach((doc) => {
+						var key = doc.id;
+						var data = doc.data();
+						data["key"] = key;
+						dbData[key] = data;
+					});
 
-		if (loadVideoStage.current === 1) {
-			loadVideoJS();
-			loadVideoStage.current = 2;
+					console.log(dbData);
+					var tempVar = [];
+
+					Object.values(dbData).forEach((el, index) => {
+						console.log(el);
+						if (
+							parseInt(el.meta) === 3 ||
+							parseInt(el.meta) === 2 ||
+							parseInt(el.meta) === 1
+						) {
+							tempVar.push(el);
+						}
+						if (index === Object.values(dbData).length - 1) {
+							console.log(tempVar);
+							console.log(tempVar[0].playbackId);
+							console.log("TEMP DATA");
+							setPatronVideoArray(tempVar);
+							setloadedVideoTitle(tempVar[0].Title);
+							setloadedPlaybackId(tempVar[0].playbackId);
+							loadStage.current = 1;
+							setVideoNavString(
+								"Viewing #" + (loadedEzID + 1) + " Of " + tempVar.length
+							);
+						}
+					});
+				});
+		}
+		if (loadStage.current === 1) {
+			if (loadVideoStage.current === 1) {
+				setTimeout(() => {
+					loadVideoJS();
+				}, 1000);
+				loadStage.current = 2;
+			}
 		}
 		if (loadVideoStage.current === 1) {
 			console.log("Finished Loading Patron Video");
@@ -190,7 +242,11 @@ function AccountElements() {
 					}
 
 					console.log(dbData);
+					console.log("GOT User Res");
 					setUserDataRes(dbData);
+					if (dbData.meta === 1 || dbData.meta === 2 || dbData.meta === 3) {
+						loadVideoStage.current = 1;
+					}
 				});
 		}
 		isInitialMount.current = false;
@@ -198,6 +254,7 @@ function AccountElements() {
 		auth.currentUser.displayName,
 		auth.currentUser.uid,
 		loadVideoJS,
+		loadedEzID,
 		payPalResponse,
 	]);
 
@@ -217,23 +274,31 @@ function AccountElements() {
 
 				if (Object.values(dbData)[loadedEzID]) {
 					if (Object.values(dbData)[loadedEzID].meta) {
-						if (parseInt(Object.values(dbData)[loadedEzID].meta) === 1 || parseInt(Object.values(dbData)[loadedEzID].meta) === 3) {
+						if (
+							parseInt(Object.values(dbData)[loadedEzID].meta) === 1 ||
+							parseInt(Object.values(dbData)[loadedEzID].meta) === 3
+						) {
 							console.log(Object.values(dbData));
 
 							let tempVar = 0;
 							Object.values(dbData).forEach((el) => {
 								if (parseInt(el.meta) === 1 || parseInt(el.meta) === 3) {
 									tempVar += 1;
-									console.log(new Date(el.Created * 1000))
+									console.log(new Date(el.Created * 1000));
 
-									console.log(Math.abs(new Date(Date.now())) - new Date((el.Created * 1000)))
+									console.log(
+										Math.abs(new Date(Date.now())) - new Date(el.Created * 1000)
+									);
 
-
-									if (Math.abs(new Date(Date.now())) - new Date((el.Created * 1000)) < 1000 * 60 * 60 * 12) {
-										alert("New/Live Video Detected From: \n" + new Date((el.Created * 1000)))
-										window.location.reload()
+									if (
+										Math.abs(new Date(Date.now())) - new Date(el.Created * 1000) <
+										1000 * 60 * 60 * 12
+									) {
+										alert(
+											"New/Live Video Detected From: \n" + new Date(el.Created * 1000)
+										);
+										window.location.reload();
 									}
-
 
 									// if (new Date(Date.now()) <= new Date(el.Created * 1000)
 									// 	+ (1000 * 36000 * 60 * 1000000)
@@ -323,17 +388,17 @@ function AccountElements() {
 				console.log(isNavForward.current);
 			});
 
-		if (!window.patronVideoInterval) {
-			window.patronVideoInterval = setInterval(() => {
-				RenderPatronDisplay()
-			}, 15000)
-		}
+		// if (!window.patronVideoInterval) {
+		// 	window.patronVideoInterval = setInterval(() => {
+		// 		RenderPatronDisplay();
+		// 	}, 15000);
+		// }
 	}
 
-	function determineUserStatus() {
+	const determineUserStatus = () => {
 		try {
-			if (isInitialMount.current === false)
-				if (userDataRes !== null)
+			if (isInitialMount.current === false) {
+				if (userDataRes !== null) {
 					if (userDataRes.meta !== null) {
 						return userDataRes !== null &&
 							userDataRes.meta !== null &&
@@ -344,7 +409,7 @@ function AccountElements() {
 								<br />
 								{() => {
 									setInterval(() => {
-										console.log()
+										console.log();
 									}, 1000);
 								}}
 								<div style={{ textAlign: "center" }}>
@@ -370,19 +435,35 @@ function AccountElements() {
 								<br />
 								<div style={{ textAlign: "center" }}>{videoNavString}</div> <br />
 								<div style={{ textAlign: "center" }}>
-									{" "}
 									&nbsp; &nbsp;
 									<Button
 										color="primary"
 										onClick={() => {
-											isNavForward.current = false;
-											setloadedEzID(toInteger(loadedEzID) - 1);
-											if (loadedPatronEzId <= 0) {
-												setLoadedPatronEzId(patronVideoCount);
+											if (loadedEzID > 1) {
+												setloadedPlaybackId(patronVideoArray[loadedEzID - 1].playbackId);
+												loadVideoStage.current = 1;
+												setloadedVideoTitle(patronVideoArray[loadedEzID - 1].Title);
+												setVideoNavString(
+													"Viewing #" + (loadedEzID - 1) + " Of " + patronVideoArray.length
+												);
+												setloadedEzID(loadedEzID - 1);
 											} else {
-												setLoadedPatronEzId(loadedPatronEzId - 1);
+												setloadedPlaybackId(
+													patronVideoArray[patronVideoArray.length - 1].playbackId
+												);
+												loadVideoStage.current = 1;
+												setloadedVideoTitle(
+													patronVideoArray[patronVideoArray.length - 1].Title
+												);
+												setVideoNavString(
+													"Viewing #" +
+														patronVideoArray.length +
+														" Of " +
+														patronVideoArray.length
+												);
+												setloadedEzID(patronVideoArray.length);
+												setLoadState("2");
 											}
-											setLoadState("2");
 										}}
 									>
 										←
@@ -391,15 +472,29 @@ function AccountElements() {
 									<Button
 										color="primary"
 										onClick={() => {
-											isNavForward.current = true;
-											setloadedEzID(toInteger(loadedEzID) + 1);
-											setLoadedPatronEzId(toInteger(loadedPatronEzId) + 1);
-											setLoadState("2");
+											if (loadedEzID < patronVideoArray.length - 1) {
+												setloadedPlaybackId(patronVideoArray[loadedEzID + 1].playbackId);
+												loadVideoStage.current = 1;
+												setloadedVideoTitle(patronVideoArray[loadedEzID + 1].Title);
+												setVideoNavString(
+													"Viewing #" + (loadedEzID + 2) + " Of " + patronVideoArray.length
+												);
+												setloadedEzID(loadedEzID + 1);
+											} else {
+												setloadedPlaybackId(patronVideoArray[0].playbackId);
+												loadVideoStage.current = 1;
+												setloadedVideoTitle(patronVideoArray[0].Title);
+												setVideoNavString(
+													"Viewing #" + 1 + " Of " + patronVideoArray.length
+												);
+												setloadedEzID(0);
+											}
 										}}
 									>
 										→
 									</Button>{" "}
-									&nbsp; <br /> <br /><br /> <br />
+									&nbsp; <br /> <br />
+									<br /> <br />
 									<div>{loadedVideoTitle}</div>
 								</div>
 								<video
@@ -409,8 +504,6 @@ function AccountElements() {
 									src={loadedPlaybackId}
 									controls
 								></video>
-
-								{RenderPatronDisplay()}
 							</div>
 						) : userDataRes.meta === 2 ? (
 							"Admin"
@@ -418,13 +511,18 @@ function AccountElements() {
 							"error" || "error"
 						);
 					}
+					return false;
+				}
+				return false;
+			}
+			return false;
 		} catch (error) {
 			setTimeout(() => {
 				window.location.reload();
 				alert("Account Created!");
 			}, 500);
 		}
-	}
+	};
 
 	function toggle(tab) {
 		if (activeTab !== tab) {
@@ -561,7 +659,7 @@ function AccountElements() {
 										<br />
 										<div style={{ textAlign: "center" }}>
 											<br />
-											<b>	To access live streams and early access videos:</b>
+											<b> To access live streams and early access videos:</b>
 											<br />
 											<br />
 

@@ -100,7 +100,7 @@ function VideoManagerComponent() {
 			var playbackId = loadedPlaybackId;
 			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
 			var video = document.getElementById("myVideo");
-			if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			if (video.canPlayType("application/vnd.apple.mpegurl")) {
 				video.src = url;
 				//
 				// If no native HLS support, check if HLS.js is supported
@@ -126,15 +126,14 @@ function VideoManagerComponent() {
 		}
 	}, [loadedPlaybackId]);
 
-
 	const sort_by = (field, reverse, primer) => {
 		const key = primer
 			? function (x) {
-				return primer(x[field]);
-			}
+					return primer(x[field]);
+			  }
 			: function (x) {
-				return x[field];
-			};
+					return x[field];
+			  };
 
 		reverse = !reverse ? 1 : -1;
 
@@ -143,8 +142,6 @@ function VideoManagerComponent() {
 			return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
 		};
 	};
-
-
 
 	useEffect(() => {
 		if (loadStage.current === 0) {
@@ -158,7 +155,8 @@ function VideoManagerComponent() {
 			if (loadStage.current === 1) {
 				firebase
 					.firestore()
-					.collection("VideoData").orderBy("Created")
+					.collection("VideoData")
+					.orderBy("Created")
 					.get()
 					.then((snapshot) => {
 						snapshot.forEach((doc) => {
@@ -178,7 +176,10 @@ function VideoManagerComponent() {
 						setloadedVideoCreatedDate(dbData[dbDataKeyArray[loadedEzID - 1]].Created);
 						setreadyVideoMeta(loadedVideoMeta);
 						setloadedTotalIDs(dbDataArray.length);
-						setreadyDuration({ start: 0, fin: dbData[dbDataKeyArray[loadedEzID - 1]].Duration });
+						setreadyDuration({
+							start: 0,
+							fin: dbData[dbDataKeyArray[loadedEzID - 1]].Duration,
+						});
 						setreadyDescription(loadedDescription);
 						console.log(dbData);
 						loadStage.current = 2;
@@ -320,11 +321,14 @@ function VideoManagerComponent() {
 			.firestore()
 			.collection(categoryVar)
 			.doc(String(loadedVideoID))
-			.set({
-				Title: String(loadedTitle || " "),
-				playbackId: String(loadedPlaybackId),
-				meta: String(readyVideoMeta),
-			}, { merge: true })
+			.set(
+				{
+					Title: String(loadedTitle || " "),
+					playbackId: String(loadedPlaybackId),
+					meta: String(readyVideoMeta),
+				},
+				{ merge: true }
+			)
 			.then((error) => {
 				if (!error) {
 					toast(
@@ -332,9 +336,8 @@ function VideoManagerComponent() {
 							<div>
 								<h1>Success!</h1>
 								<h2>
-									{String(loadedTitle)
-									}{String(readyVideoMeta)
-									}
+									{String(loadedTitle)}
+									{String(readyVideoMeta)}
 								</h2>
 							</div>
 						</div>,
@@ -360,15 +363,54 @@ function VideoManagerComponent() {
 	}
 
 	function runDeleteData() {
+		console.log(loadedVideoID);
 		var answer = window.confirm("Are you sure you want to DELETE " + loadedEzID);
 		if (answer) {
+			sendRequest();
+			firebase
+				.firestore()
+				.collection("VideoData")
+				.doc(loadedVideoID)
+				.delete()
+				.then(() => {
+					firebase
+						.firestore()
+						.collection("VideoData")
+						.orderBy("Created")
+						.get()
+						.then((snapshot) => {
+							snapshot.forEach((doc) => {
+								var key = doc.id;
+								var data = doc.data();
+								data["key"] = key;
+								dbData[key] = data;
+								dbDataArray.push(data);
+								dbDataKeyArray.push(data.key);
+							});
+
+							setloadedSnapshotData(dbData);
+							setloadedTitle(dbData[dbDataKeyArray[loadedEzID - 1]].Title);
+							setloadedVideoID(dbData[dbDataKeyArray[loadedEzID - 1]].key);
+							setloadedPlaybackId(dbData[dbDataKeyArray[loadedEzID - 1]].playbackId);
+							setloadedVideoMeta(dbData[dbDataKeyArray[loadedEzID - 1]].meta);
+							setloadedVideoCreatedDate(
+								dbData[dbDataKeyArray[loadedEzID - 1]].Created
+							);
+							setreadyVideoMeta(loadedVideoMeta);
+							setloadedTotalIDs(dbDataArray.length);
+							setreadyDuration({
+								start: 0,
+								fin: dbData[dbDataKeyArray[loadedEzID - 1]].Duration,
+							});
+							setreadyDescription(loadedDescription);
+							console.log(dbData);
+							loadStage.current = 2;
+						});
+				});
 
 			async function sendRequest(props) {
-
 				const auth = firebase.auth();
 				try {
-
-
 					var useEmulator = true;
 					//Emulator local url for development:
 					let fetchURL = "";
@@ -378,10 +420,7 @@ function VideoManagerComponent() {
 					const urlLive =
 						"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/deleteVideoRequest";
 
-					if (
-						useEmulator &&
-						window.location.hostname.includes("localhost")
-					) {
+					if (useEmulator && window.location.hostname.includes("localhost")) {
 						fetchURL = urlLocal;
 					} else {
 						fetchURL = urlLive;
@@ -415,11 +454,12 @@ function VideoManagerComponent() {
 						}),
 					});
 					const content = await rawResponse.json();
-					console.log(content.res)
-
+					console.log(content.res);
 				} catch (error) {
-
-					alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify(error));
+					alert(
+						"The message did not send. Perhaps you've lost internet? \n" +
+							JSON.stringify(error)
+					);
 				}
 			}
 
@@ -463,7 +503,7 @@ function VideoManagerComponent() {
 		try {
 			setloadedTitle("");
 			setloadedVideoMeta("");
-		} catch (error) { }
+		} catch (error) {}
 	}
 
 	function handleImageUploadState() {
@@ -484,7 +524,7 @@ function VideoManagerComponent() {
 				<small>ID #:</small>
 				<input
 					onChange={(e) => {
-						setloadedTitle("")
+						setloadedTitle("");
 						seteditedDescription("");
 						setloadedDescription("");
 						setloadedEzID(e.target.value);
@@ -499,10 +539,13 @@ function VideoManagerComponent() {
 				<Button
 					color="primary"
 					onClick={() => {
-						setloadedTitle("")
+						setloadedTitle("");
 						seteditedDescription("");
 						setloadedDescription("");
-						if (loadedEzID > Object.values(loadedSnapshotData).length || loadedEzID <= 1) {
+						if (
+							loadedEzID > Object.values(loadedSnapshotData).length ||
+							loadedEzID <= 1
+						) {
 							setloadedEzID(Object.values(loadedSnapshotData).length);
 							loadStage.current = 1;
 						} else {
@@ -517,7 +560,7 @@ function VideoManagerComponent() {
 				<Button
 					color="primary"
 					onClick={() => {
-						setloadedTitle("")
+						setloadedTitle("");
 						seteditedDescription("");
 						setloadedDescription("");
 						if (loadedEzID < Object.values(loadedSnapshotData).length) {
@@ -553,101 +596,110 @@ function VideoManagerComponent() {
 					Delete
 				</Button>{" "}
 				&nbsp;
-				<Button color="secondary" onClick={() => {
-					console.log(loadedSnapshotData);
+				<Button
+					color="secondary"
+					onClick={() => {
+						console.log(loadedSnapshotData);
 
-					setIsCroppingActive(true)
-
-				}}>
+						setIsCroppingActive(true);
+					}}
+				>
 					Crop
 				</Button>
 				<br />
-				<div hidden={!isCroppingActive} style={{ marginTop: "5px" }}>	Crop From:{" "}
-					<input style={{ width: "100px" }}
-						onChange={(event) => setreadyDuration({ start: event.target.value, fin: readyDuration.fin })}
+				<div hidden={!isCroppingActive} style={{ marginTop: "5px" }}>
+					{" "}
+					Crop From:{" "}
+					<input
+						style={{ width: "100px" }}
+						onChange={(event) =>
+							setreadyDuration({ start: event.target.value, fin: readyDuration.fin })
+						}
 						value={readyDuration.start}
-					></input> to	<input style={{ width: "150px" }}
-						onChange={(event) => setreadyDuration({ start: readyDuration.start, fin: event.target.value })}
+					></input>{" "}
+					to{" "}
+					<input
+						style={{ width: "150px" }}
+						onChange={(event) =>
+							setreadyDuration({ start: readyDuration.start, fin: event.target.value })
+						}
 						value={readyDuration.fin}
-					></input>seconds
+					></input>
+					seconds
 					<br />
-					<Button color="secondary" onClick={() => {
+					<Button
+						color="secondary"
+						onClick={() => {
+							const auth = firebase.auth();
+							if (window.confirm("Are you sure you want to crop this video?")) {
+								//
+								console.log(loadedSnapshotData);
 
-						const auth = firebase.auth();
-						if (window.confirm("Are you sure you want to crop this video?")) {
-							//
-							console.log(loadedSnapshotData);
+								async function sendRequest(props) {
+									try {
+										var useEmulator = true;
+										//Emulator local url for development:
+										let fetchURL = "";
+										const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/clipVideoRequest`;
 
+										//Live  url:
+										const urlLive =
+											"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/clipVideoRequest";
 
+										if (useEmulator && window.location.hostname.includes("localhost")) {
+											fetchURL = urlLocal;
+										} else {
+											fetchURL = urlLive;
+										}
 
-							async function sendRequest(props) {
-
-								try {
-
-
-									var useEmulator = true;
-									//Emulator local url for development:
-									let fetchURL = "";
-									const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/clipVideoRequest`;
-
-									//Live  url:
-									const urlLive =
-										"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/clipVideoRequest";
-
-									if (
-										useEmulator &&
-										window.location.hostname.includes("localhost")
-									) {
-										fetchURL = urlLocal;
-									} else {
-										fetchURL = urlLive;
-									}
-
-									//Send Details to Functions
-									const rawResponse = await fetch(fetchURL, {
-										method: "POST",
-										mode: "cors",
-										headers: new Headers({
-											"Content-Type": "application/json",
-											Accept: "application/json",
-											HeaderTokens: JSON.stringify({
-												//
-												// //
-												refreshToken: auth.currentUser.refreshToken,
-												authDomain: auth.currentUser.authDomain,
-												uid: auth.currentUser.uid,
-												name: auth.currentUser.displayName,
-												email: auth.currentUser.email,
-												hostname: window.location.hostname,
-												assetURL: loadedVideoID,
-												startCrop: readyDuration.start,
-												endCrop: readyDuration.fin,
+										//Send Details to Functions
+										const rawResponse = await fetch(fetchURL, {
+											method: "POST",
+											mode: "cors",
+											headers: new Headers({
+												"Content-Type": "application/json",
+												Accept: "application/json",
+												HeaderTokens: JSON.stringify({
+													//
+													// //
+													refreshToken: auth.currentUser.refreshToken,
+													authDomain: auth.currentUser.authDomain,
+													uid: auth.currentUser.uid,
+													name: auth.currentUser.displayName,
+													email: auth.currentUser.email,
+													hostname: window.location.hostname,
+													assetURL: loadedVideoID,
+													startCrop: readyDuration.start,
+													endCrop: readyDuration.fin,
+												}),
 											}),
-										}),
-										body: JSON.stringify({
-											name: "EventRequestPage",
-											contact: "EventRequestPage",
-											// UUID: auth.currentUser.uuid,
-										}),
-									});
-									const content = await rawResponse.json();
-									console.log(content.res)
-									alert(`Successfully created clip
+											body: JSON.stringify({
+												name: "EventRequestPage",
+												contact: "EventRequestPage",
+												// UUID: auth.currentUser.uuid,
+											}),
+										});
+										const content = await rawResponse.json();
+										console.log(content.res);
+										alert(`Successfully created clip
 									\n confirm the new clipped video before deleting the old one
 									\n longer videos may take longer to become ready
-									\n generally takes ~1minute`)
-									window.reload()
-								} catch (error) {
-
-									alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify(error));
+									\n generally takes ~1minute`);
+										window.reload();
+									} catch (error) {
+										alert(
+											"The message did not send. Perhaps you've lost internet? \n" +
+												JSON.stringify(error)
+										);
+									}
 								}
+								sendRequest();
 							}
-							sendRequest()
-						}
-
-					}}>
+						}}
+					>
 						Finalize New Cropping
-					</Button></div>
+					</Button>
+				</div>
 				<br />
 				<div
 					style={{
@@ -663,15 +715,19 @@ function VideoManagerComponent() {
 					</div>
 					<small>
 						<br />
-						<b>Created Date: </b> {loadedVideoCreatedDate && String(new Date(parseInt(loadedVideoCreatedDate) * 1000)).split("(")[0]}
+						<b>Created Date: </b>{" "}
+						{loadedVideoCreatedDate &&
+							String(new Date(parseInt(loadedVideoCreatedDate) * 1000)).split("(")[0]}
 						<br />
 						<b>VideoID:</b> {loadedVideoID}
 						<br />
-						<label><b>Choose Where This Displays:&nbsp; </b></label>
+						<label>
+							<b>Choose Where This Displays:&nbsp; </b>
+						</label>
 						<select
 							onChange={(event) => {
-								alert(loadedVideoID)
-								console.log(event);
+								console.log(event.target.value);
+								console.log("TARGET VALUE");
 								setreadyVideoMeta(event.target.value);
 								toast(
 									<div>
@@ -686,11 +742,12 @@ function VideoManagerComponent() {
 									.firestore()
 									.collection(categoryVar)
 									.doc(String(loadedVideoID))
-									.set({
-										Title: String(loadedTitle) || " ",
-										playbackId: String(loadedPlaybackId),
-										meta: String(event.target.value),
-									}, { merge: true })
+									.set(
+										{
+											meta: String(event.target.value),
+										},
+										{ merge: true }
+									)
 									.then((error) => {
 										if (!error) {
 											toast(
@@ -698,9 +755,8 @@ function VideoManagerComponent() {
 													<div>
 														<h1>Success!</h1>
 														<h2>
-															{String(loadedTitle)
-															}{String(readyVideoMeta)
-															}
+															{String(loadedTitle)}
+															{String(readyVideoMeta)}
 														</h2>
 													</div>
 												</div>,
@@ -723,7 +779,6 @@ function VideoManagerComponent() {
 											);
 										}
 									});
-								runSendData()
 							}}
 							value={readyVideoMeta === " " ? 0 : parseInt(readyVideoMeta)}
 						>
@@ -732,18 +787,12 @@ function VideoManagerComponent() {
 							<option value={3}>VideoBlog And Patrons</option>
 							<option value={0}>Hidden</option>
 						</select>
-						<input
-							hidden
-							onChange={(event) => setreadyVideoMeta(event.target.value)}
-							value={readyVideoMeta}
-						></input>
 						<br />
 						Title:
 						<input
 							onChange={(event) => setloadedTitle(event.target.value)}
 							value={loadedTitle}
 						></input>
-
 					</small>
 					<video
 						style={{ width: "90%" }}
