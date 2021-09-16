@@ -113,6 +113,7 @@ export default function MusicElements() {
 			firebase
 				.firestore()
 				.collection("VideoData")
+				.orderBy("Created")
 				.get()
 				.then((snapshot) => {
 					snapshot.forEach((doc) => {
@@ -130,7 +131,7 @@ export default function MusicElements() {
 						if (parseInt(el.meta) === 3 || parseInt(el.meta) === 2) {
 							tempVar.push(el);
 						}
-						if (index === Object.values(dbData).length - 1) {
+						if (tempVar[loadedEzID] && index === Object.values(dbData).length - 1) {
 							setPublicVideoArray(tempVar);
 							setloadedPlaybackId(tempVar[loadedEzID].playbackId);
 							loadVideoStage.current = 1;

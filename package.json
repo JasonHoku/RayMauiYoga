@@ -1,6 +1,6 @@
 {
     "name": "raymauiyoga-site",
-    "version": "1.132.0",
+    "version": "1.141.0",
     "homepage": "https://raymauiyoga-d75b1.web.app",
     "private": true,
     "dependencies": {
@@ -108,6 +108,7 @@
         "react-material-ui-carousel": "^2.2.7",
         "react-meta-tags": "^1.0.0",
         "react-metismenu": "^1.4.0",
+        "react-modal": "^3.14.3",
         "react-motion-drawer": "^3.1.0",
         "react-native-dotenv": "^2.4.3",
         "react-navi": "^0.13.3",

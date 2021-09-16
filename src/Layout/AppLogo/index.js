@@ -5,6 +5,8 @@ import { Slider } from "react-burgers";
 
 import AppMobileMenu from "../AppMobileMenu";
 
+import { Link } from "react-router-dom";
+
 import {
 	setEnableClosedSidebar,
 	setEnableMobileMenu,
@@ -36,11 +38,7 @@ class HeaderLogo extends React.Component {
 	}
 
 	componentDidMount() {
-		document.addEventListener(
-			"click",
-			this.handleClickOutside.bind(this),
-			true
-		);
+		document.addEventListener("click", this.handleClickOutside.bind(this), true);
 	}
 	componentWillUnmount() {
 		document.removeEventListener(
@@ -67,12 +65,28 @@ class HeaderLogo extends React.Component {
 		return (
 			<Fragment>
 				<div className="app-header__logo">
-					<a href="/">
-						<div className="logo-src" />
-					</a>
+					<Link to="/home">
+						<div
+							style={{ cursor: "pointer" }}
+							onClick={() => {
+								if (caches) {
+									caches.keys().then(function (names) {
+										for (let name of names) caches.delete(name);
+									});
+								}
+								if (window.location.pathname === "/") {
+									window.location.reload();
+								} else if (window.location.pathname === "/home") {
+									window.location.reload();
+								}
+							}}
+							className="logo-src"
+						/>
+					</Link>
 					<div className="header__pane ml-auto">
 						<div onClick={this.toggleEnableClosedSidebar}>
-							<Slider id="SidebarButton"
+							<Slider
+								id="SidebarButton"
 								aria-label="SidebarButton"
 								role="button"
 								aria-pressed="false"

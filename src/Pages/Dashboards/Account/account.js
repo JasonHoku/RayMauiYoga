@@ -11,6 +11,7 @@ import PayPalButton from "./PayPalExpress";
 
 import { toInteger } from "lodash";
 
+import { toast } from "react-toastify";
 import classnames from "classnames";
 import {
 	Row,
@@ -55,6 +56,8 @@ import "hls.js";
 import "hls.js/dist/hls.js";
 
 import Hls from "hls.js";
+
+import Modal from "react-modal";
 
 var firebaseConfig = process.env.REACT_APP_FIREBASE;
 
@@ -104,6 +107,14 @@ function AccountElements() {
 
 	const isNavForward = useRef(true);
 
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [modalFormData, setModalFormData] = useState({
+		TierOne: true,
+		BackCover: false,
+		SingleMonth: false,
+		AdvancedPayment: false,
+	});
+
 	const auth = firebase.auth();
 
 	const [loadState, setLoadState] = useState(0);
@@ -113,116 +124,166 @@ function AccountElements() {
 	const loadVideoJS = useCallback(
 		(prop) => {
 			if (loadVideoStage.current === 1) {
-				if (userDataRes !== null) {
-					console.log("Video State Up " + loadStage.current);
-					var playbackId = loadedPlaybackId;
-					var url = "https://stream.mux.com/" + loadedPlaybackId + ".m3u8";
-					var video = document.getElementById("myVideo");
+				var playbackId = loadedPlaybackId;
+				var url = "https://stream.mux.com/" + loadedPlaybackId + ".m3u8";
+				var video = document.getElementById("myVideo");
 
-					if (video.canPlayType("application/vnd.apple.mpegurl")) {
-						video.src = url;
-						//
-						// If no native HLS support, check if HLS.js is supported
-						//
-					} else if (Hls.isSupported()) {
-						// HLS.js-specific setup code
-						let hls = new Hls();
-						hls.loadSource(url);
-						hls.attachMedia(video);
-					}
-
-					if (typeof mux !== "undefined") {
-						mux.monitor("#myVideo", {
-							data: {
-								env_key: process.env.REACT_APP_MUX_TOKEN_SECRET,
-								player_name: "Custom Player",
-								player_init_time: window.muxPlayerInitTime,
-							},
-						});
-
-						return (loadVideoStage.current = 3);
-					}
+				if (video.canPlayType("application/vnd.apple.mpegurl")) {
+					video.src = url;
+					//
+					// If no native HLS support, check if HLS.js is supported
+					//
+				} else if (Hls.isSupported()) {
+					// HLS.js-specific setup code
+					let hls = new Hls();
+					hls.loadSource(url);
+					hls.attachMedia(video);
 				}
+
+				loadStage.current = 1;
 			}
 		},
-		[loadedPlaybackId, userDataRes]
+		[loadedPlaybackId]
 	);
 
 	useEffect(() => {
-		console.log("State Up " + loadStage.current);
-		if (loadStage.current === 0) {
-			let dbData = {};
-			firebase
-				.firestore()
-				.collection("VideoData")
-				.get()
-				.then((snapshot) => {
-					snapshot.forEach((doc) => {
-						var key = doc.id;
-						var data = doc.data();
-						data["key"] = key;
-						dbData[key] = data;
-					});
-
-					console.log(dbData);
-					var tempVar = [];
-
-					Object.values(dbData).forEach((el, index) => {
-						console.log(el);
-						if (
-							parseInt(el.meta) === 3 ||
-							parseInt(el.meta) === 2 ||
-							parseInt(el.meta) === 1
-						) {
-							tempVar.push(el);
-						}
-						if (index === Object.values(dbData).length - 1) {
-							console.log(tempVar);
-							console.log(tempVar[0].playbackId);
-							console.log("TEMP DATA");
-							setPatronVideoArray(tempVar);
-							setloadedVideoTitle(tempVar[0].Title);
-							setloadedPlaybackId(tempVar[0].playbackId);
-							loadStage.current = 1;
-							setVideoNavString(
-								"Viewing #" + (loadedEzID + 1) + " Of " + tempVar.length
-							);
-						}
-					});
-				});
-		}
-		if (loadStage.current === 1) {
-			if (loadVideoStage.current === 1) {
-				setTimeout(() => {
-					loadVideoJS();
-				}, 1000);
-				loadStage.current = 2;
-			}
-		}
-		if (loadVideoStage.current === 1) {
-			console.log("Finished Loading Patron Video");
-		}
-
-		if (hasPayPalLaunched.current === undefined) {
-			hasPayPalLaunched.current = false;
-		} else {
-			if (hasPayPalLaunched.current === false) {
-				if (payPalResponse !== null) {
-					window.open(payPalResponse, "_blank");
-					hasPayPalLaunched.current = true;
-					document.getElementById("UpgradeAccountButton").innerHTML =
-						"PayPal Opened In New Window";
-				}
-			}
-		}
+		console.log("Load Ref Up " + loadStage.current);
+		console.log("Video Ref Up " + loadVideoStage.current);
+		console.log("Init Ref Up " + isInitialMount.current);
+		console.log("User State Up " + JSON.stringify(userDataRes));
 
 		if (isInitialMount.current === false) {
 			console.log("Init State2 " + loadStage.current);
+
+			if (loadStage.current === 0) {
+				if (userDataRes && userDataRes.meta !== 0) {
+					let dbData = {};
+					firebase
+						.firestore()
+						.collection("VideoData")
+						.orderBy("Created")
+						.get()
+						.then((snapshot) => {
+							snapshot.forEach((doc) => {
+								var key = doc.id;
+								var data = doc.data();
+								data["key"] = key;
+								dbData[key] = data;
+							});
+
+							console.log(dbData);
+							var tempVar = [];
+
+							Object.values(dbData).forEach((el, index) => {
+								console.log(el);
+								if (
+									parseInt(el.meta) === 3 ||
+									parseInt(el.meta) === 2 ||
+									parseInt(el.meta) === 1
+								) {
+									tempVar.push(el);
+								}
+								if (tempVar[0] && index === Object.values(dbData).length - 1) {
+									console.log(tempVar);
+									console.log(tempVar[0].playbackId);
+									console.log("TEMP DATA");
+									setloadedVideoTitle(tempVar[0].Title);
+									setloadedPlaybackId(tempVar[0].playbackId);
+									loadStage.current = 1;
+									loadVideoStage.current = 1;
+									setVideoNavString(
+										"Viewing #" + (loadedEzID + 1) + " Of " + tempVar.length
+									);
+								}
+
+								setPatronVideoArray(tempVar);
+								if (
+									Math.abs(new Date(Date.now())) - new Date(el.Created * 1000) <
+									1000 * 60 * 60 * 12
+								) {
+									console.log("VIDEO AT DATE");
+									console.log(el.Title);
+									console.log("VIDEO AT DATE");
+
+									toast(
+										<div>
+											<div>
+												<h4>New/Live Video Detected</h4>
+												<br />
+												<h5> At: </h5>
+												<h5> {String(new Date(el.Created * 1000))}</h5>
+												<h5>
+													<button
+														onClick={() => {
+															console.log(index);
+															console.log(loadStage.current);
+															console.log(loadVideoStage.current);
+															loadVideoStage.current = 1;
+															loadStage.current = 1;
+															setLoadState("2");
+															setloadedEzID(index);
+
+															setloadedPlaybackId(el.playbackId);
+															loadVideoStage.current = 1;
+															setloadedVideoTitle(el.Title);
+															setVideoNavString("Viewing Most Recent ");
+														}}
+														style={{ borderRadius: "25px", textAlign: "center" }}
+													>
+														Click Here To Tune In
+													</button>
+												</h5>
+												<br />
+											</div>
+										</div>,
+										{ autoClose: 5000 }
+									);
+									if (document.getElementById("LiveAlertID")) {
+										document.getElementById(
+											"LiveAlertID"
+										).innerHTML = `Ray's Latest: <br /> ${
+											el.Title
+										}  <br /> From:  ${new Date(el.Created * 1000)} <br />
+							`;
+
+										document.getElementById("LiveAlertTuneIn").hidden = false;
+									}
+								}
+							});
+						});
+				}
+			}
+			if (loadStage.current === 1) {
+				if (loadVideoStage.current === 1) {
+					loadStage.current = 2;
+					setTimeout(() => {
+						loadVideoJS();
+					}, 1000);
+				}
+			}
+			if (loadVideoStage.current === 1) {
+				console.log("Finished Loading Patron Video");
+			}
+
+			if (hasPayPalLaunched.current === undefined) {
+				hasPayPalLaunched.current = false;
+			} else {
+				if (hasPayPalLaunched.current === false) {
+					if (payPalResponse !== null) {
+						hasPayPalLaunched.current = true;
+						document.getElementById("UpgradeAccountButton").innerHTML =
+							"Invoice Created! Click The Link Below To Continue To PayPal";
+
+						document.getElementById("UpgradeAccountButton").style.height = "75px";
+					}
+				}
+			}
 		} else {
 			// Runs Once Upon Mount
 
 			isNavForward.current = true;
 
+			Modal.setAppElement("#ModalContainerID");
 			//
 			console.log("Init State " + loadStage.current);
 			var dbData = {};
@@ -243,9 +304,8 @@ function AccountElements() {
 
 					console.log(dbData);
 					console.log("GOT User Res");
-					setUserDataRes(dbData);
 					if (dbData.meta === 1 || dbData.meta === 2 || dbData.meta === 3) {
-						loadVideoStage.current = 1;
+						setUserDataRes(dbData);
 					}
 				});
 		}
@@ -256,144 +316,8 @@ function AccountElements() {
 		loadVideoJS,
 		loadedEzID,
 		payPalResponse,
+		userDataRes,
 	]);
-
-	function RenderPatronDisplay() {
-		let dbData = {};
-		firebase
-			.firestore()
-			.collection("VideoData")
-			.get()
-			.then((snapshot) => {
-				snapshot.forEach((doc) => {
-					var key = doc.id;
-					var data = doc.data();
-					data["key"] = key;
-					dbData[key] = data;
-				});
-
-				if (Object.values(dbData)[loadedEzID]) {
-					if (Object.values(dbData)[loadedEzID].meta) {
-						if (
-							parseInt(Object.values(dbData)[loadedEzID].meta) === 1 ||
-							parseInt(Object.values(dbData)[loadedEzID].meta) === 3
-						) {
-							console.log(Object.values(dbData));
-
-							let tempVar = 0;
-							Object.values(dbData).forEach((el) => {
-								if (parseInt(el.meta) === 1 || parseInt(el.meta) === 3) {
-									tempVar += 1;
-									console.log(new Date(el.Created * 1000));
-
-									console.log(
-										Math.abs(new Date(Date.now())) - new Date(el.Created * 1000)
-									);
-
-									if (
-										Math.abs(new Date(Date.now())) - new Date(el.Created * 1000) <
-										1000 * 60 * 60 * 12
-									) {
-										alert(
-											"New/Live Video Detected From: \n" + new Date(el.Created * 1000)
-										);
-										window.location.reload();
-									}
-
-									// if (new Date(Date.now()) <= new Date(el.Created * 1000)
-									// 	+ (1000 * 36000 * 60 * 1000000)
-
-									// ) {
-									// 	alert(el.Created)
-									// }
-								}
-							});
-
-							setPatronVideoCount(tempVar);
-							setVideoNavString("Viewing " + loadedPatronEzId + " Of " + tempVar);
-							console.log(patronVideoCount);
-							//
-
-							loadVideoStage.current = 1;
-							setloadedPlaybackId(
-								String(Object.values(dbData)[loadedEzID].playbackId)
-							);
-							setloadedVideoTitle(String(Object.values(dbData)[loadedEzID].Title));
-							loadVideoStage.current = 1;
-						} else {
-							console.log(isNavForward.current);
-							// Not On Visible, Adjust
-							if (isNavForward.current) {
-								setloadedEzID(toInteger(loadedEzID) + 1);
-								loadVideoStage.current = 0;
-							} else {
-								if (loadedPatronEzId <= 0) {
-									setloadedEzID(Object.values(dbData).length);
-									setLoadedPatronEzId(patronVideoCount);
-								} else {
-									setloadedEzID(toInteger(loadedEzID) - 1);
-								}
-							}
-						}
-					} else {
-						console.log(isNavForward.current);
-						if (isNavForward.current) {
-							if (loadedPatronEzId > patronVideoCount) {
-								setloadedEzID(0);
-								setLoadedPatronEzId(1);
-							} else {
-								setloadedEzID(toInteger(loadedEzID) + 1);
-								setLoadedPatronEzId(loadedPatronEzId + 1);
-							}
-						} else {
-							if (loadedPatronEzId <= 0) {
-								setloadedEzID(Object.values(dbData).length);
-								setLoadedPatronEzId(patronVideoCount);
-							} else {
-								if (loadedPatronEzId <= 0) {
-									setloadedEzID(Object.values(dbData).length);
-									setLoadedPatronEzId(patronVideoCount);
-								} else {
-									setloadedEzID(toInteger(loadedEzID) - 1);
-									setLoadedPatronEzId(loadedPatronEzId - 1);
-								}
-							}
-						}
-						loadVideoStage.current = 0;
-					}
-				} else {
-					console.log(isNavForward.current);
-					if (isNavForward.current) {
-						if (loadedPatronEzId > patronVideoCount) {
-							setloadedEzID(0);
-							setLoadedPatronEzId(1);
-							loadVideoStage.current = 0;
-						} else {
-							setloadedEzID(toInteger(loadedEzID) + 1);
-							setLoadedPatronEzId(loadedPatronEzId + 1);
-						}
-					} else {
-						console.log(isNavForward.current);
-						if (loadedPatronEzId <= 0) {
-							setloadedEzID(Object.values(dbData).length);
-							setLoadedPatronEzId(patronVideoCount);
-						} else {
-							setloadedEzID(toInteger(loadedEzID) - 1);
-							setLoadedPatronEzId(loadedPatronEzId - 1);
-						}
-					}
-					loadVideoStage.current = 0;
-				}
-
-				console.log(isNavForward.current);
-			});
-
-		// if (!window.patronVideoInterval) {
-		// 	window.patronVideoInterval = setInterval(() => {
-		// 		RenderPatronDisplay();
-		// 	}, 15000);
-		// }
-	}
 
 	const determineUserStatus = () => {
 		try {
@@ -412,7 +336,7 @@ function AccountElements() {
 										console.log();
 									}, 1000);
 								}}
-								<div style={{ textAlign: "center" }}>
+								<div id="LiveAlertID" style={{ textAlign: "center" }}>
 									Ray Is Currently <b>Not Live</b> <br />
 									<small
 										onMouseEnter={() => {
@@ -428,8 +352,35 @@ function AccountElements() {
 										If he were you could join by clicking here{" "}
 									</small>
 								</div>{" "}
-								<br />
 								<div style={{ textAlign: "center" }}>
+									{" "}
+									<button
+										onClick={() => {
+											console.log(loadStage.current);
+											console.log(loadVideoStage.current);
+											loadVideoStage.current = 1;
+											loadStage.current = 1;
+											setLoadState("2");
+											console.log(patronVideoArray);
+											setloadedEzID(patronVideoArray.length - 1);
+											setloadedPlaybackId(
+												patronVideoArray[patronVideoArray.length - 1].playbackId
+											);
+											loadVideoStage.current = 1;
+											setloadedVideoTitle(
+												patronVideoArray[patronVideoArray.length - 1].Title
+											);
+											setVideoNavString("Viewing Most Recent ");
+											document.getElementById("LiveAlertTuneIn").hidden = true;
+											document.getElementById("LiveAlertID").hidden = true;
+										}}
+										style={{ borderRadius: "25px", textAlign: "center" }}
+										hidden
+										id="LiveAlertTuneIn"
+									>
+										Click Here To Tune In
+									</button>
+									<br />
 									<b>Paid Patron Videos</b>
 								</div>{" "}
 								<br />
@@ -659,7 +610,16 @@ function AccountElements() {
 										<br />
 										<div style={{ textAlign: "center" }}>
 											<br />
-											<b> To access live streams and early access videos:</b>
+											<b
+												hidden={
+													userDataRes !== null &&
+													userDataRes.meta !== null &&
+													userDataRes.meta !== 0
+												}
+											>
+												{" "}
+												To access live streams and early access videos:
+											</b>
 											<br />
 											<br />
 
@@ -671,77 +631,373 @@ function AccountElements() {
 												}
 												id="UpgradeAccountButton"
 												onClick={() => {
-													//Run EndAPI Call To Functions
-													console.log("Running");
-													require("firebase/functions");
-													async function sendRequest(props) {
-														var useEmulator = true;
-														//Emulator local url for development:
-														let fetchURL = "";
-														const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/processPayment`;
-
-														//Live  url:
-														const urlLive =
-															"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPayment";
-
-														if (
-															useEmulator &&
-															window.location.hostname.includes("localhost")
-														) {
-															fetchURL = urlLocal;
-														} else {
-															fetchURL = urlLive;
-														}
-
-														//Send Details to Functions
-														const rawResponse = await fetch(fetchURL, {
-															method: "POST",
-															mode: "cors",
-															headers: new Headers({
-																"Content-Type": "application/json",
-																Accept: "application/json",
-																HeaderTokens: JSON.stringify({
-																	refreshToken: auth.currentUser.refreshToken,
-																	authDomain: auth.currentUser.authDomain,
-																	uid: auth.currentUser.uid,
-																	name: auth.currentUser.displayName,
-																	email: auth.currentUser.email,
-																	hostname: window.location.hostname,
-																}),
-															}),
-															body: JSON.stringify({
-																UUID: auth.currentUser.uuid,
-															}),
-														});
-														const content = await rawResponse.json();
-														console.log(content);
-														setPayPalResponse(content);
-													}
-
-													sendRequest();
-													document.getElementById("UpgradeAccountButton").innerHTML =
-														"Loading";
-													document.getElementById("UpgradeAccountButton").disabled = true;
-
-													//
+													setModalIsOpen(true);
 												}}
+
+												// onClick={() => {
+												// 	//Run EndAPI Call To Functions
+												// 	console.log("Running");
+												// 	require("firebase/functions");
+												// 	async function sendRequest(props) {
+												// 		var useEmulator = true;
+												// 		//Emulator local url for development:
+												// 		let fetchURL = "";
+												// 		const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/processPayment`;
+
+												// 		//Live  url:
+												// 		const urlLive =
+												// 			"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPayment";
+
+												// 		if (
+												// 			useEmulator &&
+												// 			window.location.hostname.includes("localhost")
+												// 		) {
+												// 			fetchURL = urlLocal;
+												// 		} else {
+												// 			fetchURL = urlLive;
+												// 		}
+
+												// 		//Send Details to Functions
+												// 		const rawResponse = await fetch(fetchURL, {
+												// 			method: "POST",
+												// 			mode: "cors",
+												// 			headers: new Headers({
+												// 				"Content-Type": "application/json",
+												// 				Accept: "application/json",
+												// 				HeaderTokens: JSON.stringify({
+												// 					refreshToken: auth.currentUser.refreshToken,
+												// 					authDomain: auth.currentUser.authDomain,
+												// 					uid: auth.currentUser.uid,
+												// 					name: auth.currentUser.displayName,
+												// 					email: auth.currentUser.email,
+												// 					hostname: window.location.hostname,
+												// 				}),
+												// 			}),
+												// 			body: JSON.stringify({
+												// 				UUID: auth.currentUser.uuid,
+												// 			}),
+												// 		});
+												// 		const content = await rawResponse.json();
+												// 		console.log(content);
+												// 		setPayPalResponse(content);
+												// 	}
+
+												// 	sendRequest();
+												// 	document.getElementById("UpgradeAccountButton").innerHTML =
+												// 		"Loading";
+												// 	document.getElementById("UpgradeAccountButton").disabled = true;
+
+												// 	//
+												// }}
 											>
 												Upgrade Account
 											</button>
 										</div>
-										<span hidden>
-											ID:
+										<div style={{ textAlign: "center" }} hidden={!payPalResponse}>
 											<br />
-											{payPalResponse && payPalResponse.id} <br /> <br />
-											Pay Link:
 											<br />
-											{payPalResponse && payPalResponse} <br /> <br />
-											Status: <br />
-											{payPalResponse && payPalResponse.state}
+											<h1>
+												{" "}
+												Pay Link:
+												<br />
+												<a
+													target="_blank"
+													rel="noreferrer"
+													href={payPalResponse && payPalResponse}
+												>
+													{" "}
+													Continue To PayPal{" "}
+												</a>
+												<br />
+											</h1>{" "}
+											<br /> <br />
 											<br />
-										</span>
+										</div>
 									</div>
 								</h5>
+								<div id="ModalContainerID"></div>
+								<Modal
+									isOpen={modalIsOpen}
+									style={{
+										content: {
+											top: "50%",
+											left: "50%",
+											right: "auto",
+											bottom: "auto",
+											marginRight: "-50%",
+											transform: "translate(-50%, -50%)",
+										},
+
+										overlay: { zIndex: 8888 },
+									}}
+									contentLabel="Example Modal"
+								>
+									<h2>
+										Upgrading Account &nbsp;{" "}
+										<button
+											style={{
+												float: "right",
+												width: "50px",
+												borderRadius: "5px",
+											}}
+											onClick={() => {
+												setModalIsOpen(false);
+											}}
+										>
+											X
+										</button>
+									</h2>
+									<br />
+									<br />
+									<h3>Select your membership type:</h3>
+									<h5>
+										<br />
+										<input
+											id="TierOneInputID"
+											checked={modalFormData.TierOne}
+											onClick={() => {
+												console.log(modalFormData);
+												console.log(modalFormData.TierOne);
+												setModalFormData({
+													TierOne: true,
+													SingleMonth: modalFormData.SingleMonth,
+													AdvancedPayment: modalFormData.AdvancedPayment,
+												});
+												document.getElementById("TierOneInputID").checked = true;
+											}}
+											type="radio"
+										></input>{" "}
+										Paid Access
+										{/* <br />
+										<br />
+										<input
+											id="InsideFrontCoverInputID"
+											value={modalFormData.InsideFrontCover}
+											onClick={() => {
+												console.log(modalFormData);
+												if (modalFormData.InsideFrontCover) {
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														InsideFrontCover: false,
+														SingleMonth: modalFormData.SingleMonth,
+														AdvancedPayment: modalFormData.AdvancedPayment,
+
+
+													});
+
+													document.getElementById("InsideFrontCoverInputID").checked = false;
+												} else {
+													console.log(modalFormData.TierOne);
+													setModalFormData({
+														TierOne: false,
+														InsideFrontCover: true,
+														BackCover: false,
+														SingleMonth: modalFormData.SingleMonth,
+														AdvancedPayment: modalFormData.AdvancedPayment,
+													});
+													document.getElementById("InsideFrontCoverInputID").checked = true;
+													document.getElementById("TierOneInputID").checked = false;
+													document.getElementById("BackCoverInputID").checked = false;
+												}
+											}}
+											type="radio"
+										></input>{" "}
+										Inside Front Cover
+										<br />
+										<br />
+										<input
+											id="BackCoverInputID"
+											value={modalFormData.BackCover}
+											onClick={() => {
+												console.log(modalFormData);
+												if (modalFormData.BackCover) {
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														InsideFrontCover: modalFormData.InsideFrontCover,
+														SingleMonth: modalFormData.SingleMonth,
+														AdvancedPayment: modalFormData.AdvancedPayment,
+														BackCover: false,
+													});
+
+													document.getElementById("BackCoverInputID").checked = false;
+												} else {
+													console.log(modalFormData.TierOne);
+													setModalFormData({
+														TierOne: false,
+														InsideFrontCover: false,
+														SingleMonth: modalFormData.SingleMonth,
+														AdvancedPayment: modalFormData.AdvancedPayment,
+
+														BackCover: true,
+													});
+													document.getElementById("BackCoverInputID").checked = true;
+													document.getElementById("TierOneInputID").checked = false;
+													document.getElementById("InsideFrontCoverInputID").checked = false;
+												}
+											}}
+											type="radio"
+										></input>{" "}
+										Back Cover
+										<br />
+										<br /> */}
+										<br />
+										<br />
+										<br />
+										<br />
+										<h3>Select your payment plan:</h3>
+										<br />
+										<input
+											id="SingleMonthInputID"
+											value={modalFormData.SingleMonth}
+											onClick={() => {
+												console.log(modalFormData);
+												if (modalFormData.SingleMonth) {
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														SingleMonth: false,
+														AdvancedPayment: modalFormData.AdvancedPayment,
+													});
+
+													document.getElementById("SingleMonthInputID").checked = false;
+												} else {
+													console.log(modalFormData.SingleMonth);
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														SingleMonth: true,
+														AdvancedPayment: false,
+													});
+													document.getElementById("SingleMonthInputID").checked = true;
+													document.getElementById("AdvancedPaymentInputID").checked = false;
+												}
+											}}
+											type="radio"
+										></input>{" "}
+										Single Month
+										<br />
+										<br />
+										<input
+											id="AdvancedPaymentInputID"
+											value={modalFormData.AdvancedPayment}
+											onClick={() => {
+												console.log(modalFormData);
+												if (modalFormData.AdvancedPayment) {
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														SingleMonth: modalFormData.SingleMonth,
+														AdvancedPayment: false,
+													});
+
+													document.getElementById("AdvancedPaymentInputID").checked = false;
+												} else {
+													console.log(modalFormData.AdvancedPayment);
+													setModalFormData({
+														TierOne: modalFormData.TierOne,
+														SingleMonth: false,
+														AdvancedPayment: true,
+													});
+													document.getElementById("SingleMonthInputID").checked = false;
+													document.getElementById("AdvancedPaymentInputID").checked = true;
+												}
+											}}
+											type="radio"
+										></input>{" "}
+										Monthly Re-Occurring (Cancel Any time)
+										<br />
+										<br />
+									</h5>
+									<br />
+									<div style={{ textAlign: "center" }}>
+										{" "}
+										<button
+											style={{
+												width: "100px",
+												borderRadius: "5px",
+											}}
+											onClick={() => {
+												console.log(modalFormData);
+												var tempString = "";
+
+												Object.entries(modalFormData).forEach((el) => {
+													tempString += String(el).replace(",", "=") + "&";
+												});
+
+												var tempCost = 0;
+												var tempInterval = 1;
+												if (
+													modalFormData.TierOne === "true" &&
+													modalFormData.SingleMonth === "true" &&
+													"300"
+												)
+													tempCost = 1;
+												tempInterval = 1;
+												if (
+													modalFormData.TierOne === "true" &&
+													modalFormData.AdvancedPayment === "true" &&
+													"300"
+												)
+													tempCost = 1;
+												tempInterval = 0;
+
+												//Run EndAPI Call To Functions
+												console.log("Running");
+												require("firebase/functions");
+												async function sendRequest(props) {
+													var useEmulator = true;
+													//Emulator local url for development:
+													let fetchURL = "";
+													const urlLocal = `http://localhost:5001/raymauiyoga-d75b1/us-central1/processPayment?payment=${1}&interval=${tempInterval}&${tempString}`;
+
+													//Live  url:
+													const urlLive =
+														"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPayment";
+
+													if (
+														useEmulator &&
+														window.location.hostname.includes("localhost")
+													) {
+														fetchURL = urlLocal;
+													} else {
+														fetchURL = urlLive;
+													}
+
+													//Send Details to Functions
+													const rawResponse = await fetch(fetchURL, {
+														method: "POST",
+														mode: "cors",
+														headers: new Headers({
+															"Content-Type": "application/json",
+															Accept: "application/json",
+															HeaderTokens: JSON.stringify({
+																refreshToken: auth.currentUser.refreshToken,
+																authDomain: auth.currentUser.authDomain,
+																uid: auth.currentUser.uid,
+																name: auth.currentUser.displayName,
+																email: auth.currentUser.email,
+																hostname: window.location.hostname,
+															}),
+														}),
+														body: JSON.stringify({
+															UUID: auth.currentUser.uuid,
+														}),
+													});
+													const content = await rawResponse.json();
+													console.log(content);
+													setPayPalResponse(content);
+												}
+
+												setModalIsOpen(false)
+												sendRequest();
+												document.getElementById("UpgradeAccountButton").innerHTML =
+													"Loading";
+												document.getElementById("UpgradeAccountButton").disabled = true;
+
+												//
+											}}
+										>
+											Proceed
+										</button>
+									</div>
+								</Modal>
 							</CardBody>
 						</Card>
 					</Row>

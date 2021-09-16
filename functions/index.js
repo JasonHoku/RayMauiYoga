@@ -76,7 +76,7 @@ exports.clipVideoRequest = functions.https.onRequest((req, res) => {
 					dbData[key] = data;
 				});
 
-				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[0]) {
+				if (userID === dbData.AdminIDs[0] || userID === dbData.AdminIDs[1]) {
 					console.log("True");
 
 					var db = admin.firestore();
@@ -238,102 +238,108 @@ exports.processPaid = functions.https.onRequest((req, res) => {
 				client_id: dbData.PayPal.ID,
 				client_secret: dbData.PayPal.Secret,
 			});
+			if (htmlParams.payment_method !== "singleMonth") {
+				paypal.billingAgreement.execute(
+					token,
+					{},
+					function (error, billingAgreement) {
+						if (error) {
+							console.log(error);
+							throw error;
+						} else {
+							console.log("Approved");
+							console.log(JSON.stringify(token));
 
-			paypal.billingAgreement.execute(
-				token,
-				{},
-				function (error, billingAgreement) {
-					if (error) {
-						console.log(error);
-						throw error;
-					} else {
-						console.log("Approved");
-						console.log(JSON.stringify(token));
-
-						db.collection("UserDocs").doc(userParam).set(
-							{
-								meta: 1,
-							},
-							{ merge: true }
-						);
-
-						//PaymentApproved
-						db
-							.collection("PaymentApproved")
-							.doc()
-							.set(
+							db.collection("UserDocs").doc(userParam).set(
 								{
-									Time: admin.firestore.FieldValue.serverTimestamp(),
-									paymentId: ba_token,
-									paymentData: token,
-									UID: userParam,
+									meta: 1,
 								},
 								{ merge: true }
-							)
-							.then(() => {
-								res.redirect("https://raymauiyoga.com/account");
-							});
-						console.log("Billing Agreement Execute Response");
-						console.log(JSON.stringify(billingAgreement));
+							);
+
+							//PaymentApproved
+							db
+								.collection("PaymentApproved")
+								.doc()
+								.set(
+									{
+										Time: admin.firestore.FieldValue.serverTimestamp(),
+										paymentId: ba_token,
+										paymentData: token,
+										UID: userParam,
+									},
+									{ merge: true }
+								)
+								.then(() => {
+									res.redirect("https://raymauiyoga.com/account");
+								});
+							console.log("Billing Agreement Execute Response");
+							console.log(JSON.stringify(billingAgreement));
+						}
 					}
-				}
-			);
+				);
+			} else {
+				var execute_payment_json = {
+					payer_id: PayerID,
+					transactions: [
+						{
+							amount: {
+								currency: "USD",
+								total: "1.00",
+							},
+						},
+					],
+				};
 
-			// var execute_payment_json = {
-			// 	payer_id: PayerID,
-			// 	transactions: [
-			// 		{
-			// 			amount: {
-			// 				currency: "USD",
-			// 				total: "1.00",
-			// 			},
-			// 		},
-			// 	],
-			// };
+				paypal.payment.execute(
+					paymentId,
+					execute_payment_json,
+					function (error, payment) {
+						if (error) {
+							throw error;
+						} else {
+							console.log("Approved");
+							console.log(JSON.stringify(payment));
 
-			// paypal.payment.execute(
-			// 	paymentId,
-			// 	execute_payment_json,
-			// 	function (error, payment) {
-			// 		if (error) {
-			// 			throw error;
-			// 		} else {
-			// 			console.log("Approved");
-			// 			console.log(JSON.stringify(payment));
+							db.collection("UserDocs").doc(userParam).set(
+								{
+									meta: 1,
+								},
+								{ merge: true }
+							);
 
-			// 			db.collection("UserDocs").doc(userParam).set(
-			// 				{
-			// 					meta: 1,
-			// 				},
-			// 				{ merge: true }
-			// 			);
-
-			// 			//PaymentApproved
-			// 			db
-			// 				.collection("PaymentApproved")
-			// 				.doc()
-			// 				.set(
-			// 					{
-			// 						Time: admin.firestore.FieldValue.serverTimestamp(),
-			// 						PayerID: PayerID,
-			// 						paymentId: paymentId,
-			// 						paymentData: payment,
-			// 						UID: userParam,
-			// 					},
-			// 					{ merge: true }
-			// 				)
-			// 				.then(() => {
-			// 					res.redirect("https://raymauiyoga.com/account");
-			// 				});
-			// 		}
-			// 	}
-			// );
+							//PaymentApproved
+							db
+								.collection("PaymentApproved")
+								.doc()
+								.set(
+									{
+										Time: admin.firestore.FieldValue.serverTimestamp(),
+										PayerID: PayerID,
+										paymentId: paymentId,
+										paymentData: payment,
+										UID: userParam,
+									},
+									{ merge: true }
+								)
+								.then(() => {
+									res.redirect("https://raymauiyoga.com/account");
+								});
+						}
+					}
+				);
+			}
 		});
 });
 
 exports.processPayment = functions.https.onRequest((req, res) => {
 	res.status(200);
 	const paymentParameter = req.query.payment;
+	const intervalParameter = req.query.interval;
+	const tierParameter = req.query.TierOne;
+	const singleMonthParameter = req.query.SingleMonth;
+	const AdvancedPaymentParameter = req.query.AdvancedPayment;
+	console.log(req.query);
 	const cors = require("cors")({ origin: true });
 	res.set("Access-Control-Allow-Origin", "*");
 	res.set("Access-Control-Allow-Headers", "Content-Type");
@@ -384,262 +390,198 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 								isoDate.toISOString().slice(0, 19) + "Z";
 								isoDate.setSeconds(isoDate.getSeconds() + 15);
 
-								var billingPlanAttributes = {
-									description: "RayMauiYoga Subscription Plan",
-									merchant_preferences: {
-										auto_bill_amount: "yes",
-										cancel_url: "https://www.raymauiyoga.com/account",
-										initial_fail_amount_action: "continue",
-										max_fail_attempts: "2",
-										return_url:
-											"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
-											String(userID),
-										setup_fee: {
-											currency: "USD",
-											value: "0",
-										},
-									},
-									name: "RayMauiYoga-Membership",
-									payment_definitions: [
-										{
-											amount: {
+								if (AdvancedPaymentParameter === "true") {
+									var billingPlanAttributes = {
+										description: "RayMauiYoga Subscription Plan",
+										merchant_preferences: {
+											auto_bill_amount: AdvancedPaymentParameter === "true" ? "yes" : "no",
+											cancel_url: "https://www.raymauiyoga.com/account",
+											initial_fail_amount_action: "continue",
+											max_fail_attempts: "2",
+											return_url:
+												"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
+												String(userID),
+											setup_fee: {
 												currency: "USD",
-												value: String(dbData2.RegularSub.price),
+												value: "0",
 											},
-											cycles: "0",
-											frequency: "MONTH",
-											frequency_interval: "1",
-											name: "Regular 1",
-											type: "REGULAR",
 										},
-									],
-									type: "INFINITE",
-								};
+										name: "RayMauiYoga-Membership",
+										payment_definitions: [
+											{
+												amount: {
+													currency: "USD",
+													value: String(dbData2.RegularSub.price),
+												},
+												cycles: AdvancedPaymentParameter === "true" ? "0" : "1",
+												frequency: "MONTH",
+												frequency_interval: AdvancedPaymentParameter === "true" ? "1" : "1",
+												name: "Regular 1",
+												type: AdvancedPaymentParameter === "true" ? "REGULAR" : "TRIAL",
+											},
+										],
+										type: AdvancedPaymentParameter === "true" ? "INFINITE" : "FIXED",
+									};
 
-								var billingPlanUpdateAttributes = [
-									{
-										op: "replace",
-										path: "/",
-										value: {
-											state: "ACTIVE",
+									var billingPlanUpdateAttributes = [
+										{
+											op: "replace",
+											path: "/",
+											value: {
+												state: "ACTIVE",
+											},
 										},
-									},
-								];
+									];
 
-								var billingAgreementAttributes = {
-									name: "RayMauiYoga Membership 1",
-									description: "RayMauiYoga Subscription 1",
-									start_date: isoDate,
-									plan: {
-										id: "RayMauiYoga-01",
-									},
-									payer: {
-										payment_method: "paypal",
-									},
-								};
+									var billingAgreementAttributes = {
+										name: "RayMauiYoga Membership 1",
+										description: "RayMauiYoga Subscription 1",
+										start_date: isoDate,
+										plan: {
+											id: "RayMauiYoga-01",
+										},
+										payer: {
+											payment_method: "paypal",
+										},
+									};
 
-								console.log("Creating Billing");
-								// Create the billing plan
-								paypal.billingPlan.create(
-									billingPlanAttributes,
-									function (error, billingPlan) {
-										if (error) {
-											console.log(error);
-											throw error;
-										} else {
-											console.log("Create Billing Plan Response");
-											console.log(billingPlan);
+									console.log("Creating Billing");
+									// Create the billing plan
+									paypal.billingPlan.create(
+										billingPlanAttributes,
+										function (error, billingPlan) {
+											if (error) {
+												console.log(error);
+												throw error;
+											} else {
+												console.log("Create Billing Plan Response");
+												console.log(billingPlan);
 
-											// Activate the plan by changing status to Active
-											paypal.billingPlan.update(
-												billingPlan.id,
-												billingPlanUpdateAttributes,
-												function (error, response) {
-													if (error) {
-														console.log(error);
-														throw error;
-													} else {
-														console.log(response);
-														console.log("Billing Plan state changed to " + billingPlan.state);
-														billingAgreementAttributes.plan.id = billingPlan.id;
+												// Activate the plan by changing status to Active
+												paypal.billingPlan.update(
+													billingPlan.id,
+													billingPlanUpdateAttributes,
+													function (error, response) {
+														if (error) {
+															console.log(error);
+															throw error;
+														} else {
+															console.log(response);
+															console.log(
+																"Billing Plan state changed to " + billingPlan.state
+															);
+															billingAgreementAttributes.plan.id = billingPlan.id;
 
-														// Use activated billing plan to create agreement
-														paypal.billingAgreement.create(
-															billingAgreementAttributes,
-															function (error, billingAgreement) {
-																if (error) {
-																	console.log(error);
-																	throw error;
-																} else {
-																	console.log("Create Billing Agreement Response");
-																	//console.log(billingAgreement);
-																	for (
-																		var index = 0;
-																		index < billingAgreement.links.length;
-																		index++
-																	) {
-																		if (billingAgreement.links[index].rel === "approval_url") {
-																			var approval_url = billingAgreement.links[index].href;
-																			console.log(
-																				"For approving subscription via Paypal, first redirect user to"
-																			);
-																			console.log(approval_url);
+															// Use activated billing plan to create agreement
+															paypal.billingAgreement.create(
+																billingAgreementAttributes,
+																function (error, billingAgreement) {
+																	if (error) {
+																		console.log(error);
+																		throw error;
+																	} else {
+																		console.log("Create Billing Agreement Response");
+																		//console.log(billingAgreement);
+																		for (
+																			var index = 0;
+																			index < billingAgreement.links.length;
+																			index++
+																		) {
+																			if (billingAgreement.links[index].rel === "approval_url") {
+																				var approval_url = billingAgreement.links[index].href;
+																				console.log(
+																					"For approving subscription via Paypal, first redirect user to"
+																				);
+																				console.log(approval_url);
 
-																			console.log("Payment token is");
-																			// See billing_agreements/execute.js to see example for executing agreement
-																			// after you have payment token
+																				console.log("Payment token is");
+																				// See billing_agreements/execute.js to see example for executing agreement
+																				// after you have payment token
 
-																			res.send(JSON.stringify(approval_url));
-																			res.status(200).send();
-																			console.log(JSON.parse(gotHeaders).uid);
+																				res.send(JSON.stringify(approval_url));
+																				res.status(200).send();
+																				console.log(JSON.parse(gotHeaders).uid);
+																			}
 																		}
 																	}
 																}
-															}
-														);
+															);
+														}
 													}
-												}
-											);
+												);
+											}
 										}
-									}
-								);
+									);
+								} else if (AdvancedPaymentParameter !== "true") {
+									var create_payment_json = {
+										intent: "order",
+										payer: {
+											payment_method: "paypal",
+										},
+										redirect_urls: {
+											return_url:
+												"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
+												String(userID) +
+												"&payment_method=singleMonth",
+											cancel_url: "https://raymauiyoga.com/account",
+										},
+										transactions: [
+											{
+												item_list: {
+													items: [
+														{
+															name: "Test",
+															sku: "0000",
+															price: "1.00",
+															currency: "USD",
+															quantity: 1,
+														},
+													],
+												},
+												amount: {
+													currency: "USD",
+													total: "1.00",
+												},
+												description: "This is the payment description.",
+											},
+										],
+									};
+									paypal.payment.create(create_payment_json, function (error, payment) {
+										if (error) {
+											throw error;
+										} else {
+											console.log("Create Payment Response");
+											console.log(payment);
+											for (var i = 0; i < payment.links.length; i++) {
+												if (payment.links[i].rel === "approval_url") {
+													var approval_url = payment.links[i].href;
+													console.log(
+														"For approving subscription via Paypal, first redirect user to"
+													);
+													console.log(approval_url);
 
-								// var create_payment_json = {
-								// 	intent: "order",
-								// 	payer: {
-								// 		payment_method: "paypal",
-								// 	},
-								// 	redirect_urls: {
-								// 		return_url:
-								// 			"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processPaid?user=" +
-								// 			String(userID),
-								// 		cancel_url: "https://raymauiyoga.com//account",
-								// 	},
-								// 	transactions: [
-								// 		{
-								// 			item_list: {
-								// 				items: [
-								// 					{
-								// 						name: "Test",
-								// 						sku: "0000",
-								// 						price: "1.00",
-								// 						currency: "USD",
-								// 						quantity: 1,
-								// 					},
-								// 				],
-								// 			},
-								// 			amount: {
-								// 				currency: "USD",
-								// 				total: "1.00",
-								// 			},
-								// 			description: "This is the payment description.",
-								// 		},
-								// 	],
-								// };
+													console.log("Payment token is");
+													// See billing_agreements/execute.js to see example for executing agreement
+													// after you have payment token
 
-								// var billingPlanAttributes = {
-								// 	description: "Create Plan for Regular",
-								// 	merchant_preferences: {
-								// 		auto_bill_amount: "yes",
-								// 		return_url: "https://raymauiyoga.com/account",
-								// 		cancel_url: "https://raymauiyoga.com/account",
-								// 		initial_fail_amount_action: "continue",
-								// 		max_fail_attempts: "1",
-								// 		setup_fee: {
-								// 			currency: "USD",
-								// 			value: "2",
-								// 		},
-								// 	},
-								// 	name: "Testing1-Regular1",
-								// 	payment_definitions: [
-								// 		{
-								// 			amount: {
-								// 				currency: "USD",
-								// 				value: "3",
-								// 			},
-								// 			charge_models: [
-								// 				{
-								// 					amount: {
-								// 						currency: "USD",
-								// 						value: "2.60",
-								// 					},
-								// 					type: "SHIPPING",
-								// 				},
-								// 				{
-								// 					amount: {
-								// 						currency: "USD",
-								// 						value: "1",
-								// 					},
-								// 					type: "TAX",
-								// 				},
-								// 			],
-								// 			cycles: "0",
-								// 			frequency: "MONTH",
-								// 			frequency_interval: "1",
-								// 			name: "Regular 1",
-								// 			type: "REGULAR",
-								// 		},
-								// 		{
-								// 			amount: {
-								// 				currency: "USD",
-								// 				value: "1",
-								// 			},
-								// 			charge_models: [
-								// 				{
-								// 					amount: {
-								// 						currency: "USD",
-								// 						value: "1.60",
-								// 					},
-								// 					type: "SHIPPING",
-								// 				},
-								// 				{
-								// 					amount: {
-								// 						currency: "USD",
-								// 						value: "1",
-								// 					},
-								// 					type: "TAX",
-								// 				},
-								// 			],
-								// 			cycles: "12",
-								// 			frequency: "MONTH",
-								// 			frequency_interval: "1",
-								// 			name: "Trial 1",
-								// 			type: "TRIAL",
-								// 		},
-								// 	],
-								// 	type: "INFINITE",
-								// };
-
-								// paypal.payment.create(create_payment_json, function (error, payment) {
-								// 	if (error) {
-								// 		throw error;
-								// 	} else {
-								// 		console.log("Create Payment Response");
-								// 		console.log(payment);
+													res.send(JSON.stringify(approval_url));
+													res.status(200).send();
+													console.log(JSON.parse(gotHeaders).uid);
+													// paypal.payment.execute(el.Payment.id, execute_payment_json, function (error, payment) {
+													// 	if (error) {
+													// 		throw error;
+													// 	} else {
+													// 		console.log("Approved");
+													// 		console.log(JSON.stringify(payment));
+													// 	}
+													// });
+												}
+											}
+										}
+									});
+								}
 
 								//
-								// Execute Upon Approval
-								// 						var execute_payment_json = {
-								// 							"payer_id": "FM3Y6GFJLAFWJ",
-								// 							"transactions": [{
-								// 											"amount": {
-								// 															"currency": "USD",
-								// 															"total": "1.00"
-								// 											}
-								// 							}]
-								// 			};
-								// 						paypal.payment.execute(el.Payment.id, execute_payment_json, function (error, payment) {
-								// 							if (error) {
-								// 								throw error;
-								// 							} else {
-								// 								console.log("Approved");
-								// 								console.log(JSON.stringify(payment));
-								// 							}
-								// 						});
-								// 					});
-								// 			};
-								//
-
 								// db
 								// 	.collection("PaymentProcessing")
 								// 	.doc()
@@ -652,14 +594,11 @@ exports.processPayment = functions.https.onRequest((req, res) => {
 								// 			name: JSON.parse(gotHeaders).name,
 								// 			hostname: JSON.parse(gotHeaders).hostname,
 								// 		},
-
 								// 		{ merge: true }
 								// 	);
 								// 		resolve(payment);
-
 								// 		res.send(JSON.stringify(payment));
 								// 		res.status(200).send();
-
 								// 		console.log(JSON.parse(gotHeaders).uid);
 								// 	}
 								// });
