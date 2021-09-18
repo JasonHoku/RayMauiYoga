@@ -6,7 +6,9 @@ import React, {
 	useCallback,
 } from "react";
 
+import Mux from "@mux/mux-node";
 import mux from "mux-embed";
+import * as UpChunk from "@mux/upchunk";
 
 import "hls.js";
 import "hls.js/dist/hls.js";
@@ -38,6 +40,7 @@ function VideoManagerComponent() {
 	const [url, setURL] = useState("");
 	const isInitialMount = useRef(true);
 	const [noteVar, setnoteVar] = useState("");
+	const [filePickerState, setFilePickerState] = useState(null);
 	const [textVar2, settextVar2] = useState("Select an Instance To Begin");
 	const [activeTab, setactiveTab] = useState("1");
 	const [statusVar, setstatusVar] = useState("Viewing VideoData Data");
@@ -66,6 +69,7 @@ function VideoManagerComponent() {
 	const [hasReceivedImgURL, sethasReceivedImgURL] = useState(false);
 	const [readyCreator, setreadyCreator] = useState("");
 	const [readyTitle, setreadyTitle] = useState("");
+	const [gotMUXUploadURL, setGotMUXUploadURL] = useState("");
 	const [readyDescription, setreadyDescription] = useState("");
 	const [readyDuration, setreadyDuration] = useState("");
 	const [readyID, setreadyID] = useState("");
@@ -306,6 +310,60 @@ function VideoManagerComponent() {
 	// 		})
 	// 		.then((loadStage.current = 1));
 	// }
+
+	function handleUpload(e) {
+		e.preventDefault();
+
+		const upload2 = UpChunk.createUpload({
+			// getUploadUrl is a function that resolves with the upload URL generated
+			// on the server-side
+			endpoint: gotMUXUploadURL.url,
+			// picker here is a file picker HTML element
+			file: filePickerState,
+			chunkSize: 5120, // Uploads the file in ~5mb chunks
+		});
+
+		// subscribe to events
+		upload2.on("error", (err) => {
+			console.error("💥 🙀", err.detail);
+		});
+
+		upload2.on("progress", (progress) => {
+			console.log("Uploaded", progress.detail, "percent of this file.");
+		});
+
+		// subscribe to events
+		upload2.on("success", (err) => {
+			console.log("Wrap it up, we're done here. 👋");
+		});
+
+		console.log(upload2);
+	}
+
+	function handleChange(e) {
+		setFilePickerState(e.target.files[0]);
+		const { Video } = new Mux(
+			process.env.REACT_APP_MUX_TOKEN_ID,
+			process.env.REACT_APP_MUX_TOKEN_SECRET
+		);
+
+		Video.Uploads.create({
+			cors_origin: "https://raymauiyoga.com/",
+			new_asset_settings: {
+				playback_policy: "public",
+			},
+		}).then((upload) => {
+			console.log("GOT UPLOAD DATA");
+			console.log(upload);
+			setGotMUXUploadURL(upload);
+			console.log("GOT UPLOAD DATA");
+			setloadedEzID(toInteger(loadedTotalIDs) + 1);
+			loadStage.current = 2;
+			seteditedDescription("");
+			setloadedDescription("");
+			setloadedTitle("");
+		});
+	}
 
 	function runSendData() {
 		toast(
@@ -582,11 +640,27 @@ function VideoManagerComponent() {
 				<Button
 					color="secondary"
 					onClick={() => {
-						setloadedEzID(toInteger(loadedTotalIDs) + 1);
-						loadStage.current = 2;
-						seteditedDescription("");
-						setloadedDescription("");
-						setloadedTitle("");
+						const { Video } = new Mux(
+							process.env.REACT_APP_MUX_TOKEN_ID,
+							process.env.REACT_APP_MUX_TOKEN_SECRET
+						);
+
+						Video.Uploads.create({
+							cors_origin: "https://raymauiyoga.com/",
+							new_asset_settings: {
+								playback_policy: "public",
+							},
+						}).then((upload) => {
+							console.log("GOT UPLOAD DATA");
+							console.log(upload);
+							setGotMUXUploadURL(upload);
+							console.log("GOT UPLOAD DATA");
+							setloadedEzID(toInteger(loadedTotalIDs) + 1);
+							loadStage.current = 2;
+							seteditedDescription("");
+							setloadedDescription("");
+							setloadedTitle("");
+						});
 					}}
 				>
 					New
@@ -700,6 +774,28 @@ function VideoManagerComponent() {
 						Finalize New Cropping
 					</Button>
 				</div>
+				<div style={{ textAlign: "center" }}>
+					<form role="imgForm" name="imgForm" id="imgForm" onSubmit={handleUpload}>
+						<input type="file" onChange={handleChange} />
+						<Button
+							hidden={!filePickerState}
+							fill="true"
+							color="primary"
+							disabled={!filePickerState}
+							style={{
+								alignSelf: "center",
+								justifySelf: "center",
+								display: "block",
+								position: "relative",
+								width: "55%",
+							}}
+							type="submit"
+						>
+							<h5 style={{ position: "relative", top: "-2px" }}>Upload Video</h5>
+						</Button>{" "}
+					</form>
+					<br />
+				</div>
 				<br />
 				<div
 					style={{
@@ -715,7 +811,7 @@ function VideoManagerComponent() {
 					</div>
 					<small>
 						<br />
-						<b>Created Date: </b>{" "}
+						<b>Created Date: </b>
 						{loadedVideoCreatedDate &&
 							String(new Date(parseInt(loadedVideoCreatedDate) * 1000)).split("(")[0]}
 						<br />

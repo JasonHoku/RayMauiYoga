@@ -171,7 +171,7 @@ function AccountElements() {
 								dbData[key] = data;
 							});
 
-							console.log(dbData);
+							// console.log(dbData);
 							var tempVar = [];
 
 							Object.values(dbData).forEach((el, index) => {
@@ -179,7 +179,8 @@ function AccountElements() {
 								if (
 									parseInt(el.meta) === 3 ||
 									parseInt(el.meta) === 2 ||
-									parseInt(el.meta) === 1
+									parseInt(el.meta) === 1 ||
+									!el.meta
 								) {
 									tempVar.push(el);
 								}
@@ -187,7 +188,7 @@ function AccountElements() {
 									console.log(tempVar);
 									console.log(tempVar[0].playbackId);
 									console.log("TEMP DATA");
-									setloadedVideoTitle(tempVar[0].Title);
+									setloadedVideoTitle(tempVar[0].Title || "Live");
 									setloadedPlaybackId(tempVar[0].playbackId);
 									loadStage.current = 1;
 									loadVideoStage.current = 1;
@@ -226,7 +227,7 @@ function AccountElements() {
 															setloadedPlaybackId(el.playbackId);
 															loadVideoStage.current = 1;
 															setloadedVideoTitle(el.Title);
-															setVideoNavString("Viewing Most Recent ");
+															setVideoNavString("Viewing Live Video");
 														}}
 														style={{ borderRadius: "25px", textAlign: "center" }}
 													>
@@ -242,10 +243,9 @@ function AccountElements() {
 										document.getElementById(
 											"LiveAlertID"
 										).innerHTML = `Ray's Latest: <br /> ${
-											el.Title
-										}  <br /> From:  ${new Date(el.Created * 1000)} <br />
+											el.Title || "Today At:"
+										}  <br />   ${new Date(el.Created * 1000).toDateString()} <br />
 							`;
-
 										document.getElementById("LiveAlertTuneIn").hidden = false;
 									}
 								}
@@ -370,7 +370,7 @@ function AccountElements() {
 											setloadedVideoTitle(
 												patronVideoArray[patronVideoArray.length - 1].Title
 											);
-											setVideoNavString("Viewing Most Recent ");
+											setVideoNavString("Viewing Viewing Live Video");
 											document.getElementById("LiveAlertTuneIn").hidden = true;
 											document.getElementById("LiveAlertID").hidden = true;
 										}}
@@ -381,7 +381,34 @@ function AccountElements() {
 										Click Here To Tune In
 									</button>
 									<br />
-									<b>Paid Patron Videos</b>
+									<br />
+									<b>Patron Available Video List:</b> <br />
+									<br />
+									{patronVideoArray &&
+										patronVideoArray.map((patronVideoEls, index) => {
+											return (
+												<>
+													<button
+														onClick={() => {
+															setloadedPlaybackId(patronVideoArray[index].playbackId);
+															loadVideoStage.current = 1;
+															setloadedVideoTitle(patronVideoArray[index].Title);
+															setVideoNavString(
+																"Viewing #" + index + " Of " + patronVideoArray.length
+															);
+															setloadedEzID(loadedEzID - 1);
+														}}
+														style={{
+															borderRadius: "25px",
+															margin: "5px",
+															backgroundColor: patronVideoEls.Title ? "" : "green",
+														}}
+													>
+														{patronVideoEls.Title || "Live Video"}
+													</button>
+												</>
+											);
+										})}
 								</div>{" "}
 								<br />
 								<div style={{ textAlign: "center" }}>{videoNavString}</div> <br />
@@ -446,10 +473,12 @@ function AccountElements() {
 									</Button>{" "}
 									&nbsp; <br /> <br />
 									<br /> <br />
-									<div>{loadedVideoTitle}</div>
+									<div>
+										<b>{loadedVideoTitle}</b>
+									</div>
 								</div>
 								<video
-									style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}
+									style={{ width: "100%" }}
 									preload="false"
 									id="myVideo"
 									src={loadedPlaybackId}
@@ -985,7 +1014,7 @@ function AccountElements() {
 													setPayPalResponse(content);
 												}
 
-												setModalIsOpen(false)
+												setModalIsOpen(false);
 												sendRequest();
 												document.getElementById("UpgradeAccountButton").innerHTML =
 													"Loading";

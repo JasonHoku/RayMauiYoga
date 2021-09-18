@@ -1,6 +1,6 @@
 {
     "name": "raymauiyoga-site",
-    "version": "1.141.0",
+    "version": "1.143.0",
     "homepage": "https://raymauiyoga-d75b1.web.app",
     "private": true,
     "dependencies": {
@@ -11,6 +11,7 @@
         "@google-cloud/firestore": "^4.9.4",
         "@material-ui/lab": "^4.0.0-alpha.57",
         "@mux/mux-node": "^3.1.3",
+        "@mux/upchunk": "^2.2.2",
         "@testing-library/jest-dom": "^5.11.1",
         "@testing-library/react": "^10.0.4",
         "@testing-library/user-event": "^12.5.0",
