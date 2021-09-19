@@ -674,6 +674,19 @@ exports.twoMinuteInterval = functions.pubsub
 										{ merge: true }
 									);
 							}
+							Object.values(dataSet2).forEach((dbVideoEls) => {
+								if (parseInt(el.duration) > parseInt(dbVideoEls.Duration)) {
+									db
+										.collection("VideoData")
+										.doc(el.id)
+										.set(
+											{
+												Duration: String(el.duration),
+											},
+											{ merge: true }
+										);
+								}
+							});
 						});
 					});
 				})
