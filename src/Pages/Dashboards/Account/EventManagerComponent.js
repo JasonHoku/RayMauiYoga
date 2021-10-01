@@ -24,7 +24,6 @@ import {
 	CardFooter,
 	ButtonGroup,
 } from "reactstrap";
-import axios from "axios";
 import Calendar from "react-calendar";
 import "../../../assets/components/Calendar.css";
 import { useCollectionData } from "react-firebase-hooks/firestore";

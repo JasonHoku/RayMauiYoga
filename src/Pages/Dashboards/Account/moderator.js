@@ -6,7 +6,6 @@ import EventManagerComponent from "./EventManagerComponent.js";
 import NoteManagerComponent from "./NoteManagerComponent.js";
 import CommentManagerComponent from "./CommentManagerComponent.js";
 import SurveyManagerComponent from "./SurveyManagerComponent.js";
-import DocumentationPage from "./Documentation.js";
 import VideoManager from "./VideoManager.js";
 import IssueManager from "./IssueManager.js";
 
@@ -766,21 +765,7 @@ function ModeratorElements() {
 							</Card>
 						</Row>
 					</TabPane>
-					<TabPane tabId="Documentation">
-						<Row style={{ justifyContent: "center" }}>
-							{" "}
-							<Card
-								style={{
-									width: "95%",
-									boxShadow: "0px 0px 0px 5px rgba(50,50,50, .8)",
-									alignContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<DocumentationPage />
-							</Card>
-						</Row>
-					</TabPane>
+
 					<TabPane tabId="Video">{loadVideoManagerComponent()}
 						<br /></TabPane>
 					<TabPane tabId="Users">

@@ -28,7 +28,6 @@ import {
 	TabContent,
 	TabPane,
 } from "reactstrap";
-import axios from "axios";
 import CKEditor from "ckeditor4-react";
 
 import FireBaseImageUpload from "./firebaseImageUpload";

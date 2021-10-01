@@ -25,7 +25,6 @@ import {
 	TabContent,
 	TabPane,
 } from "reactstrap";
-import axios from "axios";
 import CKEditor from "ckeditor4-react";
 
 import { reverse, toInteger } from "lodash";

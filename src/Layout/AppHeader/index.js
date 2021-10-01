@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import cx from "classnames";
-import axios from "axios";
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
 import ReactGA from "react-ga";

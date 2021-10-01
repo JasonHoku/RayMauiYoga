@@ -24,7 +24,6 @@
 //   TabContent,
 //   TabPane,
 // } from "reactstrap";
-// import axios from "axios";
 // const apolloClient = new ApolloClient({
 //   cache: new InMemoryCache(),
 //   link: new HttpLink({
