@@ -1,4 +1,11 @@
-import React, { Component, Fragment, useRef, useState, useEffect } from "react";
+import React, {
+	Component,
+	Fragment,
+	useRef,
+	useState,
+	useEffect,
+	useCallback,
+} from "react";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
 import CarouselBSExample from "./HomeCarousel";
@@ -32,6 +39,15 @@ import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
 
+import { Route, Link } from "react-router-dom";
+
+import "hls.js";
+import "hls.js/dist/hls.js";
+
+import Hls from "hls.js";
+
+import mux from "mux-embed";
+
 export default function CRMDashboard2() {
 	const [loadStage, setloadStage] = useState("1");
 
@@ -44,6 +60,7 @@ export default function CRMDashboard2() {
 	const [gotEventsData, setGotEventsData] = useState(null);
 
 	const [selectedDateEvents, setSelectedDateEvents] = useState([]);
+	const [videoArray, setVideoArray] = useState([]);
 	const [setDate, setsetDate] = useState(
 		String(
 			new Date().toLocaleTimeString([], {
@@ -67,13 +84,77 @@ export default function CRMDashboard2() {
 	const [hover, setHover] = useState("hiddenText");
 
 	const isInitialMount = useRef(true);
+	const isVideoMount = useRef(true);
 	const dbDataRef = useRef(true);
 	const eventsWithinDate = useRef(true);
 	const loadStageRef = useRef(0);
 
+	const [loadedPlaybackId, setloadedPlaybackId] = useState(null);
+	const [loadedTitle, setloadedTitle] = useState(null);
+	const [loadedDate, setloadedDate] = useState(null);
+
+	const loadVideoStage = useRef(0);
+
+	const loadVideoJS = useCallback((prop) => {
+		if (loadVideoStage.current === 1) {
+			var playbackId = prop;
+			console.log(prop);
+			console.log("prop");
+
+			var url = "https://stream.mux.com/" + playbackId + ".m3u8";
+			var video = document.getElementById("myVideo");
+
+			if (video.canPlayType("application/vnd.apple.mpegurl")) {
+				video.src = url;
+				//
+				// If no native HLS support, check if HLS.js is supported
+				//
+			} else if (Hls.isSupported()) {
+				// HLS.js-specific setup code
+				let hls = new Hls();
+				hls.loadSource(url);
+				hls.attachMedia(video);
+			}
+
+			loadStageRef.current = 3;
+		}
+	}, []);
+
 	useEffect(() => {
 		console.log("State Refresh Stage " + loadStageRef.current);
 		//
+
+		if (isVideoMount.current) {
+			isVideoMount.current = false;
+
+			var db = firebase.firestore();
+			const query = db.collection("VideoData").orderBy("Created", "desc");
+
+			const observer = query.onSnapshot(
+				(querySnapshot) => {
+					var tempVar = [];
+					querySnapshot.docs.forEach((el) => {
+						if (parseInt(el.meta) === 3 || parseInt(el.meta) === 2) {
+							tempVar.push({ doc: el.data(), id: el.id });
+						}
+					});
+					setVideoArray(tempVar);
+					// return querySnapshot.docs();
+					console.log(querySnapshot.docs[0].data());
+					setloadedPlaybackId(querySnapshot.docs[0].data().playbackId);
+					setloadedTitle(querySnapshot.docs[0].data().Title);
+					setloadedDate(querySnapshot.docs[0].data().Created);
+					loadVideoStage.current = 1;
+					loadVideoJS(querySnapshot.docs[0].data().playbackId);
+					// ...
+				},
+				(err) => {
+					console.log(`Encountered error: ${err}`);
+				}
+			);
+			console.log(observer);
+		}
+
 		if (loadStageRef.current === 3) {
 			loadStageRef.current = 4;
 		}
@@ -82,7 +163,6 @@ export default function CRMDashboard2() {
 				loadStageRef.current = 0;
 			}, 10);
 		}
-
 		//
 		if (loadStageRef.current === 0) {
 			eventsWithinDate.current = [];
@@ -138,7 +218,7 @@ export default function CRMDashboard2() {
 			}
 		}
 		isInitialMount.current = false;
-	}, [gotEventsData, setDate, selectedDateEvents]);
+	}, [gotEventsData, setDate, selectedDateEvents, loadVideoJS]);
 
 	return (
 		<Fragment>
@@ -161,10 +241,9 @@ export default function CRMDashboard2() {
 					<Card
 						className="main-card mb-3"
 						style={{
-							width: "75%",
+							width: window.innerWidth < 615 ? "100%" : "75%",
 							maxWidth: "750px",
-							backgroundColor: "#eeffff",
-							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
+							backgroundColor: "#feffff00",
 							borderRadius: "100px",
 							borderBottomLeftRadius: "10px",
 						}}
@@ -175,22 +254,15 @@ export default function CRMDashboard2() {
 								left: "50%",
 								borderRadius: "100px",
 								borderBottomLeftRadius: "10px",
+								backgroundColor: "#feffff00",
 							}}
 						>
 							<div style={{ height: "20px" }}></div>
-							<div style={{ fontSize: window.innerWidth > 415 ? "28px" : "24px" }}>
+							<div style={{ fontSize: window.innerWidth > 615 ? "42px" : "24px" }}>
 								{" "}
 								Welcome To RayMauiYoga.com
 							</div>
-							<div style={{ height: "50px" }}></div>
-							<h4>
-								<a href="/about">
-									<b>
-										A community resource of wellness education in the forms of live,
-										written, &amp; video events.
-									</b>
-								</a>
-							</h4>
+							<div style={{ height: "15px" }}></div>
 						</CardBody>
 						<CardBody
 							style={{
@@ -199,29 +271,46 @@ export default function CRMDashboard2() {
 								backgroundColor: "transparent",
 								overflow: "hidden",
 								maxWidth: "100%",
+								width: "100%",
 							}}
 						>
 							<div
 								style={{
+									width: "100%",
 									minWidth: "100%",
 									minHeight: "100%",
-									borderRadius: "50%",
+									borderRadius: "25px",
 									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
 								}}
 							>
-								<div style={{ width: "250px", height: "200px", textAlign: "center" }}>
+								<div
+									style={{
+										width: "100%",
+										maxwidth:
+											window.innerWidth / window.innerHeight < 1
+												? "320px"
+												: window.innerWidth / 2,
+										height:
+											window.innerWidth / window.innerHeight < 1 ? "280px" : " 300px",
+										textAlign: "center",
+									}}
+								>
 									<img
 										style={{
-											borderRadius: "50%",
-											width: "250px",
-											height: "200px",
+											borderRadius: "25px",
+											width: "100%",
+											maxwidth:
+												window.innerWidth / window.innerHeight < 1
+													? "320px"
+													: window.innerWidth / 2,
+
+											height: "300px",
 											position: "relative",
 											left: "0",
 											top: "0",
 											zIndex: 3,
-											maxHeight: "100%",
 										}}
-										src={"/images/frontPageProfile.webp"}
+										src={"/images/frontPageProfile2.webp"}
 										alt=""
 									/>
 								</div>
@@ -252,7 +341,7 @@ export default function CRMDashboard2() {
 									key={"EventCardRow_+" + el.EventTitle}
 									className="main-card mb-3"
 									style={{
-										backgroundColor: "#eeffff",
+										backgroundColor: "#feffff",
 										maxWidth: "1000px",
 										borderTopLeftRadius: "25px",
 										boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
@@ -264,7 +353,7 @@ export default function CRMDashboard2() {
 									<div
 										key={"EventDivRow_+" + el.EventTitle}
 										style={{
-											backgroundColor: "#eeffff",
+											backgroundColor: "#feffff",
 											borderRadius: "0px",
 											borderTopLeftRadius: "25px",
 											borderTopRightRadius: "25px",
@@ -312,27 +401,31 @@ export default function CRMDashboard2() {
 					<Card
 						className="main-card mb-3"
 						style={{
-							backgroundColor: "#eeffff",
+							backgroundColor: "#feffff",
 							maxWidth: "1000px",
 							borderTopLeftRadius: "25px",
-							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
+							boxShadow: "0px 0px 5px 5px rgba(50,50,90, .2)",
 							borderTopRightRadius: "25px",
+							borderBottomRightRadius: "25px",
 							marginLeft: "20px",
 							marginRight: "15px",
 						}}
 					>
 						<div
 							style={{
-								backgroundColor: "#eeffff",
+								backgroundColor: "#feffff",
 								borderRadius: "0px",
 								borderTopLeftRadius: "25px",
 								borderTopRightRadius: "25px",
+								borderBottomRightRadius: "25px",
 							}}
 						>
-							<h2 style={{ padding: "10px" }}>Getting Started</h2>
+							<h2 style={{ padding: "10px", borderBottomRightRadius: "25px" }}>
+								Getting Started
+							</h2>
 						</div>
 						<CardBody
-							style={{ textAlign: "left" }}
+							style={{ textAlign: "left", borderBottomRightRadius: "25px" }}
 							onClick={() => {
 								setHover("visibleText");
 								document.getElementsByClassName("xd123")[0].hidden = true;
@@ -372,15 +465,65 @@ export default function CRMDashboard2() {
 
 						<CardBody
 							className="xd123"
-							style={{ justifyContent: "center", textAlign: "center" }}
+							style={{
+								justifyContent: "center",
+								borderBottomRightRadius: "25px",
+								textAlign: "center",
+							}}
 							onClick={() => setHover("visibleText")}
 							id={hover}
 						>
 							<span id="readMore">
 								<span id="readMore">
-									<Button>Click To Read More</Button>
+									<Button color="primary">Click To Read More</Button>
 								</span>
 							</span>
+						</CardBody>
+					</Card>
+				</Row>
+				<Row style={{ textAlign: "center" }}>
+					<Card
+						className="main-card mb-3"
+						style={{
+							backgroundColor: "#feffff",
+							maxWidth: "1000px",
+							borderTopLeftRadius: "25px",
+							boxShadow: "0px 0px 5px 5px rgba(50,50,90, .2)",
+							borderTopRightRadius: "25px",
+							borderBottomRightRadius: "25px",
+							marginLeft: "20px",
+							marginRight: "15px",
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: "#feffff",
+								borderRadius: "0px",
+								borderTopLeftRadius: "25px",
+								borderTopRightRadius: "25px",
+								borderBottomRightRadius: "25px",
+							}}
+						>
+							<h2 style={{ padding: "10px" }}>Latest Video</h2>
+							<small>
+								From:{" "}
+								{loadedDate && new Date(parseInt(loadedDate) * 1000).toTimeString()}{" "}
+							</small>
+						</div>
+						<CardBody
+							style={{ textAlign: "center", borderBottomRightRadius: "25px" }}
+						>
+							{loadedTitle && loadedTitle}
+							<video
+								controls={true}
+								style={{ width: "100%", height: window.innerWidth * 0.9 * 0.5 }}
+								preload="true"
+								id="myVideo"
+								src={loadedPlaybackId}
+							></video>
+							<Link to="/videos">
+								<Button color="primary">Find More Videos</Button>
+							</Link>
 						</CardBody>
 					</Card>
 				</Row>
@@ -388,9 +531,10 @@ export default function CRMDashboard2() {
 					<Card
 						className="main-card mb-3"
 						style={{
-							boxShadow: "0px 0px 10px 15px rgba(50,50,90, .2)",
+							boxShadow: "0px 0px 5px 5px rgba(50,50,90, .2)",
 							borderRadius: "25px",
-							backgroundColor: "#eeffff",
+							backgroundColor: "#feffff",
+							borderBottomRightRadius: "25px",
 							maxWidth: "1000px",
 							minWidth: "50%",
 						}}
@@ -398,26 +542,34 @@ export default function CRMDashboard2() {
 						<CardLink href="/calendar">
 							<div
 								style={{
-									backgroundColor: "#eeffff",
+									backgroundColor: "#feffff",
+									borderBottomRightRadius: "25px",
 									borderRadius: "25px",
 								}}
 							>
 								<h2
 									style={{
 										padding: "10px",
-										backgroundColor: "#eeffff",
-										borderRadius: "15px",
+										backgroundColor: "#feffff",
+										borderBottomRightRadius: "25px",
+										borderRadius: "25px",
 										textAlign: "center",
 									}}
 								>
 									Discover More Upcoming Events
 								</h2>
 							</div>
-							<CardBody>
-								<li>Find new and coming activities</li>
-								<li>Check availabilities and reserve a spot</li>
-								<li>Request a home or private session</li>
-								<br />
+							<CardBody
+								style={{
+									borderBottomRightRadius: "25px",
+								}}
+							>
+								<div style={{ textAlign: "left", marginLeft: "25px" }}>
+									<li>Find new and coming activities</li>
+									<li>Check availabilities and reserve a spot</li>
+									<li>Request a home or private session</li>
+									<br />
+								</div>
 								All at the events section; By clicking here.
 							</CardBody>
 						</CardLink>

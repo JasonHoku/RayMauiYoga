@@ -114,7 +114,7 @@ export default class ProjectElements extends Component {
 								style={{
 									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
 									position: "relative",
-									backgroundColor: "#eeffff",
+									backgroundColor: "#feffff",
 									top: "-16px",
 									maxWidth: "1000px",
 									borderTopLeftRadius: "25px",

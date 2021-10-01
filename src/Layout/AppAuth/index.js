@@ -236,7 +236,7 @@ function AppAuth() {
 					marginRight: "-5px",
 					color: "black",
 					background:
-						"linear-gradient(0.25turn, #103066FF, #eeffff,#eeffff,#eeffff,#eeffff,#eeffff,#eeffff,#eeffff,#eeffff,#eeffff, #103066FF)",
+						"linear-gradient(0.25turn, #103066FF, #feffff,#feffff,#feffff,#feffff,#feffff,#feffff,#feffff,#feffff,#feffff, #103066FF)",
 				}}
 			>
 				<br />

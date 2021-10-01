@@ -42,9 +42,9 @@ export default class BlogElements extends Component {
 		});
 	}
 
-	onChange(evt) { }
+	onChange(evt) {}
 
-	onBlur(evt) { }
+	onBlur(evt) {}
 
 	getFirestoreBlogData() {
 		let tempDataArray = [];
@@ -109,7 +109,7 @@ export default class BlogElements extends Component {
 							justifyContent: "center",
 							boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
 							alignItems: "center",
-							backgroundColor: "#eeffff",
+							backgroundColor: "#feffff",
 							borderRadius: "0px",
 							borderTopLeftRadius: "25px",
 							borderTopRightRadius: "25px",
@@ -118,7 +118,7 @@ export default class BlogElements extends Component {
 						<Card
 							style={{
 								width: "90%",
-								backgroundColor: "#eeffff",
+								backgroundColor: "#feffff",
 								borderRadius: "0px",
 								borderTopLeftRadius: "25px",
 								borderTopRightRadius: "25px",
@@ -127,19 +127,25 @@ export default class BlogElements extends Component {
 							<h1
 								style={{
 									textAlign: "center",
+									paddingTop:"25px",
 								}}
 							>
-								<h1>"On and Off the Mat"</h1>
+								<h1>On and Off the Mat</h1>
 							</h1>
 							<CardTitle
 								style={{ width: "100%", textAlign: "center", justifyContent: "center" }}
-							> <br />
+							>
+								{" "}
+								<br />
 								{this.state.gotFirestoreBlogs.map((el, index) => {
 									return (
 										<span>
 											<button
 												style={{
-													width: "auto", margin: "20px", fontSize: "20px", backgroundColor: "transparent",
+													width: "auto",
+													margin: "20px",
+													fontSize: "20px",
+													backgroundColor: "transparent",
 													fontFamily: "Montserrat",
 													fontWeight: "bold",
 												}}
@@ -149,11 +155,14 @@ export default class BlogElements extends Component {
 													console.log(index);
 												}}
 											>
-												<span style={{
-													position: "relative", top: "-3px",
+												<span
+													style={{
+														position: "relative",
+														top: "-3px",
 
-													color: this.state.selectedBlog === index ? "darkGreen" : "blue"
-												}}>
+														color: this.state.selectedBlog === index ? "darkGreen" : "blue",
+													}}
+												>
 													{this.state.gotFirestoreBlogs[index].title}
 												</span>
 											</button>

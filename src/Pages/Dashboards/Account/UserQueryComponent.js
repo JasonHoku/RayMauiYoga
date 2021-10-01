@@ -329,7 +329,7 @@ function UserQueryComponent() {
 					>
 						Search
 					</Button>{" "}
-					<div style={{ position: "absolute", backgroundColor: "#eeffff", zIndex: 3 }} id="searchInputID" hidden={true} ><input
+					<div style={{ position: "absolute", backgroundColor: "#feffff", zIndex: 3 }} id="searchInputID" hidden={true} ><input
 
 						onChange={(e) => {
 							console.log(loadedSnapshotData)
