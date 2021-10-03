@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import firebase from "firebase";
 import {
@@ -84,7 +84,7 @@ export default class ProjectElements extends Component {
 
 		return (
 			<Fragment>
-				<CSSTransitionGroup
+				<TransitionGroup
 					component="div"
 					transitionName="TabsAnimation"
 					transitionAppear={true}
@@ -165,7 +165,7 @@ export default class ProjectElements extends Component {
 						</Col>
 					</Row>
 					<br></br>
-				</CSSTransitionGroup>
+				</TransitionGroup>
 			</Fragment>
 		);
 	}

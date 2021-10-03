@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
-import { Slider } from "react-burgers";
+import { CgMoreVerticalO } from "react-icons/cg";
 
 import cx from "classnames";
 
@@ -76,17 +76,41 @@ class AppMobileMenu extends React.Component {
 						style={{ position: "relative", top: "-8px", right: "15px" }}
 						onClick={this.toggleMobileSidebar}
 					>
-						<Slider id="SidebarButton"
-							aria-label="SidebarButton"
+						<CgMoreVerticalO
+							id="SidebarButton2"
+							aria-label="Navigate With Sidebar Button"
 							role="button"
-							aria-pressed="false"
-							style={{ position: "absolute", top: "15px", left: "10px" }}
-							width={35}
-							lineHeight={8}
-							lineSpacing={4}
-							color="#253030"
-							active={this.state.active}
-							onClick={() => this.setState({ active: !this.state.active })}
+							alt="Navigate With Sidebar Button"
+							style={{
+								position: "absolute",
+								transition: "all 1s",
+								top: window.innerWidth / window.innerHeight < 1 ? "0px" : "0px",
+								left: window.innerWidth / window.innerHeight < 1 ? "5px" : "25px",
+								zIndex: 1001,
+								cursor: "pointer",
+							}}
+							onMouseOver={() => {
+								document.getElementById("SidebarButton2").style.transform =
+									"rotate(360deg) ";
+							}}
+							onMouseLeave={() => {
+								document.getElementById("SidebarButton2").style.transform =
+									"rotate(0deg)";
+							}}
+							size={50}
+							color="#112200"
+							onClick={() => {
+								if (this.state.active) {
+									this.setState({
+										active: !this.state.active,
+									});
+								} else {
+									this.setState({
+										active: this.state.active,
+									});
+								}
+								window.toggleSidebar();
+							}}
 						/>
 					</div>
 				</div>

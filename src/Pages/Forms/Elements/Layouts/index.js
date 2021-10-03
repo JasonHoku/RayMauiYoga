@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../../Layout/AppMain/PageTitle";
 
@@ -16,7 +16,7 @@ class FormElementsLayouts extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <PageTitle heading="Form Layouts"
             subheading="Build whatever layout you need with our ArchitectUI framework."
@@ -29,7 +29,7 @@ class FormElementsLayouts extends React.Component {
               <FormGrid />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

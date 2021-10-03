@@ -21,10 +21,6 @@ import {
 
 import { toast, Bounce } from "react-toastify";
 
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import city3 from "../../../assets/utils/images/dropdown-header/abstract4.jpg";
 import avatar1 from "../../../assets/utils/images/avatars/1.jpg";
 
@@ -37,16 +33,16 @@ class UserBox extends React.Component {
 	}
 
 	notify2 = () =>
-	(this.toastId = toast(
-		"You don't have any new items in your calendar for today! Go out and play!",
-		{
-			transition: Bounce,
-			closeButton: true,
-			autoClose: 5000,
-			position: "bottom-center",
-			type: "success",
-		}
-	));
+		(this.toastId = toast(
+			"You don't have any new items in your calendar for today! Go out and play!",
+			{
+				transition: Bounce,
+				closeButton: true,
+				autoClose: 5000,
+				position: "bottom-center",
+				type: "success",
+			}
+		));
 
 	render() {
 		return (
@@ -57,13 +53,14 @@ class UserBox extends React.Component {
 							<div className="widget-content-left ">
 								<UncontrolledButtonDropdown id="MobileMenuID">
 									<DropdownToggle color="link" className="p-0 ">
-										<img id="MobileMenuID"
+										<img
+											id="MobileMenuID"
 											width={42}
 											className="rounded-circle "
 											src={avatar1}
 											alt=""
 										/>
-										<FontAwesomeIcon id="MobileMenuID" className="ml-2" icon={faAngleDown} />
+										↓
 									</DropdownToggle>
 									<DropdownMenu right className="rm-pointers dropdown-menu-lg">
 										<div className="dropdown-menu-header">
@@ -86,9 +83,7 @@ class UserBox extends React.Component {
 																/>
 															</div>
 															<div className="widget-content-left">
-																<div className="widget-heading">
-																	Ray Maui Yoga
-																</div>
+																<div className="widget-heading">Ray Maui Yoga</div>
 																<div className="widget-subheading opacity-9">
 																	Yoga Instructor: Maui, Hawaii
 																</div>
@@ -114,9 +109,7 @@ class UserBox extends React.Component {
 														<NavLink href="/about">Bio</NavLink>
 													</NavItem>
 													<NavItem>
-														<NavLink href="/retreats">
-															Retreats
-														</NavLink>
+														<NavLink href="/retreats">Retreats</NavLink>
 													</NavItem>
 													<Nav vertical>
 														<NavItem className="nav-item-btn text-center">

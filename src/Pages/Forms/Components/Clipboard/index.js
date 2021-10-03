@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import {
   Row,
   Col,
@@ -46,7 +46,7 @@ export default class FormClipboard extends React.Component {
         <PageTitle heading="Clipboard"
           subheading="You can copy/paste text with this React form widget."
           icon="pe-7s-phone icon-gradient bg-premium-dark"/>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <Row>
             <Col md="6">
@@ -112,7 +112,7 @@ export default class FormClipboard extends React.Component {
               </Card>
             </Col>
           </Row>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

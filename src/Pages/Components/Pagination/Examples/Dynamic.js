@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import JwPagination from "jw-react-pagination";
 
@@ -58,7 +58,7 @@ class DynamicPagination extends Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <Container fluid>
             <Row>
@@ -94,7 +94,7 @@ class DynamicPagination extends Component {
               </Col>
             </Row>
           </Container>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

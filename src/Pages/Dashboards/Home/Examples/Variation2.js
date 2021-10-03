@@ -6,7 +6,7 @@ import React, {
 	useEffect,
 	useCallback,
 } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import CarouselBSExample from "./HomeCarousel";
 
@@ -222,7 +222,7 @@ export default function CRMDashboard2() {
 
 	return (
 		<Fragment>
-			<CSSTransitionGroup
+			<TransitionGroup
 				component="div"
 				transitionName="MainAnimation2"
 				transitionAppear={true}
@@ -319,8 +319,8 @@ export default function CRMDashboard2() {
 					</Card>
 				</Row>
 				<div style={{ height: "25px" }}></div>
-			</CSSTransitionGroup>
-			<CSSTransitionGroup
+			</TransitionGroup>
+			<TransitionGroup
 				component="div"
 				transitionName="MainAnimation3"
 				transitionAppear={true}
@@ -575,7 +575,7 @@ export default function CRMDashboard2() {
 						</CardLink>
 					</Card>
 				</Row>
-			</CSSTransitionGroup>
+			</TransitionGroup>
 		</Fragment>
 	);
 }

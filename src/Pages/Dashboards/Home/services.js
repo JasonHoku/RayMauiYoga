@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitleAlt2 from "../../../Layout/AppMain/PageTitleAlt2";
 
@@ -12,21 +12,21 @@ import CRMDashboard1 from "./Examples/Variation1";
 import CRMDashboard2 from "./Examples/Variation2";
 
 
-//  
+//
 
 export default class HomeDashboard extends Component {
   render() {
-    return ( 
+    return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
 
            <PageTitleAlt2 heading="RayMauiYoga Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"
             subheading="RayMauiYoga Design, Engineering &amp; Services | Website Application Development, Music, Graphic Arts, Apparel, Discussion &amp; Modern Arts Collective Non-Profit of West Maui, Hawaii"/>
             <CRMDashboard2 />
-                 </CSSTransitionGroup>
+                 </TransitionGroup>
       </Fragment>
     )
-    
+
   }
 }

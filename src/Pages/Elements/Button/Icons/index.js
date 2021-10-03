@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../../Layout/AppMain/PageTitle";
 
@@ -15,7 +15,7 @@ export default class ButtonsIcons extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false}transitionLeave={false}>
           <PageTitle
             heading="Buttons with Icons"
@@ -30,7 +30,7 @@ export default class ButtonsIcons extends React.Component {
               <ButtonsVerticalIcons />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

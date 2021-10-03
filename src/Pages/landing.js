@@ -2,7 +2,7 @@ import react from "react";
 import React, { Fragment } from "react";
 import { useHistory } from "react-navi";
 import { Route, Redirect } from "react-router-dom";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class LandingPage extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup>
+        <TransitionGroup>
           <span
             className="landingContent"
             onClick={() => (window.location.hash = "/")}
@@ -50,7 +50,7 @@ class LandingPage extends React.Component {
             </h3>
             <br /> <br />
           </span>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

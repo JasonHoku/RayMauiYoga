@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
-import { Slider } from "react-burgers";
-
-import AppMobileMenu from "../AppMobileMenu";
+import { CgMoreVerticalO } from "react-icons/cg";
 
 import { Link } from "react-router-dom";
 
@@ -23,10 +21,6 @@ class HeaderLogo extends React.Component {
 		};
 	}
 
-	toggleEnableClosedSidebar = () => {
-		let { enableClosedSidebar, setEnableClosedSidebar } = this.props;
-		setEnableClosedSidebar(!enableClosedSidebar);
-	};
 	handleClickOutside(event) {
 		if (String(event.target.className).includes("Burger")) {
 		} else {
@@ -38,6 +32,10 @@ class HeaderLogo extends React.Component {
 	}
 
 	componentDidMount() {
+		setTimeout(() => {
+			document.getElementById("headerLogoID").hidden = false;
+			document.getElementById("headerLogoID").style.opacity = 1;
+		}, 750);
 		document.addEventListener("click", this.handleClickOutside.bind(this), true);
 	}
 	componentWillUnmount() {
@@ -65,43 +63,78 @@ class HeaderLogo extends React.Component {
 		return (
 			<Fragment>
 				<div className="app-header__logo">
-					<Link to="/home">
+					<Link
+						onClick={() => {
+							if (caches) {
+								caches.keys().then(function (names) {
+									for (let name of names) caches.delete(name);
+								});
+							}
+							if (window.location.pathname === "/") {
+								window.location.reload();
+							} else if (window.location.pathname === "/home") {
+								window.location.reload();
+							}
+						}}
+						style={{
+							opacity: 0,
+							transitionDuration: "1s",
+							transition: "opacity 1s",
+						}}
+						id="headerLogoID"
+						aria-label="Landing Page Link"
+						to="/"
+					>
 						<div
-							style={{ cursor: "pointer" }}
-							onClick={() => {
-								if (caches) {
-									caches.keys().then(function (names) {
-										for (let name of names) caches.delete(name);
-									});
-								}
-								if (window.location.pathname === "/") {
-									window.location.reload();
-								} else if (window.location.pathname === "/home") {
-									window.location.reload();
-								}
+							style={{
+								position: "absolute",
+								left: "50%",
+								top: "5px",
+								transform: "translateX(-100px)",
 							}}
 							className="logo-src"
-						/>
+						></div>
 					</Link>
-					<div className="header__pane ml-auto">
-						<div onClick={this.toggleEnableClosedSidebar}>
-							<Slider
-								id="SidebarButton"
-								aria-label="SidebarButton"
-								role="button"
-								aria-pressed="false"
-								style={{ position: "absolute", top: "-5px", left: "10px" }}
-								width={35}
-								lineHeight={9}
-								lineSpacing={4}
-								color="#253030"
-								active={this.state.active}
-								onClick={() => this.setState({ active: !this.state.active })}
-							/>
-						</div>
-					</div>
+					<div className="header__pane ml-auto"></div>
 				</div>
-				<AppMobileMenu />
+				<span style={{ position: "absolute", top: "-0px", left: "25px" }}>
+					<CgMoreVerticalO
+						id="SidebarButton"
+						aria-label="Navigate With Sidebar Button"
+						role="button"
+						alt="Navigate With Sidebar Button"
+						style={{
+							position: "absolute",
+							transition: "all 1s",
+							top: window.innerWidth / window.innerHeight < 1 ? "2px" : "2px",
+							left: window.innerWidth / window.innerHeight < 1.3 ? "-10px" : "-10px",
+							zIndex: 1001,
+							cursor: "pointer",
+						}}
+						onMouseOver={() => {
+							document.getElementById("SidebarButton").style.transform =
+								"rotate(360deg) ";
+						}}
+						onMouseLeave={() => {
+							document.getElementById("SidebarButton").style.transform =
+								"rotate(0deg)";
+						}}
+						size={55}
+						color="#112200"
+						onClick={() => {
+							if (this.state.active) {
+								this.setState({
+									active: !this.state.active,
+								});
+							} else {
+								this.setState({
+									active: this.state.active,
+								});
+							}
+							window.toggleSidebar();
+						}}
+					/>
+				</span>
 			</Fragment>
 		);
 	}

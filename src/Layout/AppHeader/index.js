@@ -1,46 +1,59 @@
 import React, { Fragment } from "react";
 import cx from "classnames";
-import { findDOMNode } from "react-dom";
-import { connect } from "react-redux";
-import ReactGA from "react-ga";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
-import SendToGoogleAnalytics from "./Components/analytics";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+import { Button } from "reactstrap";
 
 import HeaderLogo from "../AppLogo";
+
+import MegaMenu from "./Components/MegaMenu";
 
 import {
 	setEnableMobileMenu,
 	setEnableMobileMenuSmall,
 } from "../../reducers/ThemeOptions";
-import SearchBox from "./Components/SearchBox";
-import MegaMenu from "./Components/MegaMenu";
-import UserBox from "./Components/UserBox";
-import HeaderRightDrawer from "./Components/HeaderRightDrawer";
-import { Button } from "reactstrap";
-
-import Login from "../../Login/Login";
-
-import HeaderDots from "./Components/HeaderDots";
-
-import LoginRedirect from "../../Login/LoginRedirect";
 
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
-			response: [],
+			url: "",
 		};
-		this.onClickGA = this.onClickGA.bind(this);
+
+		this.updateState = this.updateState.bind(this);
+		this.toggleMobileSmall = this.toggleMobileSmall.bind(this);
 	}
+
+	updateState() {
+		this.setState({
+			url: window.location.path,
+		});
+	}
+
+	componentDidMount() {
+		this.setState({
+			url: window.location.pathname,
+		});
+		window.addEventListener("click", () => {
+			setTimeout(() => {
+				this.setState({
+					url: window.location.pathname,
+				});
+				console.log(this.state.url);
+			}, 280);
+		});
+	}
+
+	componentWillUnmount() {}
 
 	closePopupOnClick(event) {
 		let { enableMobileMenuSmall, setEnableMobileMenuSmall } = this.props;
 		if (enableMobileMenuSmall) {
-			console.log(String(event.target.id));
-			console.log(String(event.target.className));
 			if (this.state.mobileActive === true) {
+				console.log(String(event.target.id));
 				if (
 					String(event.target.className) === "[object SVGAnimatedString]" ||
 					String(event.target.id) === "MobileMenuID" ||
@@ -67,68 +80,75 @@ class Header extends React.Component {
 		setEnableMobileMenuSmall(!enableMobileMenuSmall);
 		this.setState({ mobileActive: false });
 	}
-	componentDidMount() {
-		document.addEventListener("click", this.closePopupOnClick.bind(this), false);
-		document.addEventListener("click", this.onClickGA.bind(this), false);
-		ReactGA.initialize("UA-102481694-8");
-	}
-	componentWillUnmount() {
-		document.removeEventListener("click", this.onClickGA.bind(this), false);
-	}
-
-	onClickGA(event) {
-		ReactGA.pageview(window.location.href + window.location);
-		const domNode = findDOMNode(event.target);
-		ReactGA.outboundLink(
-			{
-				label: "Clicked :" + domNode.outerHTML,
-			},
-			function () {
-				try {
-				} catch (error) {}
-			}
-		);
-	}
 
 	render() {
 		let { headerBackgroundColor, enableMobileMenuSmall, enableHeaderShadow } =
 			this.props;
 		return (
 			<Fragment>
-				<CSSTransitionGroup
+				<div
 					component="div"
 					className={cx("app-header", headerBackgroundColor, {
 						"header-shadow": enableHeaderShadow,
 					})}
-					transitionName="HeaderAnimation"
-					transitionAppear={true}
-					transitionAppearTimeout={1500}
-					transitionEnter={false}
-					transitionLeave={false}
 				>
-					<SendToGoogleAnalytics />
 					<HeaderLogo />
+
 					<div
 						className={cx("app-header__content", {
 							"header-mobile-open": enableMobileMenuSmall,
 						})}
 					>
 						<div className="app-header-left">
-							<SearchBox />
 							<MegaMenu />
 						</div>
 						<div className="app-header-right">
-							<Router>
-								<Switch>
-									<Login />
-								</Switch>
-							</Router>
-
-							<UserBox />
-							<HeaderRightDrawer />
+							&nbsp;
+							<Link to="/about">
+								<Button
+									onClick={() => {
+										if (window.location.pathname === "/about") {
+											window.location.reload();
+										}
+									}}
+									className="btn-icon-horizontal btn-transition app-header-right"
+									color="light"
+								>
+									<span style={{ fontSize: "22px", textAlign: "center" }}>About</span>
+								</Button>{" "}
+							</Link>
+							&nbsp;
+							<Link to="/contact">
+								<Button
+									onClick={() => {
+										if (window.location.pathname === "/contact") {
+											window.location.reload();
+										}
+									}}
+									className="btn-icon-horizontal btn-transition app-header-right"
+									color="light"
+								>
+									<span style={{ fontSize: "22px", textAlign: "center" }}>Contact</span>
+								</Button>
+							</Link>
+							&nbsp;
+							<Link to="/account">
+								<Button
+									onClick={() => {
+										if (window.location.pathname === "/account") {
+											window.location.reload();
+										}
+									}}
+									className="btn-icon-horizontal btn-transition app-header-right"
+									color="light"
+								>
+									<span style={{ fontSize: "22px", textAlign: "center" }}>Account</span>
+								</Button>
+							</Link>
+							<span style={{ width: "15px" }}></span>
 						</div>
 					</div>
-				</CSSTransitionGroup>
+				</div>
 			</Fragment>
 		);
 	}

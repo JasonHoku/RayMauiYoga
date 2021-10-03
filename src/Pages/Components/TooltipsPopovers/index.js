@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../Layout/AppMain/PageTitle";
 
@@ -15,7 +15,7 @@ export default class TooltipsPopoversExample extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <PageTitle heading="Tooltips & Popovers"
             subheading="These React components are used to add interaction or extra information for your app's content."
@@ -28,7 +28,7 @@ export default class TooltipsPopoversExample extends React.Component {
               <TooltipsExample />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import MegaMenuFooter from "./Components/FooterMegaMenu";
 import FooterDots from "./Components/FooterDots";
 
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import collections from "../../assets/images/collections.png"; // gives image path
 
@@ -63,7 +63,7 @@ class AppContent extends React.Component {
     }
     return (
       <Fragment>
-        <CSSTransitionGroup
+        <CSSTransition
           component="span"
           transitionName="fade-appear"
           transitionAppear={true}
@@ -71,8 +71,8 @@ class AppContent extends React.Component {
           transitionEnter={false}
           transitionLeave={false}
         >
-   
-        </CSSTransitionGroup>
+
+        </CSSTransition>
       </Fragment>
     );
   }

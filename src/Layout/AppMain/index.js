@@ -4,7 +4,7 @@ import Loader from "react-loaders";
 
 import { ToastContainer } from "react-toastify";
 
-const Dashboards = lazy(() => import("../../Pages/Dashboards"));
+import { Dashboards } from "../../Pages/Dashboards";
 
 
 const AppMain = () => {
@@ -27,7 +27,6 @@ const AppMain = () => {
 			>
 				<Route component={Dashboards} />
 			</Suspense>
-
 			<ToastContainer />
 		</Fragment>
 	);

@@ -8,7 +8,7 @@ import Tooltip from "./Examples/Tooltip";
 import { Link } from "./Examples/Button";
 import PropTypes from "prop-types";
 
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import { Row, Col, Card, CardBody } from "reactstrap";
 
 import PageTitle from "../../../Layout/AppMain/PageTitle";
@@ -58,7 +58,7 @@ class GuidedToursExample extends Component {
         <PageTitle heading="Guided Tours"
           subheading="These can be used with other components and elements to create stunning and unique new elements for your UIs."
           icon="pe-7s-paint icon-gradient bg-sunny-morning"/>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <Row>
             <Col md="12">
@@ -71,7 +71,7 @@ class GuidedToursExample extends Component {
               </Card>
             </Col>
           </Row>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

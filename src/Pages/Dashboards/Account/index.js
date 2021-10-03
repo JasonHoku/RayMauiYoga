@@ -6,7 +6,7 @@ import React, {
 	useState,
 	useRef,
 } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import { Helmet } from "react-helmet";
 
 import { unregister } from "../../../serviceWorker";

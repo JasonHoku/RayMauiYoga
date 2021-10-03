@@ -1,10 +1,7 @@
-import React, { Component, Fragment } from "../../../../node_modules/react";
-import scriptLoader from "../../../../node_modules/react-async-script-loader";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "../../../../node_modules/classnames";
-import ReactTable from "../../../../node_modules/react-table";
-import { Route } from "../../../../node_modules/react-router-dom";
+import React, { Component, Fragment } from "react";
 import CarouselBSExample from "./Carousel";
+
+import {TransitionGroup} from "react-transition-group";
 
 import {
 	Row,
@@ -30,27 +27,7 @@ import {
 	Progress,
 	CardFooter,
 	ButtonGroup,
-} from "../../../../node_modules/reactstrap";
-
-import {
-	ResponsiveContainer,
-	LineChart,
-	Line,
-	AreaChart,
-	Area,
-	Tooltip,
-} from "../../../../node_modules/recharts";
-
-import PerfectScrollbar from "../../../../node_modules/react-perfect-scrollbar";
-
-import {
-	faAngleUp,
-	faDotCircle,
-	faAngleDown,
-	faStrikethrough,
-} from "../../../../node_modules/@fortawesome/free-solid-svg-icons";
-
-import { makeData } from "../../Tables/DataTables/Examples/utils";
+} from "reactstrap";
 
 const CLIENT = {
 	sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
@@ -78,8 +55,6 @@ function boxMullerRandom() {
 		}
 	})();
 }
-
-
 
 export default class GalleryElements extends Component {
 	constructor(props) {
@@ -109,10 +84,9 @@ export default class GalleryElements extends Component {
 	}
 
 	render() {
-
 		return (
 			<Fragment>
-				<CSSTransitionGroup
+				<TransitionGroup
 					component="div"
 					transitionName="TabsAnimation"
 					transitionAppear={true}
@@ -147,30 +121,39 @@ export default class GalleryElements extends Component {
 						</CardTitle>
 					</Row>
 					<br />
-					<Row style={{
-						justifyContent: "center",
-						borderRadius: "0px",
-						borderTopLeftRadius: "25px",
-						borderTopRightRadius: "25px",
-					}}>
-						<Col width="100%" style={{
-							maxWidth: "750px",
+					<Row
+						style={{
+							justifyContent: "center",
 							borderRadius: "0px",
 							borderTopLeftRadius: "25px",
 							borderTopRightRadius: "25px",
-						}}>
-							<Card style={{
+						}}
+					>
+						<Col
+							width="100%"
+							style={{
 								maxWidth: "750px",
 								borderRadius: "0px",
 								borderTopLeftRadius: "25px",
 								borderTopRightRadius: "25px",
-							}}>
-								<CardBody style={{
+							}}
+						>
+							<Card
+								style={{
 									maxWidth: "750px",
 									borderRadius: "0px",
 									borderTopLeftRadius: "25px",
 									borderTopRightRadius: "25px",
-								}}>
+								}}
+							>
+								<CardBody
+									style={{
+										maxWidth: "750px",
+										borderRadius: "0px",
+										borderTopLeftRadius: "25px",
+										borderTopRightRadius: "25px",
+									}}
+								>
 									<p></p>{" "}
 									<center>
 										<CarouselBSExample />
@@ -185,97 +168,143 @@ export default class GalleryElements extends Component {
 					</Row>
 					<br></br>
 
-					<Row style={{
-						textAlign: "center",
-						alignSelf: "center",
-						backgroundColor: "transparent",
-						maxWidth: "100%",
-					}}>
-						<Col style={{
+					<Row
+						style={{
 							textAlign: "center",
 							alignSelf: "center",
 							backgroundColor: "transparent",
 							maxWidth: "100%",
-						}} xs="6" sm="4" md="4" xl="3">
+						}}
+					>
+						<Col
+							style={{
+								textAlign: "center",
+								alignSelf: "center",
+								backgroundColor: "transparent",
+								maxWidth: "100%",
+							}}
+							xs="6"
+							sm="4"
+							md="4"
+							xl="3"
+						>
 							<a href="/about">
-								<Card style={{
-									borderRadius: "50%",
-									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
-								}}>
-									<CardHeader style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "100%",
-									}}>Explore</CardHeader>
-									<CardBody style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "100%",
-									}}> An Eye-Opening Experience</CardBody>
+								<Card
+									style={{
+										borderRadius: "50%",
+										boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
+									}}
+								>
+									<CardHeader
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "100%",
+										}}
+									>
+										Explore
+									</CardHeader>
+									<CardBody
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "100%",
+										}}
+									>
+										{" "}
+										An Eye-Opening Experience
+									</CardBody>
 								</Card>
 							</a>
 						</Col>
 
-						<Col style={{
-							marginTop: "10px",
-							textAlign: "center",
-							alignSelf: "center",
-							backgroundColor: "transparent",
-							maxWidth: "100%",
-						}} xs="6" sm="4" md="3" xl="4">
+						<Col
+							style={{
+								marginTop: "10px",
+								textAlign: "center",
+								alignSelf: "center",
+								backgroundColor: "transparent",
+								maxWidth: "100%",
+							}}
+							xs="6"
+							sm="4"
+							md="3"
+							xl="4"
+						>
 							<a href="/about">
 								<Card>
-									<CardHeader style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "100%",
-									}}>Learn More</CardHeader>
-									<CardBody style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "100%",
-									}} >Discover RayMauiYoga Events.</CardBody>
+									<CardHeader
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "100%",
+										}}
+									>
+										Learn More
+									</CardHeader>
+									<CardBody
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "100%",
+										}}
+									>
+										Discover RayMauiYoga Events.
+									</CardBody>
 								</Card>
 							</a>
 						</Col>
 
-						<Col style={{
-							marginTop: "15px",
-							textAlign: "center",
-							alignSelf: "center",
-							backgroundColor: "transparent",
-							maxWidth: "100%",
-						}} xs="7" sm="4" md="4" xl="5">
+						<Col
+							style={{
+								marginTop: "15px",
+								textAlign: "center",
+								alignSelf: "center",
+								backgroundColor: "transparent",
+								maxWidth: "100%",
+							}}
+							xs="7"
+							sm="4"
+							md="4"
+							xl="5"
+						>
 							<a href="/contact">
-								<Card style={{
-									borderRadius: "50%",
-									boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
-								}}>
-									<CardHeader style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "100%",
-									}} >Contact</CardHeader>
-									<CardBody style={{
-										textAlign: "center",
-										alignSelf: "center",
-										backgroundColor: "transparent",
-										maxWidth: "80%",
-									}}>
-										For questions, comments or concerns, reach out at the
-										contact page.
+								<Card
+									style={{
+										borderRadius: "50%",
+										boxShadow: "0px 0px 5px 5px rgba(50,50,90, .3)",
+									}}
+								>
+									<CardHeader
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "100%",
+										}}
+									>
+										Contact
+									</CardHeader>
+									<CardBody
+										style={{
+											textAlign: "center",
+											alignSelf: "center",
+											backgroundColor: "transparent",
+											maxWidth: "80%",
+										}}
+									>
+										For questions, comments or concerns, reach out at the contact page.
 									</CardBody>
 								</Card>
 							</a>
 						</Col>
 					</Row>
 					<br></br>
-				</CSSTransitionGroup>
+				</TransitionGroup>
 			</Fragment>
 		);
 	}

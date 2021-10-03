@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 
 
@@ -18,12 +18,12 @@ export default class Projects extends Component {
 	render() {
 		return (
 			<Fragment>
-				<CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+				<TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
 					transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
 
 
 					<ProjectElements />
-				</CSSTransitionGroup>
+				</TransitionGroup>
 			</Fragment>
 		)
 

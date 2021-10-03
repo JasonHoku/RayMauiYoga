@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import {
   Row,
   Col,
@@ -54,7 +54,7 @@ class BasicExample extends Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <Container fluid>
             <Row>
@@ -606,7 +606,7 @@ class BasicExample extends Component {
               </Col>
             </Row>
           </Container>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

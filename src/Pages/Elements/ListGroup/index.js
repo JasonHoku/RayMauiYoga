@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../Layout/AppMain/PageTitle";
 
@@ -15,7 +15,7 @@ export default class ListGroupExample extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <PageTitle heading="List Groups"
             subheading="These can be used with other components and elements to create stunning and unique new elements for your UIs."
@@ -29,7 +29,7 @@ export default class ListGroupExample extends React.Component {
               <ListGroupExampleBasic />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

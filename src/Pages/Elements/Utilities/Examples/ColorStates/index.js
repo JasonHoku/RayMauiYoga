@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import { Row, Col, Card, CardBody, CardTitle } from "reactstrap";
 
 import ColorSwatches from "./ColorSolids";
@@ -26,7 +26,7 @@ import bg15 from "../../../../../assets/utils/images/sidebar/city5.jpg";
 const UtilitiesColors = (props) => {
   return (
     <Fragment>
-      <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+      <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
         transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
         <Row>
           <Col lg="6">
@@ -157,7 +157,7 @@ const UtilitiesColors = (props) => {
             </Card>
           </Col>
         </Row>
-      </CSSTransitionGroup>
+      </TransitionGroup>
     </Fragment>
   );
 };

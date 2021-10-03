@@ -9,7 +9,6 @@ import SurveyManagerComponent from "./SurveyManagerComponent.js";
 import VideoManager from "./VideoManager.js";
 import IssueManager from "./IssueManager.js";
 
-
 import classnames from "classnames";
 
 import {
@@ -36,25 +35,13 @@ import {
 	CardFooter,
 	ButtonGroup,
 } from "reactstrap";
-import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
-import { relative } from "path";
-import LoginPageElements from "./loginPage";
 import AccountElements from "./account";
-import { get, initial } from "lodash";
 
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
-var firebaseConfig = {
-	apiKey: process.env.REACT_APP_FIREBASE,
-	authDomain: "raymauiyoga-d75b1.firebaseapp.com",
-	projectId: "raymauiyoga-d75b1",
-	storageBucket: "raymauiyoga-d75b1.appspot.com",
-	messagingSenderId: "313463385446",
-	appId: "1:313463385446:web:7d2d2fd362f03913802ca7",
-	measurementId: "G-S8EJTRMN63",
-};
+
 
 function ModeratorElements() {
 	const [message, setMessage] = useState("Hi there, how are you?");
@@ -80,7 +67,6 @@ function ModeratorElements() {
 			console.log("LoadStage: " + loadStage);
 			if (loadStage === "1") {
 				const loadsnapshot = async () => {
-
 					const snapshot = await firebase.firestore().collection("UserDocs").get();
 					snapshot.forEach((doc) => {
 						concData = concData.concat({
@@ -89,17 +75,21 @@ function ModeratorElements() {
 						concData2 = concData2.concat(doc.id);
 					});
 
-					const doc = firebase.firestore().collection('WebsiteStatistics').doc('clicks');
+					const doc = firebase
+						.firestore()
+						.collection("WebsiteStatistics")
+						.doc("clicks");
 
-					const observer = doc.onSnapshot(docSnapshot => {
-						setClickCountMetric(docSnapshot.data().value)
-						console.log(`Received doc snapshot: ${docSnapshot.data().value}`);
-						// ...
-					}, err => {
-						console.log(`Encountered error: ${err}`);
-					});
-
-
+					const observer = doc.onSnapshot(
+						(docSnapshot) => {
+							setClickCountMetric(docSnapshot.data().value);
+							console.log(`Received doc snapshot: ${docSnapshot.data().value}`);
+							// ...
+						},
+						(err) => {
+							console.log(`Encountered error: ${err}`);
+						}
+					);
 
 					// firebase.firestore()
 					// 	.collection("WebsiteStatistics").doc("clicks")
@@ -125,7 +115,6 @@ function ModeratorElements() {
 			}
 		}
 	}, [loadStage, loadedSnapshotData]);
-
 
 	function loadProducts(props) {
 		if (activeTab === "Products") {
@@ -638,8 +627,7 @@ function ModeratorElements() {
 									<br />
 									Clicks: {clickCountMetric}
 									<br />
-									Website Version: {
-										localStorage.getItem("appVersion")}
+									Website Version: {localStorage.getItem("appVersion")}
 									<span id="id002"></span>
 								</h4>
 							</Card>
@@ -718,8 +706,10 @@ function ModeratorElements() {
 							</Card>
 						</Row>
 					</TabPane>
-					<TabPane tabId="Content">{loadContentManagerComponent()}
-						<br /></TabPane>
+					<TabPane tabId="Content">
+						{loadContentManagerComponent()}
+						<br />
+					</TabPane>
 					<TabPane tabId="Notes">
 						<Row style={{ justifyContent: "center" }}>
 							{" "}
@@ -765,9 +755,10 @@ function ModeratorElements() {
 							</Card>
 						</Row>
 					</TabPane>
-
-					<TabPane tabId="Video">{loadVideoManagerComponent()}
-						<br /></TabPane>
+					<TabPane tabId="Video">
+						{loadVideoManagerComponent()}
+						<br />
+					</TabPane>
 					<TabPane tabId="Users">
 						<Row style={{ justifyContent: "center" }}>
 							{" "}

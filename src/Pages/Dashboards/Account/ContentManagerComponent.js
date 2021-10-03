@@ -1,7 +1,5 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 
-import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
-import { Query, ApolloProvider, Mutation } from "react-apollo";
 
 import { toast } from "react-toastify";
 
@@ -28,7 +26,7 @@ import {
 	TabContent,
 	TabPane,
 } from "reactstrap";
-import CKEditor from "ckeditor4-react";
+import {CKEditor} from "ckeditor4-react";
 
 import FireBaseImageUpload from "./firebaseImageUpload";
 

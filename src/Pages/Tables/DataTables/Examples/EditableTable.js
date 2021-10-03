@@ -6,7 +6,7 @@ import { Row, Col, Card, CardBody } from "reactstrap";
 import PageTitle from "../../../../Layout/AppMain/PageTitle";
 
 import { makeData } from "./utils";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 export default class DataTableEditable extends Component {
   constructor() {
@@ -37,7 +37,7 @@ export default class DataTableEditable extends Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <div>
             <PageTitle heading="Data Tables"
@@ -77,7 +77,7 @@ export default class DataTableEditable extends Component {
               </Card>
             </Col>
           </Row>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

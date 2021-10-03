@@ -1,5 +1,5 @@
 import React, { Component, Fragment, setState } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import CKEditor from "ckeditor4-react";
 
 import firebase from "firebase";
@@ -94,7 +94,7 @@ export default class BlogElements extends Component {
 	render() {
 		return (
 			<Fragment>
-				<CSSTransitionGroup
+				<TransitionGroup
 					component="div"
 					transitionName="TabsAnimation"
 					transitionAppear={true}
@@ -194,7 +194,7 @@ export default class BlogElements extends Component {
 							</TabContent>
 						</Card>
 					</Row>
-				</CSSTransitionGroup>
+				</TransitionGroup>
 			</Fragment>
 		);
 	}

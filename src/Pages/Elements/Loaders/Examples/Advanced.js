@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import Loader from "react-loader-advanced";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import { Loader as LoaderAnim } from "react-loaders";
 
 import { Button, Container } from "reactstrap";
@@ -60,7 +60,7 @@ class LoadersAdvancedExample extends Component {
 
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <Container fluid>
             <div>
@@ -91,7 +91,7 @@ class LoadersAdvancedExample extends Component {
               )}
             </div>
           </Container>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

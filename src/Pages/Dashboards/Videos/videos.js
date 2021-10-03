@@ -6,10 +6,7 @@ import React, {
 	useState,
 	useCallback,
 } from "react";
-import scriptLoader from "react-async-script-loader";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "classnames";
-import ReactTable from "react-table";
+import {TransitionGroup} from "react-transition-group";
 import { Route, Link } from "react-router-dom";
 
 import {
@@ -183,7 +180,7 @@ export default function MusicElements() {
 	}
 	return (
 		<Fragment>
-			<CSSTransitionGroup
+			<TransitionGroup
 				component="div"
 				transitionName="TabsAnimation"
 				transitionAppear={true}
@@ -285,7 +282,7 @@ export default function MusicElements() {
 						</CardBody>
 					</Card>
 				</Row>
-			</CSSTransitionGroup>
+			</TransitionGroup>
 		</Fragment>
 	);
 }

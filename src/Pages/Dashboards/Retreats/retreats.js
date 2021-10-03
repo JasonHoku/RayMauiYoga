@@ -1,10 +1,5 @@
 import React, { Component, Fragment } from "react";
-import scriptLoader from "react-async-script-loader";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import classnames from "classnames";
-import ReactTable from "react-table";
-import { Route } from "react-router-dom";
-import CKEditor from "ckeditor4-react";
+import {TransitionGroup} from "react-transition-group";
 
 import {
   Row,
@@ -31,35 +26,7 @@ import {
   ButtonGroup,
 } from "reactstrap";
 
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  Tooltip,
-} from "recharts";
 
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import {
-  faAngleUp,
-  faDotCircle,
-  faAngleDown,
-  faStrikethrough,
-} from "@fortawesome/free-solid-svg-icons";
-
-import { Sparklines, SparklinesCurve } from "react-sparklines";
-
-import { makeData } from "../../Tables/DataTables/Examples/utils";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CountUp from "react-countup";
-
-const CLIENT = {
-  sandbox: process.env.PAYPAL_CLIENT_ID_SANDBOX,
-  production: process.env.PAYPAL_CLIENT_ID_PRODUCTION,
-};
 
 export default class MusicElements extends Component {
   constructor(props) {
@@ -91,7 +58,7 @@ export default class MusicElements extends Component {
   render() {
       return (
         <Fragment>
-          <CSSTransitionGroup
+          <TransitionGroup
             component="div"
             transitionName="TabsAnimation"
             transitionAppear={true}
@@ -125,7 +92,7 @@ export default class MusicElements extends Component {
                 </TabContent>
               </Card>
             </Row>
-          </CSSTransitionGroup>
+          </TransitionGroup>
         </Fragment>
       );
   }

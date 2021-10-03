@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../../Layout/AppMain/PageTitle";
 
@@ -16,7 +16,7 @@ class FormElementsControls extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <PageTitle heading="Form Controls"
             subheading="Wide selection of forms controls, using the Bootstrap 4 code base, but built with React."
@@ -29,7 +29,7 @@ class FormElementsControls extends React.Component {
               <InputGroups />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

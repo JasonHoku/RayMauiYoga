@@ -1,8 +1,5 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 
-import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
-import { Query, ApolloProvider, Mutation } from "react-apollo";
-
 import {
 	Row,
 	Col,
@@ -25,7 +22,6 @@ import {
 	TabContent,
 	TabPane,
 } from "reactstrap";
-import CKEditor from "ckeditor4-react";
 
 import { reverse, toInteger } from "lodash";
 import firebase from "firebase/app";

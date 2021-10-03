@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import cx from "classnames";
 import { withRouter } from "react-router-dom";
 
-import ResizeDetector from "react-resize-detector";
-
 import AppMain from "../../Layout/AppMain";
 
 import AppAuth from "../../Layout/AppAuth/index.js";
@@ -22,7 +20,10 @@ class Main extends React.Component {
 	componentDidMount() {
 		window.addEventListener("hashchange", this.toggle1, false);
 		document.body.addEventListener("click", async function (e) {
-			const cityRef = firebase.firestore().collection("WebsiteStatistics").doc("clicks");
+			const cityRef = firebase
+				.firestore()
+				.collection("WebsiteStatistics")
+				.doc("clicks");
 
 			try {
 				await firebase.firestore().runTransaction(async (t) => {
@@ -35,8 +36,7 @@ class Main extends React.Component {
 			} catch (e) {
 				console.log("Transaction failure:", e);
 			}
-		})
-
+		});
 	}
 
 	componentWillUnmount() {
@@ -60,39 +60,39 @@ class Main extends React.Component {
 			enablePageTabsAlt,
 		} = this.props;
 
-		return (
-			<ResizeDetector
-				handleWidth
-				render={({ width }) => (
-					<Fragment>
-						<div
-							style={{
-								backgroundColor: "transparent",
-								position: "sticky",
-								margin: 0,
-								padding: 0,
-								width: "100%",
-								height: "100vh",
-							}}
-							className={cx(
-								"app-container app-theme-" + colorScheme,
-								{ "fixed-header": enableFixedHeader },
-								{ "fixed-sidebar": enableFixedSidebar || width < 1250 },
-								{ "fixed-footer": enableFixedFooter },
-								{ "closed-sidebar": enableClosedSidebar || width < 1250 },
-								{
-									"closed-sidebar-mobile": closedSmallerSidebar || width < 1250,
-								},
-								{ "sidebar-mobile-open": enableMobileMenu },
-								{ "body-tabs-shadow-btn": enablePageTabsAlt }
-							)}
-						>
-							<AppMain />
+		let width = window.innerWidth;
 
-						</div>
-					</Fragment>
-				)}
-			/>
+		window.onresize = function () {
+			width = window.innerWidth;
+		};
+
+		return (
+			<Fragment>
+				<div
+					style={{
+						backgroundColor: "transparent",
+						position: "sticky",
+						margin: 0,
+						padding: 0,
+						width: "100%",
+						height: "100vh",
+					}}
+					className={cx(
+						"app-container app-theme-" + colorScheme,
+						{ "fixed-header": enableFixedHeader },
+						{ "fixed-sidebar": enableFixedSidebar || width < 1250 },
+						{ "fixed-footer": enableFixedFooter },
+						{ "closed-sidebar": enableClosedSidebar || width < 1250 },
+						{
+							"closed-sidebar-mobile": closedSmallerSidebar || width < 1250,
+						},
+						{ "sidebar-mobile-open": enableMobileMenu },
+						{ "body-tabs-shadow-btn": enablePageTabsAlt }
+					)}
+				>
+					<AppMain />
+				</div>
+			</Fragment>
 		);
 	}
 }

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 
 import PageTitle from "../../../Layout/AppMain/PageTitle";
 
@@ -15,7 +15,7 @@ export default class WidgetsChartBoxes2 extends React.Component {
   render() {
     return (
       <Fragment>
-        <CSSTransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
+        <TransitionGroup component="div" transitionName="TabsAnimation" transitionAppear={true}
           transitionAppearTimeout={0} transitionEnter={false} transitionLeave={false}>
           <PageTitle heading="Chart Boxes II"
             subheading="Unlimited styles are available for our chart boxes. Check out our dashboard examples for more."
@@ -28,7 +28,7 @@ export default class WidgetsChartBoxes2 extends React.Component {
               <Colors2Example />
             </TabPane>
           </Tabs>
-        </CSSTransitionGroup>
+        </TransitionGroup>
       </Fragment>
     );
   }

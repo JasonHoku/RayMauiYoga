@@ -59,8 +59,6 @@ import Hls from "hls.js";
 
 import Modal from "react-modal";
 
-var firebaseConfig = process.env.REACT_APP_FIREBASE;
-
 function AccountElements() {
 	const [activeTab, setactiveTab] = useState("1");
 	const [formTitle, setformTitle] = useState("");
@@ -318,7 +316,7 @@ function AccountElements() {
 		payPalResponse,
 		userDataRes,
 	]);
-
+	var Loader = require("react-loaders").Loader;
 	const determineUserStatus = () => {
 		try {
 			if (isInitialMount.current === false) {
@@ -330,6 +328,7 @@ function AccountElements() {
 							"Regular User"
 						) : userDataRes.meta === 1 ? (
 							<div>
+								Patron User
 								<br />
 								{() => {
 									setInterval(() => {
@@ -337,20 +336,25 @@ function AccountElements() {
 									}, 1000);
 								}}
 								<div id="LiveAlertID" style={{ textAlign: "center" }}>
-									Ray Is Currently <b>Not Live</b> <br />
-									<small
-										onMouseEnter={() => {
-											document.getElementById("LiveTextSpan").style.color = "#222222";
-										}}
-										onMouseLeave={() => {
-											document.getElementById("LiveTextSpan").style.color = "blue";
-										}}
-										id="LiveTextSpan"
-										style={{ color: "blue" }}
-									>
+									Ray Is Currently <b>Not Live</b>
+									<br /> <Loader color="red" type="line-scale" active />
+									Checking for new videos. <br />
+									<b>
 										{" "}
-										If he were you could join by clicking here{" "}
-									</small>
+										<small
+											onMouseEnter={() => {
+												document.getElementById("LiveTextSpan").style.color = "#222222";
+											}}
+											onMouseLeave={() => {
+												document.getElementById("LiveTextSpan").style.color = "blue";
+											}}
+											id="LiveTextSpan"
+											style={{ color: "blue" }}
+										>
+											{" "}
+											If he were you could join by clicking here{" "}
+										</small>
+									</b>
 								</div>{" "}
 								<div style={{ textAlign: "center" }}>
 									{" "}
@@ -382,7 +386,7 @@ function AccountElements() {
 									</button>
 									<br />
 									<br />
-									<b>Patron Available Video List:</b> <br />
+									<b>Patron Access Videos:</b> <br />
 									<br />
 									{patronVideoArray &&
 										patronVideoArray.map((patronVideoEls, index) => {
@@ -402,9 +406,11 @@ function AccountElements() {
 															borderRadius: "25px",
 															margin: "5px",
 															backgroundColor: patronVideoEls.Title ? "" : "green",
+															height: "auto",
 														}}
 													>
-														{patronVideoEls.Title || "Live Video"}
+														<h3> {patronVideoEls.Title || "Live Video"}</h3>
+														{new Date(patronVideoArray[index].Created * 1000).toDateString()}
 													</button>
 												</>
 											);
@@ -934,6 +940,13 @@ function AccountElements() {
 										<br />
 										<br />
 									</h5>
+									<br />
+									<div style={{ maxWidth: "450px", textAlign: "center" }}>
+										Currently offering live streams & new videos at a special rate of $15
+										for monthly access.
+									</div>
+									<br />
+
 									<br />
 									<div style={{ textAlign: "center" }}>
 										{" "}

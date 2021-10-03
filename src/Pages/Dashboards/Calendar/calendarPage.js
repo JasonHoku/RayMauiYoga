@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
+import {TransitionGroup} from "react-transition-group";
 import {
 	Row,
 	Col,
@@ -362,7 +362,7 @@ function EventManagerComponent() {
 
 	return (
 		<Fragment>
-			<CSSTransitionGroup
+			<TransitionGroup
 				component="div"
 				transitionName="MainAnimation3"
 				transitionAppear={true}
@@ -578,7 +578,7 @@ function EventManagerComponent() {
 							</div>
 						</CardBody>
 					</Card></Row>
-			</CSSTransitionGroup>
+			</TransitionGroup>
 		</Fragment>
 	);
 }

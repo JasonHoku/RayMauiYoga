@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
-import emailjs from "emailjs-com";
+import {TransitionGroup} from "react-transition-group";
 
 import {
 	Row,
@@ -33,28 +32,6 @@ import {
 	CardFooter,
 	ButtonGroup,
 } from "reactstrap";
-
-import {
-	ResponsiveContainer,
-	LineChart,
-	Line,
-	AreaChart,
-	Area,
-	Tooltip,
-} from "recharts";
-
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import {
-	faAngleUp,
-	faDotCircle,
-	faAngleDown,
-	faStrikethrough,
-} from "@fortawesome/free-solid-svg-icons";
-
-import { Sparklines, SparklinesCurve } from "react-sparklines";
-
-import { makeData } from "../../Tables/DataTables/Examples/utils";
 
 var EJSSERVICE = process.env.REACT_APP_EJSSERVICE;
 var EJSTEMPLATE = process.env.REACT_APP_EJSTEMPLATE;
@@ -107,15 +84,11 @@ export default class ContactElements extends Component {
 			.then((response) => {
 				CLIIP = response;
 			})
-			.then(function (parsedData) { })
+			.then(function (parsedData) {})
 			.catch((error) => this.setState({ error, isLoading: false }));
 	}
 
 	submitContact() {
-
-
-
-
 		let { formName, formEmail, formMessage } = this.state;
 
 		document.getElementById("contactFormButton").disabled = true;
@@ -128,13 +101,10 @@ export default class ContactElements extends Component {
 			alert("You must fill this form entirely.");
 			document.getElementById("contactFormButton").disabled = false;
 		} else {
-			sendRequest()
+			sendRequest();
 			document.getElementById("headerMsg").innerHTML = "<br /> Sending... <br /> ";
 			async function sendRequest(props) {
-
 				try {
-
-
 					var useEmulator = true;
 					//Emulator local url for development:
 					let fetchURL = "";
@@ -144,10 +114,7 @@ export default class ContactElements extends Component {
 					const urlLive =
 						"https://us-central1-raymauiyoga-d75b1.cloudfunctions.net/processSendEmail";
 
-					if (
-						useEmulator &&
-						window.location.hostname.includes("localhost")
-					) {
+					if (useEmulator && window.location.hostname.includes("localhost")) {
 						fetchURL = urlLocal;
 					} else {
 						fetchURL = urlLive;
@@ -179,39 +146,37 @@ export default class ContactElements extends Component {
 						}),
 					});
 					const content = await rawResponse.json();
-					console.log(content.res)
+					console.log(content.res);
 
 					if (content.res === "success") {
 						alert("Your message has sent successfully!");
 						var form = document.getElementById("contactFormID");
 						document.getElementById("contactFormID").hidden = true;
-						document.getElementById("headerMsg").innerHTML = "Thank you!<br /> Your message has sent successfully. <br /> A response can generally be expected within 24hrs";
+						document.getElementById("headerMsg").innerHTML =
+							"Thank you!<br /> Your message has sent successfully. <br /> A response can generally be expected within 24hrs";
 						// document.getElementById("contactFormThanks").hidden = false;
 						document.getElementById("contactFormButton").disabled = true;
 					} else {
-						alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify
-						)
+						alert(
+							"The message did not send. Perhaps you've lost internet? \n" +
+								JSON.stringify
+						);
 					}
 				} catch (error) {
-
-					alert("The message did not send. Perhaps you've lost internet? \n" + JSON.stringify(error));
+					alert(
+						"The message did not send. Perhaps you've lost internet? \n" +
+							JSON.stringify(error)
+					);
 					document.getElementById("contactFormButton").disabled = false;
 				}
 			}
-
-
-
-
-
-
-
 		}
 	}
 
 	render() {
 		return (
 			<Fragment>
-				<CSSTransitionGroup
+				<TransitionGroup
 					component="div"
 					transitionName="TabsAnimation"
 					transitionAppear={true}
@@ -293,7 +258,8 @@ export default class ContactElements extends Component {
 													onChange={this.handleInputChange}
 													id="formMessage"
 													style={{
-														width: "270px", height: "170px",
+														width: "270px",
+														height: "170px",
 														backgroundColor: "#f0ffff",
 													}}
 												/>
@@ -318,7 +284,7 @@ export default class ContactElements extends Component {
 							</Card>
 						</Row>
 					</Container>
-				</CSSTransitionGroup>
+				</TransitionGroup>
 			</Fragment>
 		);
 	}
